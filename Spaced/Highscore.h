@@ -1,9 +1,8 @@
 #pragma once
 
 #include <SFML\Graphics.hpp>
-#include <iostream>
 
-class Menu {
+class Highscore {
 private:
 public:
 	void display(sf::RenderWindow window);
