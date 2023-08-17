@@ -1,10 +1,9 @@
 #include "Gameplay.h"
 
-void Gameplay::display(sf::RenderWindow window) {
+int Gameplay::display(sf::RenderWindow &window) {
     sf::RectangleShape player(sf::Vector2f(20.0f, 20.0f));
     player.setFillColor(sf::Color::Cyan);
     player.setOrigin(sf::Vector2f(10.0f, 10.0f));
-    //sf::Texture playerTexture;
 
     player.setPosition(10.0f, 10.0f);
     window.draw(player);
@@ -43,4 +42,5 @@ void Gameplay::display(sf::RenderWindow window) {
             window.display();
         }
     }
+    return 1;
 }

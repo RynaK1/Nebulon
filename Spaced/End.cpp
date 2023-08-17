@@ -1,5 +1,6 @@
 #include "End.h"
 
-void End::display(sf::RenderWindow window) {
+int End::display(sf::RenderWindow &window) {
 
+	return 1;
 }

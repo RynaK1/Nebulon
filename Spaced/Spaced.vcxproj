@@ -148,6 +148,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="End.h" />
+    <ClInclude Include="Externs.h" />
     <ClInclude Include="Gameplay.h" />
     <ClInclude Include="Highscore.h" />
     <ClInclude Include="Menu.h" />

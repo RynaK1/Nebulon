@@ -1,5 +1,5 @@
 #include "Highscore.h"
 
-void Highscore::display(sf::RenderWindow window) {
-
+int Highscore::display(sf::RenderWindow &window) {
+	return 1;
 }

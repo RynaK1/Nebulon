@@ -6,5 +6,5 @@
 class Menu {
 private:
 public:
-	void display(sf::RenderWindow window);
+	int display(sf::RenderWindow &window);
 };
