@@ -10,11 +10,7 @@
 using namespace std;
 
 int main() {
-    sf::RenderWindow window(sf::VideoMode(400, 600), "Nebulon");
-
-    sf::Texture bround;
-    bround.loadFromFile("../sprites/spaceBackground.png");
-    sf::Sprite background(bround);
+    sf::RenderWindow window(sf::VideoMode(600, 900), "Nebulon");
 
     Menu menu;
     Gameplay gameplay;
@@ -24,8 +20,6 @@ int main() {
     int go = go_menu;
 
     while (window.isOpen()) {
-        window.draw(background);
-        window.display();
 
         switch (go) {
         case go_menu:

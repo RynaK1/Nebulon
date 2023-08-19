@@ -4,6 +4,22 @@
 using namespace std;
 
 int Menu::display(sf::RenderWindow &window) {
+    //background
+    sf::Texture bround;
+    bround.loadFromFile("../sprites/spaceBackground.png");
+    sf::Sprite background(bround);
+
+    //buttons
+    sf::Font font;
+    font.loadFromFile("../sprites/AlfaSlabOne-Regular.ttf");
+
+    sf::Text start_txt("Start", font);
+    start_txt.setCharacterSize(30);
+    start_txt.setStyle(sf::Text::Bold);
+    start_txt.setFillColor(sf::Color::White);
+    start_txt.setPosition(250, 500);
+
+
 
     while (window.isOpen()) {
 
@@ -18,11 +34,15 @@ int Menu::display(sf::RenderWindow &window) {
             }
 
             if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-                cout << "test" << endl;
+                if (true) {
+
+                }
             }
 
-            //window.clear();
-            //window.display();
+            window.clear();
+            window.draw(background);
+            window.draw(start_txt);
+            window.display();
         }
     }
     return 1;
