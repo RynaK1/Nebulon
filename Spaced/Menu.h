@@ -1,10 +1,12 @@
 #pragma once
 
 #include <SFML\Graphics.hpp>
-#include <iostream>
+
+#include "Externs.h"
 
 class Menu {
 private:
 public:
-	int display(sf::RenderWindow &window);
+	int displayMainMenu(sf::RenderWindow &window);
+	int displayOptions(sf::RenderWindow &window);
 };

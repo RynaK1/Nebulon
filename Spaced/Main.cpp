@@ -17,24 +17,24 @@ int main() {
     End end;
     Highscore highscore;
 
-    int go = go_menu;
+    int go = GO_MENU;
 
     while (window.isOpen()) {
 
         switch (go) {
-        case go_menu:
+        case GO_MENU:
             cout << "Going to menu" << endl;
-            go = menu.display(window);
+            go = menu.displayMainMenu(window);
             break;
-        case go_gameplay:
+        case GO_GAMEPLAY:
             cout << "Going to gameplay" << endl;
             go = gameplay.display(window);
             break;
-        case go_end:
+        case GO_END:
             cout << "Going to end" << endl;
             go = end.display(window);
             break;
-        case go_highscore:
+        case GO_HIGHSCORE:
             cout << "Going to highscore" << endl;
             go = highscore.display(window);
             break;
