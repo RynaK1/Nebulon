@@ -38,7 +38,7 @@ int main() {
             cout << "Going to highscore" << endl;
             go = highscore.display(window);
             break;
-        default:
+        case QUIT:
             window.close();
             break;
         }

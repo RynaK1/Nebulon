@@ -36,6 +36,11 @@ int Menu::displayMainMenu(sf::RenderWindow &window) {
     highscores_txt.setFillColor(sf::Color::White);
     highscores_txt.setPosition(198, 620);
 
+    sf::Text quit_txt("Quit", font);
+    quit_txt.setCharacterSize(30);
+    quit_txt.setStyle(sf::Text::Bold);
+    quit_txt.setFillColor(sf::Color::White);
+    quit_txt.setPosition(254, 680);
 
     while (window.isOpen()) {
 
@@ -58,10 +63,14 @@ int Menu::displayMainMenu(sf::RenderWindow &window) {
             else if (buttonBounds(mousePos, 198, 392, 624, 650)) {
                 highscores_txt.setFillColor(sf::Color::Red);
             }
+            else if (buttonBounds(mousePos, 254, 330, 684, 710)) {
+                quit_txt.setFillColor(sf::Color::Red);
+            }
             else {
                 start_txt.setFillColor(sf::Color::White);
                 options_txt.setFillColor(sf::Color::White);
                 highscores_txt.setFillColor(sf::Color::White);
+                quit_txt.setFillColor(sf::Color::White);
             }
 
 
@@ -75,6 +84,9 @@ int Menu::displayMainMenu(sf::RenderWindow &window) {
                 else if (buttonBounds(mousePos, 198, 392, 624, 650)) {
                     return GO_HIGHSCORE;
                 }
+                else if (buttonBounds(mousePos, 254, 330, 684, 710)) {
+                    return QUIT;
+                }
             }
 
             window.clear();
@@ -83,10 +95,11 @@ int Menu::displayMainMenu(sf::RenderWindow &window) {
             window.draw(options_txt);
             window.draw(highscores_txt);
             window.draw(title_txt);
+            window.draw(quit_txt);
             window.display();
         }
     }
-    return -1;
+    return QUIT;
 }
 
 
@@ -126,7 +139,7 @@ void Menu::displayOptions(sf::RenderWindow& window) {
     sf::Text back_txt("Back", font);
     back_txt.setCharacterSize(30);
     back_txt.setFillColor(sf::Color::White);
-    back_txt.setPosition(250, 630);
+    back_txt.setPosition(254, 630);
 
     int knob_pos = 430;
 
@@ -149,7 +162,7 @@ void Menu::displayOptions(sf::RenderWindow& window) {
             else if (buttonBounds(mousePos, 185, 408, 573, 600)) {
                 bind_txt.setFillColor(sf::Color::Red);
             }
-            else if (buttonBounds(mousePos, 250, 332, 635, 660)) {
+            else if (buttonBounds(mousePos, 250, 336, 635, 660)) {
                 back_txt.setFillColor(sf::Color::Red);
             }
             else {
@@ -166,7 +179,7 @@ void Menu::displayOptions(sf::RenderWindow& window) {
                 else if (buttonBounds(mousePos, 185, 408, 573, 600)) {
                     //key binds
                 }
-                else if (buttonBounds(mousePos, 250, 332, 635, 660)) {
+                else if (buttonBounds(mousePos, 250, 336, 635, 660)) {
                     return void();
                 }
             }
