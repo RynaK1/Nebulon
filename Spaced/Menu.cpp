@@ -2,6 +2,7 @@
 #include <iostream>
 
 int Menu::displayMainMenu(sf::RenderWindow &window) {
+
     //background
     sf::Texture bround;
     bround.loadFromFile("../sprites/spaceBackground.png");
@@ -49,13 +50,13 @@ int Menu::displayMainMenu(sf::RenderWindow &window) {
 
             //highlight button if mouse is over button
             if (buttonBounds(mousePos, 250, 340, 504, 530)) {
-                start_txt.setFillColor(sf::Color::Magenta);
+                start_txt.setFillColor(sf::Color::Red);
             }
             else if (buttonBounds(mousePos, 227, 363, 564, 590)) {
-                options_txt.setFillColor(sf::Color::Magenta);
+                options_txt.setFillColor(sf::Color::Red);
             }
             else if (buttonBounds(mousePos, 198, 392, 624, 650)) {
-                highscores_txt.setFillColor(sf::Color::Magenta);
+                highscores_txt.setFillColor(sf::Color::Red);
             }
             else {
                 start_txt.setFillColor(sf::Color::White);
@@ -66,21 +67,12 @@ int Menu::displayMainMenu(sf::RenderWindow &window) {
 
             if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
                 if (buttonBounds(mousePos, 250, 340, 505, 530)) {
-                    start_txt.setFillColor(sf::Color::Red);
-                    window.draw(start_txt);
-                    window.display();
                     return GO_GAMEPLAY;
                 }
                 else if (buttonBounds(mousePos, 227, 363, 564, 590)) {
-                    options_txt.setFillColor(sf::Color::Red);
-                    window.draw(options_txt);
-                    window.display();
                     displayOptions(window);
                 }
                 else if (buttonBounds(mousePos, 198, 392, 624, 650)) {
-                    highscores_txt.setFillColor(sf::Color::Red);
-                    window.draw(highscores_txt);
-                    window.display();
                     return GO_HIGHSCORE;
                 }
             }
@@ -97,7 +89,8 @@ int Menu::displayMainMenu(sf::RenderWindow &window) {
     return -1;
 }
 
-int Menu::displayOptions(sf::RenderWindow& window) {
+
+void Menu::displayOptions(sf::RenderWindow& window) {
     sf::Texture bround;
     bround.loadFromFile("../sprites/spaceBackground.png");
     sf::Sprite background(bround);
@@ -113,18 +106,27 @@ int Menu::displayOptions(sf::RenderWindow& window) {
     options_txt.setPosition(200, 260);
 
     sf::Text volume_txt("Volume", font);
-    volume_txt.setCharacterSize(25);
-    //volume_txt.setStyle(sf::Text::Bold);
+    volume_txt.setCharacterSize(30);
     volume_txt.setFillColor(sf::Color::White);
-    volume_txt.setPosition(240, 480);
+    volume_txt.setPosition(230, 480);
 
     sf::RectangleShape vol_bar(sf::Vector2f(290, 6));
     vol_bar.setFillColor(sf::Color::White);
-    vol_bar.setPosition(150, 515);
+    vol_bar.setPosition(150, 530);
 
     sf::RectangleShape vol_knob(sf::Vector2f(10, 25));
-    vol_knob.setFillColor(sf::Color::Green);
-    vol_knob.setPosition(430, 505);
+    vol_knob.setFillColor(sf::Color::Magenta);
+    vol_knob.setPosition(430, 520);
+
+    sf::Text bind_txt("Key Bindings", font);
+    bind_txt.setCharacterSize(30);
+    bind_txt.setFillColor(sf::Color::White);
+    bind_txt.setPosition(187, 570);
+
+    sf::Text back_txt("Back", font);
+    back_txt.setCharacterSize(30);
+    back_txt.setFillColor(sf::Color::White);
+    back_txt.setPosition(250, 630);
 
     int knob_pos = 430;
 
@@ -141,21 +143,31 @@ int Menu::displayOptions(sf::RenderWindow& window) {
             sf::Vector2i mousePos = sf::Mouse::getPosition(window);
 
             //highlight button if mouse is over button
-            if (buttonBounds(mousePos, knob_pos, knob_pos + 10, 505, 530)) {
-                vol_knob.setFillColor(sf::Color::Magenta);
+            if (buttonBounds(mousePos, knob_pos, knob_pos + 10, 520, 545)) {
+                vol_knob.setFillColor(sf::Color::Red);
+            }
+            else if (buttonBounds(mousePos, 185, 408, 573, 600)) {
+                bind_txt.setFillColor(sf::Color::Red);
+            }
+            else if (buttonBounds(mousePos, 250, 332, 635, 660)) {
+                back_txt.setFillColor(sf::Color::Red);
             }
             else {
-                vol_knob.setFillColor(sf::Color::Green);
+                vol_knob.setFillColor(sf::Color::Magenta);
+                bind_txt.setFillColor(sf::Color::White);
+                back_txt.setFillColor(sf::Color::White);
             }
 
             if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-                if (buttonBounds(mousePos, 150, 440, 505, 530)) {
-                    vol_knob.setFillColor(sf::Color::Red);
-                    vol_knob.setPosition(mousePos.x - 5, 505);
+                if (buttonBounds(mousePos, 150, 440, 520, 545)) {
+                    vol_knob.setPosition(mousePos.x - 5, 520);
                     knob_pos = mousePos.x - 5;
-
-                    window.draw(vol_knob);
-                    window.display();
+                }
+                else if (buttonBounds(mousePos, 185, 408, 573, 600)) {
+                    //key binds
+                }
+                else if (buttonBounds(mousePos, 250, 332, 635, 660)) {
+                    return void();
                 }
             }
 
@@ -165,9 +177,9 @@ int Menu::displayOptions(sf::RenderWindow& window) {
             window.draw(volume_txt);
             window.draw(vol_bar);
             window.draw(vol_knob);
+            window.draw(bind_txt);
+            window.draw(back_txt);
             window.display();
         }
     }
-
-    return -1;
 }

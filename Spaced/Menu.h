@@ -8,5 +8,5 @@ class Menu {
 private:
 public:
 	int displayMainMenu(sf::RenderWindow &window);
-	int displayOptions(sf::RenderWindow &window);
+	void displayOptions(sf::RenderWindow &window);
 };
