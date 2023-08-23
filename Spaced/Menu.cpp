@@ -74,7 +74,7 @@ int Menu::displayMainMenu(sf::RenderWindow &window) {
             }
 
 
-            if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+            if (evnt.type == sf::Event::MouseButtonPressed && evnt.mouseButton.button == sf::Mouse::Left) {
                 if (buttonBounds(mousePos, 250, 340, 505, 530)) {
                     return GO_GAMEPLAY;
                 }
@@ -162,7 +162,7 @@ void Menu::displayOptions(sf::RenderWindow& window) {
             else if (buttonBounds(mousePos, 185, 408, 573, 600)) {
                 bind_txt.setFillColor(sf::Color::Red);
             }
-            else if (buttonBounds(mousePos, 250, 336, 635, 660)) {
+            else if (buttonBounds(mousePos, 250, 334, 635, 660)) {
                 back_txt.setFillColor(sf::Color::Red);
             }
             else {
@@ -171,7 +171,7 @@ void Menu::displayOptions(sf::RenderWindow& window) {
                 back_txt.setFillColor(sf::Color::White);
             }
 
-            if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+            if (evnt.type == sf::Event::MouseButtonPressed && evnt.mouseButton.button == sf::Mouse::Left) {
                 if (buttonBounds(mousePos, 150, 440, 520, 545)) {
                     vol_knob.setPosition(mousePos.x - 5, 520);
                     knob_pos = mousePos.x - 5;
@@ -179,7 +179,7 @@ void Menu::displayOptions(sf::RenderWindow& window) {
                 else if (buttonBounds(mousePos, 185, 408, 573, 600)) {
                     //key binds
                 }
-                else if (buttonBounds(mousePos, 250, 336, 635, 660)) {
+                else if (buttonBounds(mousePos, 250, 334, 635, 660)) {
                     return void();
                 }
             }
