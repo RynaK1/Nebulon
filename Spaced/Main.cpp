@@ -1,4 +1,5 @@
 #include <SFML\Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <iostream>
 
 #include "Menu.h"
@@ -12,6 +13,13 @@ using namespace std;
 int main() {
     sf::RenderWindow window(sf::VideoMode(600, 900), "Nebulon");
 
+    sf::Music title_theme;
+    if (!title_theme.openFromFile("../Resources/Audio/title_theme.ogg")) {
+        cerr << "Music file missing or improperly placed" << endl;
+    }
+
+    title_theme.play();
+
     Menu menu;
     Gameplay gameplay;
     End end;
@@ -24,19 +32,20 @@ int main() {
         switch (go) {
         case GO_MENU:
             cout << "Going to menu" << endl;
-            go = menu.displayMainMenu(window);
+            go = menu.displayMainMenu(window, title_theme);
             break;
         case GO_GAMEPLAY:
             cout << "Going to gameplay" << endl;
-            go = gameplay.display(window);
+            title_theme.stop();
+            go = gameplay.display(window, title_theme);
             break;
         case GO_END:
             cout << "Going to end" << endl;
-            go = end.display(window);
+            go = end.display(window, title_theme);
             break;
         case GO_HIGHSCORE:
             cout << "Going to highscore" << endl;
-            go = highscore.display(window);
+            go = highscore.display(window, title_theme);
             break;
         case QUIT:
             window.close();

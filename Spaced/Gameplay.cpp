@@ -1,6 +1,6 @@
 #include "Gameplay.h"
 
-int Gameplay::display(sf::RenderWindow &window) {
+int Gameplay::display(sf::RenderWindow& window, sf::Music& music) {
     sf::RectangleShape player(sf::Vector2f(20.0f, 20.0f));
     player.setFillColor(sf::Color::Cyan);
     player.setOrigin(sf::Vector2f(10.0f, 10.0f));

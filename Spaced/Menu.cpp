@@ -1,16 +1,18 @@
 #include "Menu.h"
 #include <iostream>
+#include <cmath>
+#include <string>
 
-int Menu::displayMainMenu(sf::RenderWindow &window) {
+int Menu::displayMainMenu(sf::RenderWindow& window, sf::Music& music) {
 
     //background
     sf::Texture bround;
-    bround.loadFromFile("../sprites/spaceBackground.png");
+    bround.loadFromFile("../Resources/Textures/spaceBackground.png");
     sf::Sprite background(bround);
 
     //texts and buttons
     sf::Font font;
-    font.loadFromFile("../sprites/AlfaSlabOne-Regular.ttf"); \
+    font.loadFromFile("../Resources/Textures/AlfaSlabOne-Regular.ttf"); 
 
     sf::Text title_txt("Nebulon", font);
     title_txt.setCharacterSize(60);
@@ -79,7 +81,7 @@ int Menu::displayMainMenu(sf::RenderWindow &window) {
                     return GO_GAMEPLAY;
                 }
                 else if (buttonBounds(mousePos, 227, 363, 564, 590)) {
-                    displayOptions(window);
+                    displayOptions(window, music);
                 }
                 else if (buttonBounds(mousePos, 198, 392, 624, 650)) {
                     return GO_HIGHSCORE;
@@ -103,14 +105,14 @@ int Menu::displayMainMenu(sf::RenderWindow &window) {
 }
 
 
-void Menu::displayOptions(sf::RenderWindow& window) {
+void Menu::displayOptions(sf::RenderWindow& window, sf::Music& music) {
     sf::Texture bround;
-    bround.loadFromFile("../sprites/spaceBackground.png");
+    bround.loadFromFile("../Resources/Textures/spaceBackground.png");
     sf::Sprite background(bround);
 
     //texts and buttons
     sf::Font font;
-    font.loadFromFile("../sprites/AlfaSlabOne-Regular.ttf"); \
+    font.loadFromFile("../Resources/Textures/AlfaSlabOne-Regular.ttf"); \
 
     sf::Text options_txt("Options", font);
     options_txt.setCharacterSize(45);
@@ -123,13 +125,18 @@ void Menu::displayOptions(sf::RenderWindow& window) {
     volume_txt.setFillColor(sf::Color::White);
     volume_txt.setPosition(230, 480);
 
+    sf::Text volume_num_txt("100%", font);
+    volume_num_txt.setCharacterSize(20);
+    volume_num_txt.setFillColor(sf::Color::White);
+    volume_num_txt.setPosition(450, 520);
+
     sf::RectangleShape vol_bar(sf::Vector2f(290, 6));
     vol_bar.setFillColor(sf::Color::White);
     vol_bar.setPosition(150, 530);
 
     sf::RectangleShape vol_knob(sf::Vector2f(10, 25));
     vol_knob.setFillColor(sf::Color::Magenta);
-    vol_knob.setPosition(430, 520);
+    vol_knob.setPosition(435, 520);
 
     sf::Text bind_txt("Key Bindings", font);
     bind_txt.setCharacterSize(30);
@@ -141,7 +148,7 @@ void Menu::displayOptions(sf::RenderWindow& window) {
     back_txt.setFillColor(sf::Color::White);
     back_txt.setPosition(254, 630);
 
-    int knob_pos = 430;
+    int knob_pos = 435;
 
     while (window.isOpen()) {
 
@@ -175,6 +182,11 @@ void Menu::displayOptions(sf::RenderWindow& window) {
             if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && buttonBounds(mousePos, 150, 440, 520, 545)) {
                 vol_knob.setPosition(mousePos.x - 5, 520);
                 knob_pos = mousePos.x - 5;
+                music.setVolume(std::round((knob_pos - 145) / 2.85));
+                std::string vol = std::to_string(std::round((knob_pos - 145) / 2.9));
+                vol = vol.substr(0, vol.find('.'));
+                volume_num_txt.setString(vol.append("%"));
+                std::cout << std::round((knob_pos - 145) / 2.9) << std::endl;
             }
 
             if (evnt.type == sf::Event::MouseButtonPressed && evnt.mouseButton.button == sf::Mouse::Left) {   
@@ -190,6 +202,7 @@ void Menu::displayOptions(sf::RenderWindow& window) {
             window.draw(background);
             window.draw(options_txt);
             window.draw(volume_txt);
+            window.draw(volume_num_txt);
             window.draw(vol_bar);
             window.draw(vol_knob);
             window.draw(bind_txt);
