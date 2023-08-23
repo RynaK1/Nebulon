@@ -171,12 +171,14 @@ void Menu::displayOptions(sf::RenderWindow& window) {
                 back_txt.setFillColor(sf::Color::White);
             }
 
-            if (evnt.type == sf::Event::MouseButtonPressed && evnt.mouseButton.button == sf::Mouse::Left) {
-                if (buttonBounds(mousePos, 150, 440, 520, 545)) {
-                    vol_knob.setPosition(mousePos.x - 5, 520);
-                    knob_pos = mousePos.x - 5;
-                }
-                else if (buttonBounds(mousePos, 185, 408, 573, 600)) {
+            //mouse tracker alternative for volume slider
+            if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && buttonBounds(mousePos, 150, 440, 520, 545)) {
+                vol_knob.setPosition(mousePos.x - 5, 520);
+                knob_pos = mousePos.x - 5;
+            }
+
+            if (evnt.type == sf::Event::MouseButtonPressed && evnt.mouseButton.button == sf::Mouse::Left) {   
+                if (buttonBounds(mousePos, 185, 408, 573, 600)) {
                     //key binds
                 }
                 else if (buttonBounds(mousePos, 250, 334, 635, 660)) {
