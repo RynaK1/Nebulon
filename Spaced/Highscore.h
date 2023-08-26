@@ -3,6 +3,8 @@
 #include <SFML\Graphics.hpp>
 #include <SFML\Audio.hpp>
 
+#include "Externs.h"
+
 class Highscore {
 private:
 public:
