@@ -1,7 +1,4 @@
 #include "Menu.h"
-#include <iostream>
-#include <cmath>
-#include <string>
 
 int Menu::displayMainMenu(sf::RenderWindow& window, sf::Music& music) {
 
@@ -14,35 +11,43 @@ int Menu::displayMainMenu(sf::RenderWindow& window, sf::Music& music) {
     sf::Font font;
     font.loadFromFile("../Resources/Textures/AlfaSlabOne-Regular.ttf"); 
 
+    int win_x = window.getSize().x;
+    int win_y = window.getSize().y;
+
     sf::Text title_txt("Nebulon", font);
     title_txt.setCharacterSize(60);
     title_txt.setStyle(sf::Text::Bold);
     title_txt.setFillColor(sf::Color::White);
-    title_txt.setPosition(160, 250);
+    title_txt.setPosition(((float)(win_x - title_txt.getLocalBounds().width) / 2), 
+                            (float)((win_y - title_txt.getLocalBounds().height) / 3.5));
 
     sf::Text start_txt("Start", font);
     start_txt.setCharacterSize(30);
     start_txt.setStyle(sf::Text::Bold);
     start_txt.setFillColor(sf::Color::White);
-    start_txt.setPosition(250, 500);
+    start_txt.setPosition((float)((win_x - start_txt.getLocalBounds().width) / 2),
+                          (float)((win_y - start_txt.getLocalBounds().height) / 1.8));
 
     sf::Text options_txt("Options", font);
     options_txt.setCharacterSize(30);
     options_txt.setStyle(sf::Text::Bold);
     options_txt.setFillColor(sf::Color::White);
-    options_txt.setPosition(227, 560);
+    options_txt.setPosition((float)((win_x - options_txt.getLocalBounds().width) / 2),
+                            (float)((win_y - options_txt.getLocalBounds().height) / 1.6));
 
     sf::Text highscores_txt("Highscores", font);
     highscores_txt.setCharacterSize(30);
     highscores_txt.setStyle(sf::Text::Bold);
     highscores_txt.setFillColor(sf::Color::White);
-    highscores_txt.setPosition(198, 620);
+    highscores_txt.setPosition((float)((win_x - highscores_txt.getLocalBounds().width) / 2),
+                               (float)((win_y - highscores_txt.getLocalBounds().height) / 1.44));
 
     sf::Text quit_txt("Quit", font);
     quit_txt.setCharacterSize(30);
     quit_txt.setStyle(sf::Text::Bold);
     quit_txt.setFillColor(sf::Color::White);
-    quit_txt.setPosition(254, 680);
+    quit_txt.setPosition((float)((win_x - quit_txt.getLocalBounds().width) / 2),
+                         (float)((win_y - quit_txt.getLocalBounds().height) / 1.32));
 
     while (window.isOpen()) {
 
@@ -56,16 +61,16 @@ int Menu::displayMainMenu(sf::RenderWindow& window, sf::Music& music) {
             sf::Vector2i mousePos = sf::Mouse::getPosition(window);
 
             //highlight button if mouse is over button
-            if (buttonBounds(mousePos, 250, 340, 504, 530)) {
+            if (buttonBounds(mousePos, start_txt)) {
                 start_txt.setFillColor(sf::Color::Red);
             }
-            else if (buttonBounds(mousePos, 227, 363, 564, 590)) {
+            else if (buttonBounds(mousePos, options_txt)) {
                 options_txt.setFillColor(sf::Color::Red);
             }
-            else if (buttonBounds(mousePos, 198, 392, 624, 650)) {
+            else if (buttonBounds(mousePos, highscores_txt)) {
                 highscores_txt.setFillColor(sf::Color::Red);
             }
-            else if (buttonBounds(mousePos, 254, 330, 684, 710)) {
+            else if (buttonBounds(mousePos, quit_txt)) {
                 quit_txt.setFillColor(sf::Color::Red);
             }
             else {
@@ -75,18 +80,17 @@ int Menu::displayMainMenu(sf::RenderWindow& window, sf::Music& music) {
                 quit_txt.setFillColor(sf::Color::White);
             }
 
-
             if (evnt.type == sf::Event::MouseButtonPressed && evnt.mouseButton.button == sf::Mouse::Left) {
-                if (buttonBounds(mousePos, 250, 340, 505, 530)) {
+                if (buttonBounds(mousePos, start_txt)) {
                     return GO_GAMEPLAY;
                 }
-                else if (buttonBounds(mousePos, 227, 363, 564, 590)) {
+                else if (buttonBounds(mousePos, options_txt)) {
                     displayOptions(window, music);
                 }
-                else if (buttonBounds(mousePos, 198, 392, 624, 650)) {
+                else if (buttonBounds(mousePos, highscores_txt)) {
                     return GO_HIGHSCORE;
                 }
-                else if (buttonBounds(mousePos, 254, 330, 684, 710)) {
+                else if (buttonBounds(mousePos, quit_txt)) {
                     return QUIT;
                 }
             }
@@ -101,6 +105,8 @@ int Menu::displayMainMenu(sf::RenderWindow& window, sf::Music& music) {
             window.display();
         }
     }
+
+    std::cerr << "Error: Menu.cpp end of function return" << std::endl;
     return QUIT;
 }
 
@@ -112,43 +118,53 @@ void Menu::displayOptions(sf::RenderWindow& window, sf::Music& music) {
 
     //texts and buttons
     sf::Font font;
-    font.loadFromFile("../Resources/Textures/AlfaSlabOne-Regular.ttf"); \
+    font.loadFromFile("../Resources/Textures/AlfaSlabOne-Regular.ttf"); 
+
+    int win_x = window.getSize().x;
+    int win_y = window.getSize().y;
 
     sf::Text options_txt("Options", font);
     options_txt.setCharacterSize(45);
     options_txt.setStyle(sf::Text::Bold);
     options_txt.setFillColor(sf::Color::White);
-    options_txt.setPosition(200, 260);
+    options_txt.setPosition((float)((win_x - options_txt.getLocalBounds().width) / 2),
+                            (float)((win_y - options_txt.getLocalBounds().height) / 3.5));
 
     sf::Text volume_txt("Volume", font);
     volume_txt.setCharacterSize(30);
     volume_txt.setFillColor(sf::Color::White);
-    volume_txt.setPosition(230, 480);
+    volume_txt.setPosition((float)((win_x - volume_txt.getLocalBounds().width) / 2),
+                           (float)((win_y - volume_txt.getLocalBounds().height) / 1.8));
 
     sf::Text volume_num_txt("100%", font);
     volume_num_txt.setCharacterSize(20);
     volume_num_txt.setFillColor(sf::Color::White);
-    volume_num_txt.setPosition(450, 520);
+    volume_num_txt.setPosition((float)((win_x - volume_num_txt.getLocalBounds().width) / 1.5),
+                               (float)((win_y - volume_num_txt.getLocalBounds().height) / 1.615));
 
     sf::RectangleShape vol_bar(sf::Vector2f(290, 6));
     vol_bar.setFillColor(sf::Color::White);
-    vol_bar.setPosition(150, 530);
+    vol_bar.setPosition((float)((win_x - vol_bar.getLocalBounds().width) / 2),
+                        (float)((win_y - vol_bar.getLocalBounds().height) / 1.6));
 
     sf::RectangleShape vol_knob(sf::Vector2f(10, 25));
+    vol_knob.setOrigin(5, 13);
     vol_knob.setFillColor(sf::Color::Magenta);
-    vol_knob.setPosition(435, 520);
+    vol_knob.setPosition((float)((win_x - vol_bar.getLocalBounds().width) / 2) + vol_bar.getLocalBounds().width,
+                         (float)((win_y - vol_bar.getLocalBounds().height) / 1.59));
 
     sf::Text bind_txt("Key Bindings", font);
     bind_txt.setCharacterSize(30);
     bind_txt.setFillColor(sf::Color::White);
-    bind_txt.setPosition(187, 570);
+    bind_txt.setPosition((float)((win_x - bind_txt.getLocalBounds().width) / 2),
+                         (float)((win_y - bind_txt.getLocalBounds().height) / 1.44));
 
     sf::Text back_txt("Back", font);
     back_txt.setCharacterSize(30);
     back_txt.setFillColor(sf::Color::White);
-    back_txt.setPosition(254, 630);
+    back_txt.setPosition((float)((win_x - back_txt.getLocalBounds().width) / 2),
+                         (float)((win_y - back_txt.getLocalBounds().height) / 1.32));
 
-    int knob_pos = 435;
 
     while (window.isOpen()) {
 
@@ -163,13 +179,14 @@ void Menu::displayOptions(sf::RenderWindow& window, sf::Music& music) {
             sf::Vector2i mousePos = sf::Mouse::getPosition(window);
 
             //highlight button if mouse is over button
-            if (buttonBounds(mousePos, knob_pos, knob_pos + 10, 520, 545)) {
+            
+            if (buttonBounds(mousePos, vol_knob)) {
                 vol_knob.setFillColor(sf::Color::Red);
             }
-            else if (buttonBounds(mousePos, 185, 408, 573, 600)) {
+            else if (buttonBounds(mousePos, bind_txt)) {
                 bind_txt.setFillColor(sf::Color::Red);
             }
-            else if (buttonBounds(mousePos, 250, 334, 635, 660)) {
+            else if (buttonBounds(mousePos, back_txt)) {
                 back_txt.setFillColor(sf::Color::Red);
             }
             else {
@@ -179,21 +196,27 @@ void Menu::displayOptions(sf::RenderWindow& window, sf::Music& music) {
             }
 
             //mouse tracker alternative for volume slider
-            if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && buttonBounds(mousePos, 150, 440, 520, 545)) {
-                vol_knob.setPosition(mousePos.x - 5, 520);
-                knob_pos = mousePos.x - 5;
-                music.setVolume(std::round((knob_pos - 145) / 2.85));
-                std::string vol = std::to_string(std::round((knob_pos - 145) / 2.9));
-                vol = vol.substr(0, vol.find('.'));
-                volume_num_txt.setString(vol.append("%"));
-                std::cout << std::round((knob_pos - 145) / 2.9) << std::endl;
+            if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && buttonBounds(mousePos, vol_bar)) {
+
+                float bar_length = vol_bar.getLocalBounds().width;
+                if (mousePos.x > (win_x - bar_length) / 2 &&
+                    mousePos.x < ((win_x - bar_length) / 2) + bar_length) {
+
+                    vol_knob.setPosition(mousePos.x, ((int)win_y - vol_bar.getLocalBounds().height) / 1.59);
+
+                    int num = getVolumePercentage(mousePos.x, window.getSize().x);
+                    music.setVolume(num);
+                    std::string vol = std::to_string(num);
+                    vol = vol.substr(0, vol.find('.'));
+                    volume_num_txt.setString(vol.append("%"));
+                }    
             }
 
             if (evnt.type == sf::Event::MouseButtonPressed && evnt.mouseButton.button == sf::Mouse::Left) {   
-                if (buttonBounds(mousePos, 185, 408, 573, 600)) {
+                if (buttonBounds(mousePos, bind_txt)) {
                     //key binds
                 }
-                else if (buttonBounds(mousePos, 250, 334, 635, 660)) {
+                else if (buttonBounds(mousePos, back_txt)) {
                     return void();
                 }
             }

@@ -11,7 +11,7 @@
 using namespace std;
 
 int main() {
-    sf::RenderWindow window(sf::VideoMode(600, 900), "Nebulon");
+    sf::RenderWindow window(sf::VideoMode(1280, 720), "Nebulon", sf::Style::Close);
 
     sf::Music title_theme;
     if (!title_theme.openFromFile("../Resources/Audio/title_theme.ogg")) {
