@@ -202,10 +202,10 @@ void Menu::displayOptions(sf::RenderWindow& window, sf::Music& music) {
                 if (mousePos.x > (win_x - bar_length) / 2 &&
                     mousePos.x < ((win_x - bar_length) / 2) + bar_length) {
 
-                    vol_knob.setPosition(mousePos.x, ((int)win_y - vol_bar.getLocalBounds().height) / 1.59);
+                    vol_knob.setPosition((float)mousePos.x, (win_y - vol_bar.getLocalBounds().height) / (float)1.59);
 
                     int num = getVolumePercentage(mousePos.x, window.getSize().x);
-                    music.setVolume(num);
+                    music.setVolume((float)num);
                     std::string vol = std::to_string(num);
                     vol = vol.substr(0, vol.find('.'));
                     volume_num_txt.setString(vol.append("%"));
