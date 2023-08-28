@@ -9,6 +9,7 @@ const static int GO_END = 2;
 const static int GO_HIGHSCORE = 3;
 const static int QUIT = -1;
 
+
 inline bool buttonBounds(sf::Vector2i mousePos, sf::Text text) {
 	sf::FloatRect bound = text.getGlobalBounds();
 	if (bound.contains((float)mousePos.x, (float)mousePos.y)) {

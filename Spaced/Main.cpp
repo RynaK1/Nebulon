@@ -26,13 +26,14 @@ int main() {
     Highscore highscore;
 
     int go = GO_MENU;
+    int main_volume = 100;
 
     while (window.isOpen()) {
 
         switch (go) {
         case GO_MENU:
             cout << "Going to menu" << endl;
-            go = menu.displayMainMenu(window, title_theme);
+            go = menu.displayMainMenu(window, title_theme, main_volume);
             break;
         case GO_GAMEPLAY:
             cout << "Going to gameplay" << endl;

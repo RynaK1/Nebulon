@@ -6,3 +6,6 @@ int getVolumePercentage(int knob_pos, int window_x) {
 	int left_gap = (window_x - vol_bar_width) / 2;
 	return std::round((knob_pos - left_gap) / 2.9);
 }
+
+// save volume percentage data 
+// set volume percentage number close to bar for 1920 x 1080

@@ -1,6 +1,6 @@
 #include "Menu.h"
 
-int Menu::displayMainMenu(sf::RenderWindow& window, sf::Music& music) {
+int Menu::displayMainMenu(sf::RenderWindow& window, sf::Music& music, int& volume) {
 
     //background
     sf::Texture bround;
@@ -85,7 +85,7 @@ int Menu::displayMainMenu(sf::RenderWindow& window, sf::Music& music) {
                     return GO_GAMEPLAY;
                 }
                 else if (buttonBounds(mousePos, options_txt)) {
-                    displayOptions(window, music);
+                    displayOptions(window, music, volume);
                 }
                 else if (buttonBounds(mousePos, highscores_txt)) {
                     return GO_HIGHSCORE;
@@ -111,7 +111,7 @@ int Menu::displayMainMenu(sf::RenderWindow& window, sf::Music& music) {
 }
 
 
-void Menu::displayOptions(sf::RenderWindow& window, sf::Music& music) {
+void Menu::displayOptions(sf::RenderWindow& window, sf::Music& music, int& volume) {
     sf::Texture bround;
     bround.loadFromFile("../Resources/Textures/spaceBackground.png");
     sf::Sprite background(bround);
@@ -135,8 +135,11 @@ void Menu::displayOptions(sf::RenderWindow& window, sf::Music& music) {
     volume_txt.setFillColor(sf::Color::White);
     volume_txt.setPosition((float)((win_x - volume_txt.getLocalBounds().width) / 2),
                            (float)((win_y - volume_txt.getLocalBounds().height) / 1.8));
-
-    sf::Text volume_num_txt("100%", font);
+    
+    sf::Text volume_num_txt("", font);
+    std::string vol = std::to_string(volume);
+    vol = vol.substr(0, vol.find('.'));
+    volume_num_txt.setString(vol.append("%"));
     volume_num_txt.setCharacterSize(20);
     volume_num_txt.setFillColor(sf::Color::White);
     volume_num_txt.setPosition((float)((win_x - volume_num_txt.getLocalBounds().width) / 1.5),
@@ -150,7 +153,8 @@ void Menu::displayOptions(sf::RenderWindow& window, sf::Music& music) {
     sf::RectangleShape vol_knob(sf::Vector2f(10, 25));
     vol_knob.setOrigin(5, 13);
     vol_knob.setFillColor(sf::Color::Magenta);
-    vol_knob.setPosition((float)((win_x - vol_bar.getLocalBounds().width) / 2) + vol_bar.getLocalBounds().width,
+
+    vol_knob.setPosition((float)((win_x - vol_bar.getLocalBounds().width) / 2) + (vol_bar.getLocalBounds().width * ((float)volume / 100.0)),
                          (float)((win_y - vol_bar.getLocalBounds().height) / 1.59));
 
     sf::Text bind_txt("Key Bindings", font);
@@ -204,10 +208,9 @@ void Menu::displayOptions(sf::RenderWindow& window, sf::Music& music) {
 
                     vol_knob.setPosition((float)mousePos.x, (win_y - vol_bar.getLocalBounds().height) / (float)1.59);
 
-                    int num = getVolumePercentage(mousePos.x, window.getSize().x);
-                    music.setVolume((float)num);
-                    std::string vol = std::to_string(num);
-                    vol = vol.substr(0, vol.find('.'));
+                    volume = getVolumePercentage(mousePos.x, window.getSize().x);
+                    music.setVolume((float)volume);
+                    std::string vol = std::to_string(volume);
                     volume_num_txt.setString(vol.append("%"));
                 }    
             }
