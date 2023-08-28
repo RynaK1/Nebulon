@@ -25,7 +25,7 @@ int main() {
     End end;
     Highscore highscore;
 
-    int go = GO_MENU;
+    int go = GO_MENU; //which screen to go to
     int main_volume = 100;
 
     while (window.isOpen()) {
