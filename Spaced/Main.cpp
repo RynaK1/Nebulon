@@ -25,15 +25,19 @@ int main() {
     End end;
     Highscore highscore;
 
-    int go = GO_MENU; //which screen to go to
+    int go = GO_MAIN_MENU; //which screen to go to
     int main_volume = 100;
 
     while (window.isOpen()) {
 
         switch (go) {
-        case GO_MENU:
-            cout << "Going to menu" << endl;
-            go = menu.displayMainMenu(window, title_theme, main_volume);
+        case GO_MAIN_MENU:
+            cout << "Going to main menu" << endl;
+            go = menu.displayMainMenu(window, title_theme);
+            break;
+        case GO_OPTIONS_MENU:
+            cout << "Going to options menu" << endl;
+            go = menu.displayOptions(window, title_theme, main_volume);
             break;
         case GO_GAMEPLAY:
             cout << "Going to gameplay" << endl;

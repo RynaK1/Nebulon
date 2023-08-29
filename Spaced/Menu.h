@@ -12,6 +12,6 @@
 class Menu {
 private:
 public:
-	int displayMainMenu(sf::RenderWindow &window, sf::Music& music, int& volume);
-	void displayOptions(sf::RenderWindow &window, sf::Music& music, int& volume);
+	int displayMainMenu(sf::RenderWindow &window, sf::Music& music);
+	int displayOptions(sf::RenderWindow &window, sf::Music& music, int& volume);
 };

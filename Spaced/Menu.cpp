@@ -1,18 +1,17 @@
 #include "Menu.h"
 
-int Menu::displayMainMenu(sf::RenderWindow& window, sf::Music& music, int& volume) {
+int Menu::displayMainMenu(sf::RenderWindow& window, sf::Music& music) {
 
-    //background
+    int win_x = window.getSize().x;
+    int win_y = window.getSize().y;
+
+    // ****************** graphic initializations ***********************
     sf::Texture bround;
     bround.loadFromFile("../Resources/Textures/spaceBackground.png");
     sf::Sprite background(bround);
 
-    //texts and buttons
     sf::Font font;
     font.loadFromFile("../Resources/Textures/AlfaSlabOne-Regular.ttf"); 
-
-    int win_x = window.getSize().x;
-    int win_y = window.getSize().y;
 
     sf::Text title_txt("Nebulon", font);
     title_txt.setCharacterSize(60);
@@ -85,7 +84,7 @@ int Menu::displayMainMenu(sf::RenderWindow& window, sf::Music& music, int& volum
                     return GO_GAMEPLAY;
                 }
                 else if (buttonBounds(mousePos, options_txt)) {
-                    displayOptions(window, music, volume);
+                    return GO_OPTIONS_MENU;
                 }
                 else if (buttonBounds(mousePos, highscores_txt)) {
                     return GO_HIGHSCORE;
@@ -106,12 +105,15 @@ int Menu::displayMainMenu(sf::RenderWindow& window, sf::Music& music, int& volum
         }
     }
 
-    std::cerr << "Error: Menu.cpp end of function return" << std::endl;
+    std::cerr << "Error: displayMainMenu end of function return" << std::endl;
     return QUIT;
 }
 
 
-void Menu::displayOptions(sf::RenderWindow& window, sf::Music& music, int& volume) {
+int Menu::displayOptions(sf::RenderWindow& window, sf::Music& music, int& volume) {
+
+    // ****************** graphic initializations ***********************
+    // background
     sf::Texture bround;
     bround.loadFromFile("../Resources/Textures/spaceBackground.png");
     sf::Sprite background(bround);
@@ -163,11 +165,17 @@ void Menu::displayOptions(sf::RenderWindow& window, sf::Music& music, int& volum
     bind_txt.setPosition((float)((win_x - bind_txt.getLocalBounds().width) / 2),
                          (float)((win_y - bind_txt.getLocalBounds().height) / 1.44));
 
+    sf::Text low_txt("1280x720", font);
+    low_txt.setCharacterSize(30);
+    low_txt.setFillColor(sf::Color::White);
+    low_txt.setPosition((float)((win_x - low_txt.getLocalBounds().width) / 3),
+        (float)((win_y - low_txt.getLocalBounds().height) / 1.32));
+
     sf::Text back_txt("Back", font);
     back_txt.setCharacterSize(30);
     back_txt.setFillColor(sf::Color::White);
     back_txt.setPosition((float)((win_x - back_txt.getLocalBounds().width) / 2),
-                         (float)((win_y - back_txt.getLocalBounds().height) / 1.32));
+                         (float)((win_y - back_txt.getLocalBounds().height) / 1.25));
 
 
     while (window.isOpen()) {
@@ -220,7 +228,7 @@ void Menu::displayOptions(sf::RenderWindow& window, sf::Music& music, int& volum
                     //key binds
                 }
                 else if (buttonBounds(mousePos, back_txt)) {
-                    return void();
+                    return GO_MAIN_MENU;
                 }
             }
 
@@ -236,4 +244,7 @@ void Menu::displayOptions(sf::RenderWindow& window, sf::Music& music, int& volum
             window.display();
         }
     }
+
+    std::cerr << "Error: displayOptionsMenu end of function return" << std::endl;
+    return QUIT;
 }

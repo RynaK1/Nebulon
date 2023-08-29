@@ -2,6 +2,8 @@
 
 
 int Gameplay::display(sf::RenderWindow& window, sf::Music& music) {
+
+    // ****************** graphic initializations ***********************
     //background
     sf::Texture bround;
     bround.loadFromFile("../Resources/Textures/spaceBackground.png");
