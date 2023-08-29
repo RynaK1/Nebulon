@@ -168,14 +168,20 @@ int Menu::displayOptions(sf::RenderWindow& window, sf::Music& music, int& volume
     sf::Text low_txt("1280x720", font);
     low_txt.setCharacterSize(30);
     low_txt.setFillColor(sf::Color::White);
-    low_txt.setPosition((float)((win_x - low_txt.getLocalBounds().width) / 3),
+    low_txt.setPosition((float)((win_x - low_txt.getLocalBounds().width) / 2.4),
         (float)((win_y - low_txt.getLocalBounds().height) / 1.32));
+
+    sf::Text high_txt("1920x1080", font);
+    high_txt.setCharacterSize(30);
+    high_txt.setFillColor(sf::Color::White);
+    high_txt.setPosition((float)((win_x - low_txt.getLocalBounds().width) / 1.72),
+        (float)((win_y - high_txt.getLocalBounds().height) / 1.32));
 
     sf::Text back_txt("Back", font);
     back_txt.setCharacterSize(30);
     back_txt.setFillColor(sf::Color::White);
     back_txt.setPosition((float)((win_x - back_txt.getLocalBounds().width) / 2),
-                         (float)((win_y - back_txt.getLocalBounds().height) / 1.25));
+                         (float)((win_y - back_txt.getLocalBounds().height) / 1.22));
 
 
     while (window.isOpen()) {
@@ -201,10 +207,18 @@ int Menu::displayOptions(sf::RenderWindow& window, sf::Music& music, int& volume
             else if (buttonBounds(mousePos, back_txt)) {
                 back_txt.setFillColor(sf::Color::Red);
             }
+            else if (buttonBounds(mousePos, low_txt)) {
+                low_txt.setFillColor(sf::Color::Red);
+            }
+            else if (buttonBounds(mousePos, high_txt)) {
+                high_txt.setFillColor(sf::Color::Red);
+            }
             else {
                 vol_knob.setFillColor(sf::Color::Magenta);
                 bind_txt.setFillColor(sf::Color::White);
                 back_txt.setFillColor(sf::Color::White);
+                low_txt.setFillColor(sf::Color::White);
+                high_txt.setFillColor(sf::Color::White);
             }
 
             //mouse tracker alternative for volume slider
@@ -227,6 +241,14 @@ int Menu::displayOptions(sf::RenderWindow& window, sf::Music& music, int& volume
                 if (buttonBounds(mousePos, bind_txt)) {
                     //key binds
                 }
+                else if (buttonBounds(mousePos, low_txt)) {
+                    window.create(sf::VideoMode(1280, 720), "Nebulon", sf::Style::Close);
+                    return GO_OPTIONS_MENU;
+                }
+                else if (buttonBounds(mousePos, high_txt)) {
+                    window.create(sf::VideoMode(1920, 1080), "Nebulon", sf::Style::Close);
+                    return GO_OPTIONS_MENU;
+                }
                 else if (buttonBounds(mousePos, back_txt)) {
                     return GO_MAIN_MENU;
                 }
@@ -240,6 +262,8 @@ int Menu::displayOptions(sf::RenderWindow& window, sf::Music& music, int& volume
             window.draw(vol_bar);
             window.draw(vol_knob);
             window.draw(bind_txt);
+            window.draw(low_txt);
+            window.draw(high_txt);
             window.draw(back_txt);
             window.display();
         }
