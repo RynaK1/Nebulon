@@ -137,6 +137,11 @@ int Menu::displayOptions(sf::RenderWindow& window, sf::Music& music, int& volume
     volume_txt.setFillColor(sf::Color::White);
     volume_txt.setPosition((float)((win_x - volume_txt.getLocalBounds().width) / 2),
                            (float)((win_y - volume_txt.getLocalBounds().height) / 1.8));
+
+    sf::RectangleShape vol_bar(sf::Vector2f(290, 6));
+    vol_bar.setFillColor(sf::Color::White);
+    vol_bar.setPosition((float)((win_x - vol_bar.getLocalBounds().width) / 2),
+        (float)((win_y - vol_bar.getLocalBounds().height) / 1.6));
     
     sf::Text volume_num_txt("", font);
     std::string vol = std::to_string(volume);
@@ -144,13 +149,8 @@ int Menu::displayOptions(sf::RenderWindow& window, sf::Music& music, int& volume
     volume_num_txt.setString(vol.append("%"));
     volume_num_txt.setCharacterSize(20);
     volume_num_txt.setFillColor(sf::Color::White);
-    volume_num_txt.setPosition((float)((win_x - volume_num_txt.getLocalBounds().width) / 1.5),
-                               (float)((win_y - volume_num_txt.getLocalBounds().height) / 1.615));
-
-    sf::RectangleShape vol_bar(sf::Vector2f(290, 6));
-    vol_bar.setFillColor(sf::Color::White);
-    vol_bar.setPosition((float)((win_x - vol_bar.getLocalBounds().width) / 2),
-                        (float)((win_y - vol_bar.getLocalBounds().height) / 1.6));
+    volume_num_txt.setPosition((float)(((win_x - vol_bar.getLocalBounds().width) / 2) + +vol_bar.getLocalBounds().width + 35),
+                               (float)((win_y - volume_num_txt.getLocalBounds().height) / 1.61));
 
     sf::RectangleShape vol_knob(sf::Vector2f(10, 25));
     vol_knob.setOrigin(5, 13);
