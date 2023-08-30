@@ -36,7 +36,7 @@
     <ClCompile Include="Gameplay.cpp">
       <Filter>Source Files\Screens</Filter>
     </ClCompile>
-    <ClCompile Include="MenuBackend.cpp">
+    <ClCompile Include="Externs.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -54,9 +54,6 @@
       <Filter>Header Files\Screens</Filter>
     </ClInclude>
     <ClInclude Include="Externs.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="MenuBackend.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
