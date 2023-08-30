@@ -11,13 +11,21 @@
 using namespace std;
 
 int main() {
-    sf::RenderWindow window(sf::VideoMode(1280, 720), "Nebulon", sf::Style::Close);
+    string res = readFromFile("resolution");
+    // set resolution data
+    int window_x = stoi(res.substr(0, res.find('x')));
+    int window_y = stoi(res.substr(res.find('x') + 1));
 
+    sf::RenderWindow window(sf::VideoMode(window_x, window_y), "Nebulon", sf::Style::Close);
+
+    // get music and play
     sf::Music title_theme;
     if (!title_theme.openFromFile("../Resources/Audio/title_theme.ogg")) {
         cerr << "Music file missing or improperly placed" << endl;
     }
 
+    int volume = stoi(readFromFile("volume"));
+    title_theme.setVolume((float)volume);
     title_theme.play();
 
     Menu menu;
@@ -26,7 +34,6 @@ int main() {
     Highscore highscore;
 
     int go = GO_MAIN_MENU; //which screen to go to
-    int main_volume = 100;
 
     while (window.isOpen()) {
 
@@ -37,7 +44,7 @@ int main() {
             break;
         case GO_OPTIONS_MENU:
             cout << "Going to options menu" << endl;
-            go = menu.displayOptions(window, title_theme, main_volume);
+            go = menu.displayOptions(window, title_theme);
             break;
         case GO_GAMEPLAY:
             cout << "Going to gameplay" << endl;
