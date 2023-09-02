@@ -13,13 +13,19 @@ const static int GO_HIGHSCORE = 4;
 const static int QUIT = -1;
 
 /*
-* getVolumePercentage
+* calcVolPercent
 * 
 * Description: Calculates the volume with respect to the pixel position of the volume bar.
 * Parameters: int knob_pos: x-coordinate pixel position of the volume knob
-*			  int window_x: x-axis width of the window
+*			  float window_x: x-axis width of the window
 */
-int getVolumePercentage(int knob_pos, int window_x);
+float calcVolPercent(float knob_pos, float offset);
+
+/*
+* Description: Translates the volume percentage into a string fit for display.
+* Parameters: float num: the integer form of the volume percentage
+*/
+std::string getVolPercentString(float num);
 
 
 /*

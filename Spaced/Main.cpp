@@ -24,7 +24,7 @@ int main() {
         cerr << "Music file missing or improperly placed" << endl;
     }
 
-    int volume = stoi(readFromFile("volume"));
+    int volume = stoi(readFromFile("main_volume"));
     title_theme.setVolume((float)volume);
     title_theme.play();
 
