@@ -151,17 +151,67 @@ int Menu::displayOptions(sf::RenderWindow& window, sf::Music& music) {
     mvol_num_txt.setString(getVolPercentString(mvol_num));
     mvol_num_txt.setCharacterSize(20);
     mvol_num_txt.setFillColor(sf::Color::White);
-    mvol_num_txt.setPosition(((win_x - mvol_bar.getLocalBounds().width) / 2) + mvol_bar.getLocalBounds().width + 35,
+    mvol_num_txt.setPosition(((win_x - mvol_bar.getLocalBounds().width) / 2) + mvol_bar.getLocalBounds().width + 25,
                               (win_y - mvol_num_txt.getLocalBounds().height) / 1.91f);
 
     sf::RectangleShape mvol_knob(sf::Vector2f(10, 25));
     mvol_knob.setOrigin(5, 13);
     mvol_knob.setFillColor(sf::Color::Magenta);
 
-    mvol_knob.setPosition(((win_x - mvol_bar.getLocalBounds().width) / 2) + (mvol_bar.getLocalBounds().width * ((float)mvol_num / 100)),
+    mvol_knob.setPosition(((win_x - mvol_bar.getLocalBounds().width) / 2) + (mvol_bar.getLocalBounds().width * (mvol_num / 100)),
                            (win_y - mvol_bar.getLocalBounds().height) / 1.89f);
 
-    //sf::Text 
+    sf::Text svol_txt("SFX Volume", font);
+    svol_txt.setCharacterSize(25);
+    svol_txt.setFillColor(sf::Color::White);
+    svol_txt.setPosition(((win_x - svol_txt.getLocalBounds().width) / 1.51f),
+                          (win_y - svol_txt.getLocalBounds().height) / 1.72f);
+
+    sf::RectangleShape svol_bar(sf::Vector2f(230, 6));
+    svol_bar.setFillColor(sf::Color::White);
+    svol_bar.setPosition(((win_x - svol_bar.getLocalBounds().width) / 1.5f),
+                          (win_y - svol_bar.getLocalBounds().height) / 1.59f);
+
+    float svol_num = stof(readFromFile("sfx_volume"));
+    sf::Text svol_num_txt(std::to_string(svol_num), font);
+    svol_num_txt.setString(getVolPercentString(svol_num));
+    svol_num_txt.setCharacterSize(20);
+    svol_num_txt.setFillColor(sf::Color::White);
+    svol_num_txt.setPosition(((win_x - svol_bar.getLocalBounds().width) / 1.5f) + svol_bar.getLocalBounds().width + 25,
+                              (win_y - svol_num_txt.getLocalBounds().height) / 1.598f);
+
+    sf::RectangleShape svol_knob(sf::Vector2f(10, 25));
+    svol_knob.setOrigin(5, 13);
+    svol_knob.setFillColor(sf::Color::Magenta);
+
+    svol_knob.setPosition(((win_x - svol_bar.getLocalBounds().width) / 1.5f) + (svol_bar.getLocalBounds().width * (svol_num / 100)),
+                           (win_y - svol_bar.getLocalBounds().height) / 1.585f);
+
+    sf::Text muvol_txt("Music Volume", font);
+    muvol_txt.setCharacterSize(25);
+    muvol_txt.setFillColor(sf::Color::White);
+    muvol_txt.setPosition(((win_x - muvol_txt.getLocalBounds().width) / 2.97f),
+                          (win_y - muvol_txt.getLocalBounds().height) / 1.72f);
+
+    sf::RectangleShape muvol_bar(sf::Vector2f(230, 6));
+    muvol_bar.setFillColor(sf::Color::White);
+    muvol_bar.setPosition(((win_x - muvol_bar.getLocalBounds().width) / 3),
+                          (win_y - muvol_bar.getLocalBounds().height) / 1.59f);
+
+    float muvol_num = stof(readFromFile("music_volume"));
+    sf::Text muvol_num_txt(std::to_string(muvol_num), font);
+    muvol_num_txt.setString(getVolPercentString(muvol_num));
+    muvol_num_txt.setCharacterSize(20);
+    muvol_num_txt.setFillColor(sf::Color::White);
+    muvol_num_txt.setPosition(((win_x - muvol_bar.getLocalBounds().width) / 3) + muvol_bar.getLocalBounds().width + 25,
+                              (win_y - muvol_num_txt.getLocalBounds().height) / 1.598f);
+
+    sf::RectangleShape muvol_knob(sf::Vector2f(10, 25));
+    muvol_knob.setOrigin(5, 13);
+    muvol_knob.setFillColor(sf::Color::Magenta);
+
+    muvol_knob.setPosition(((win_x - muvol_bar.getLocalBounds().width) / 3) + (muvol_bar.getLocalBounds().width * (muvol_num / 100)),
+                           (win_y - muvol_bar.getLocalBounds().height) / 1.585f);
 
     sf::Text bind_txt("Key Bindings", font);
     bind_txt.setCharacterSize(30);
@@ -258,10 +308,22 @@ int Menu::displayOptions(sf::RenderWindow& window, sf::Music& music) {
             window.clear();
             window.draw(background);
             window.draw(options_txt);
+
             window.draw(mvol_txt);
-            window.draw(mvol_num_txt);
             window.draw(mvol_bar);
+            window.draw(mvol_num_txt);
             window.draw(mvol_knob);
+
+            window.draw(svol_txt);
+            window.draw(svol_bar);
+            window.draw(svol_num_txt);
+            window.draw(svol_knob);
+
+            window.draw(muvol_txt);
+            window.draw(muvol_bar);
+            window.draw(muvol_num_txt);
+            window.draw(muvol_knob);
+
             window.draw(bind_txt);
             window.draw(low_txt);
             window.draw(high_txt);
