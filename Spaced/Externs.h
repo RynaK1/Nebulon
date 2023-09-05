@@ -3,6 +3,7 @@
 #include <SFML\Graphics.hpp>
 #include <iostream>
 #include <fstream>
+#include <string>
 
 //global variables
 const static int GO_MAIN_MENU = 0;
@@ -21,11 +22,22 @@ const static int QUIT = -1;
 */
 float calcVolPercent(float knob_pos, float offset);
 
+
+/*
+* calcVolTotal
+* 
+* Description: Calculates the total volume output of either music or sfx volume by taking
+			   the main volume into consideration.
+* Parameters: string vol_type: which volume to calculate for 
+*/
+sf::Vector2f calcVolTotal();
+
+
 /*
 * Description: Translates the volume percentage into a string fit for display.
 * Parameters: float num: the integer form of the volume percentage
 */
-std::string getVolPercentString(float num);
+std::string getVolPercentString(float percent);
 
 
 /*

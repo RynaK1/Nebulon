@@ -18,15 +18,23 @@ int main() {
 
     sf::RenderWindow window(sf::VideoMode(window_x, window_y), "Nebulon", sf::Style::Close);
 
-    // get music and play
+    // sounds
     sf::Music title_theme;
     if (!title_theme.openFromFile("../Resources/Audio/title_theme.ogg")) {
-        cerr << "Music file missing or improperly placed" << endl;
+        cerr << "Title theme music file missing" << endl;
     }
 
-    int volume = stoi(readFromFile("main_volume"));
-    title_theme.setVolume((float)volume);
+    sf::Music sfx_interact;
+    if (!sfx_interact.openFromFile("../Resources/Audio/laser.ogg")) {
+        cerr << "SFX interact file missing" << endl;
+    }
+
+    sf::Vector2f sounds = calcVolTotal();
+    title_theme.setVolume(sounds.x);
     title_theme.play();
+
+    float svol = stof(readFromFile("sfx_volume"));
+    sfx_interact.setVolume(sounds.y);
 
     Menu menu;
     Gameplay gameplay;
@@ -40,11 +48,11 @@ int main() {
         switch (go) {
         case GO_MAIN_MENU:
             cout << "Going to main menu" << endl;
-            go = menu.displayMainMenu(window, title_theme);
+            go = menu.displayMainMenu(window, title_theme, sfx_interact);
             break;
         case GO_OPTIONS_MENU:
             cout << "Going to options menu" << endl;
-            go = menu.displayOptions(window, title_theme);
+            go = menu.displayOptions(window, title_theme, sfx_interact);
             break;
         case GO_GAMEPLAY:
             cout << "Going to gameplay" << endl;

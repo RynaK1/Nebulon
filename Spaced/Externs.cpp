@@ -14,12 +14,47 @@ float calcVolPercent(float knob_pos, float offset) {
 	return std::round((knob_pos - offset) / 2.3f);
 }
 
+
+/*
+* calcVolTotal
+*
+* Description: Calculates the total volume output of either music or sfx volume by taking
+			   the main volume into consideration.
+* Parameters: string vol_type: which volume to calculate for
+*/
+sf::Vector2f calcVolTotal() {
+	std::ifstream inFile("data.txt");
+	if (!inFile.is_open()) {
+		std::cerr << "Could not access data.txt (calcVolTotal)" << std::endl;
+		return sf::Vector2f();
+	}
+
+	std::string buffer;
+	std::getline(inFile, buffer);
+	buffer = buffer.substr(buffer.find('=') + 1);
+	float main = std::stof(buffer);
+
+	std::getline(inFile, buffer);
+	buffer = buffer.substr(buffer.find('=') + 1);
+	float x = main * stof(buffer) / 100;
+
+	std::getline(inFile, buffer);
+	buffer = buffer.substr(buffer.find('=') + 1);
+	float y = main * stof(buffer) / 100;
+
+	std::cout << main << " " << x << " " << y << std::endl;
+
+	inFile.close();
+	
+	return sf::Vector2f(x, y);
+}
+
 /*
 * Description: Translates the integer volume percentage into a string then removes excess
 *			   numbers and adds a percentage symbol.
 */
-std::string getVolPercentString(float num) {
-	std::string main_vol = std::to_string(num);
+std::string getVolPercentString(float percent) {
+	std::string main_vol = std::to_string(percent);
 	main_vol = main_vol.substr(0, main_vol.find('.'));
 	main_vol.append("%");
 	return main_vol;

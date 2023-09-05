@@ -1,6 +1,6 @@
 #include "Menu.h"
 
-int Menu::displayMainMenu(sf::RenderWindow& window, sf::Music& music) {
+int Menu::displayMainMenu(sf::RenderWindow& window, sf::Music& music, sf::Music& sfx) {
 
     float win_x = (float)window.getSize().x;
     float win_y = (float)window.getSize().y;
@@ -113,7 +113,7 @@ int Menu::displayMainMenu(sf::RenderWindow& window, sf::Music& music) {
 
 
 
-int Menu::displayOptions(sf::RenderWindow& window, sf::Music& music) { 
+int Menu::displayOptions(sf::RenderWindow& window, sf::Music& music, sf::Music& sfx) { 
 
     // ****************** graphic initializations ***********************
     // background
@@ -191,12 +191,12 @@ int Menu::displayOptions(sf::RenderWindow& window, sf::Music& music) {
     muvol_txt.setCharacterSize(25);
     muvol_txt.setFillColor(sf::Color::White);
     muvol_txt.setPosition(((win_x - muvol_txt.getLocalBounds().width) / 2.97f),
-                          (win_y - muvol_txt.getLocalBounds().height) / 1.72f);
+                           (win_y - muvol_txt.getLocalBounds().height) / 1.72f);
 
     sf::RectangleShape muvol_bar(sf::Vector2f(230, 6));
     muvol_bar.setFillColor(sf::Color::White);
     muvol_bar.setPosition(((win_x - muvol_bar.getLocalBounds().width) / 3),
-                          (win_y - muvol_bar.getLocalBounds().height) / 1.59f);
+                           (win_y - muvol_bar.getLocalBounds().height) / 1.59f);
 
     float muvol_num = stof(readFromFile("music_volume"));
     sf::Text muvol_num_txt(std::to_string(muvol_num), font);
@@ -204,14 +204,14 @@ int Menu::displayOptions(sf::RenderWindow& window, sf::Music& music) {
     muvol_num_txt.setCharacterSize(20);
     muvol_num_txt.setFillColor(sf::Color::White);
     muvol_num_txt.setPosition(((win_x - muvol_bar.getLocalBounds().width) / 3) + muvol_bar.getLocalBounds().width + 25,
-                              (win_y - muvol_num_txt.getLocalBounds().height) / 1.598f);
+                               (win_y - muvol_num_txt.getLocalBounds().height) / 1.598f);
 
     sf::RectangleShape muvol_knob(sf::Vector2f(10, 25));
     muvol_knob.setOrigin(5, 13);
     muvol_knob.setFillColor(sf::Color::Magenta);
 
     muvol_knob.setPosition(((win_x - muvol_bar.getLocalBounds().width) / 3) + (muvol_bar.getLocalBounds().width * (muvol_num / 100)),
-                           (win_y - muvol_bar.getLocalBounds().height) / 1.585f);
+                            (win_y - muvol_bar.getLocalBounds().height) / 1.585f);
 
     sf::Text bind_txt("Key Bindings", font);
     bind_txt.setCharacterSize(30);
@@ -254,6 +254,12 @@ int Menu::displayOptions(sf::RenderWindow& window, sf::Music& music) {
             if (buttonBounds(mousePos, mvol_knob)) {
                 mvol_knob.setFillColor(sf::Color::Red);
             }
+            else if (buttonBounds(mousePos, svol_knob)) {
+                svol_knob.setFillColor(sf::Color::Red);
+            }
+            else if (buttonBounds(mousePos, muvol_knob)) {
+                muvol_knob.setFillColor(sf::Color::Red);
+            }
             else if (buttonBounds(mousePos, bind_txt)) {
                 bind_txt.setFillColor(sf::Color::Red);
             }
@@ -268,6 +274,8 @@ int Menu::displayOptions(sf::RenderWindow& window, sf::Music& music) {
             }
             else {
                 mvol_knob.setFillColor(sf::Color::Magenta);
+                svol_knob.setFillColor(sf::Color::Magenta);
+                muvol_knob.setFillColor(sf::Color::Magenta);
                 bind_txt.setFillColor(sf::Color::White);
                 back_txt.setFillColor(sf::Color::White);
                 low_txt.setFillColor(sf::Color::White);
@@ -276,14 +284,36 @@ int Menu::displayOptions(sf::RenderWindow& window, sf::Music& music) {
 
             //mouse tracker alternative for volume slider
             if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-                if (buttonBounds(mousePos, mvol_bar)) {
-                    mvol_knob.setPosition((float)mousePos.x, (win_y - mvol_bar.getLocalBounds().height) / 1.89f);
 
+                if (buttonBounds(mousePos, mvol_bar)) {
+
+                    mvol_knob.setPosition((float)mousePos.x, (win_y - mvol_bar.getLocalBounds().height) / 1.89f);
                     mvol_num = calcVolPercent((float)mousePos.x, mvol_bar.getPosition().x);
-                    music.setVolume(mvol_num);
-                    mvol_num_txt.setString(getVolPercentString(mvol_num));
                     writeToFile(std::to_string(mvol_num), "main_volume");
+
+                    music.setVolume(calcVolTotal().x);
+                    sfx.setVolume(calcVolTotal().y);             
+                    mvol_num_txt.setString(getVolPercentString(mvol_num));
                 } 
+
+                else if (buttonBounds(mousePos, svol_bar)) {
+
+                    svol_knob.setPosition((float)mousePos.x, (win_y - svol_bar.getLocalBounds().height) / 1.585f);
+                    svol_num = calcVolPercent((float)mousePos.x, svol_bar.getPosition().x);
+                    writeToFile(std::to_string(svol_num), "sfx_volume");
+
+                    sfx.setVolume(calcVolTotal().y);
+                    svol_num_txt.setString(getVolPercentString(svol_num));
+                }
+
+                else if (buttonBounds(mousePos, muvol_bar)) {
+                    muvol_knob.setPosition((float)mousePos.x, (win_y - muvol_bar.getLocalBounds().height) / 1.585f);
+                    muvol_num = calcVolPercent((float)mousePos.x, muvol_bar.getPosition().x);
+                    writeToFile(std::to_string(muvol_num), "music_volume");
+
+                    music.setVolume(calcVolTotal().x);
+                    muvol_num_txt.setString(getVolPercentString(muvol_num));
+                }
             }
 
             if (evnt.type == sf::Event::MouseButtonPressed && evnt.mouseButton.button == sf::Mouse::Left) {   

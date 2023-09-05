@@ -30,19 +30,28 @@ int Gameplay::display(sf::RenderWindow& window, sf::Music& music) {
             }
         }
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) {
-            player.move(0.0f, -0.5f);
+        sf::Vector2f v;
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up)) {
+            v.y -= 0.4f;
         }
-        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) {
-            player.move(-0.5f, 0.0f);
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left)) {
+            v.x -= 0.4f;
         }
-        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) {
-            player.move(0.0f, 0.5f);
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down)) {
+            v.y += 0.4f;
         }
-        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) {
-            player.move(0.5f, 0.0f);
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right)) {
+            v.x += 0.4f;
         }
 
+        if (v.x != 0 && v.y != 0) {
+            v /= std::sqrt(2.0f);
+        }
+
+        
+
+        player.move(v);
+        
         window.clear();
         window.draw(background);
         window.draw(player);
