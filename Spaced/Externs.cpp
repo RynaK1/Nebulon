@@ -23,28 +23,9 @@ float calcVolPercent(float knob_pos, float offset) {
 * Parameters: string vol_type: which volume to calculate for
 */
 sf::Vector2f calcVolTotal() {
-	std::ifstream inFile("data.txt");
-	if (!inFile.is_open()) {
-		std::cerr << "Could not access data.txt (calcVolTotal)" << std::endl;
-		return sf::Vector2f();
-	}
-
-	std::string buffer;
-	std::getline(inFile, buffer);
-	buffer = buffer.substr(buffer.find('=') + 1);
-	float main = std::stof(buffer);
-
-	std::getline(inFile, buffer);
-	buffer = buffer.substr(buffer.find('=') + 1);
-	float x = main * stof(buffer) / 100;
-
-	std::getline(inFile, buffer);
-	buffer = buffer.substr(buffer.find('=') + 1);
-	float y = main * stof(buffer) / 100;
-
-	std::cout << main << " " << x << " " << y << std::endl;
-
-	inFile.close();
+	float main = stof(readFromFile("main_volume"));
+	float x = (main / 100) * stof(readFromFile("music_volume"));
+	float y = (main / 100) * stof(readFromFile("sfx_volume"));
 	
 	return sf::Vector2f(x, y);
 }

@@ -79,3 +79,9 @@ void writeToFile(std::string value, std::string key);
 * Parameters: string key: the particular option 
 */
 std::string readFromFile(std::string key);
+
+
+
+
+
+//MOST LIKELY NOT PLAYING BC TOO FAST

@@ -11,30 +11,27 @@
 using namespace std;
 
 int main() {
+    sf::Music music;
+    if (!music.openFromFile("../Resources/Audio/theme_music.ogg")) {
+        std::cerr << "Title theme music file missing" << std::endl;
+    }
+    sf::Music sfx;
+    if (!sfx.openFromFile("../Resources/Audio/sfx_laser.ogg")) {
+        std::cerr << "sfx file missing" << std::endl;
+    }
+
+    sf::Vector2f sounds = calcVolTotal();
+    music.setVolume(sounds.x);
+    sfx.setVolume(sounds.y);
+
+    music.play();
+
     string res = readFromFile("resolution");
     // set resolution data
     int window_x = stoi(res.substr(0, res.find('x')));
     int window_y = stoi(res.substr(res.find('x') + 1));
 
     sf::RenderWindow window(sf::VideoMode(window_x, window_y), "Nebulon", sf::Style::Close);
-
-    // sounds
-    sf::Music title_theme;
-    if (!title_theme.openFromFile("../Resources/Audio/title_theme.ogg")) {
-        cerr << "Title theme music file missing" << endl;
-    }
-
-    sf::Music sfx_interact;
-    if (!sfx_interact.openFromFile("../Resources/Audio/laser.ogg")) {
-        cerr << "SFX interact file missing" << endl;
-    }
-
-    sf::Vector2f sounds = calcVolTotal();
-    title_theme.setVolume(sounds.x);
-    title_theme.play();
-
-    float svol = stof(readFromFile("sfx_volume"));
-    sfx_interact.setVolume(sounds.y);
 
     Menu menu;
     Gameplay gameplay;
@@ -48,24 +45,23 @@ int main() {
         switch (go) {
         case GO_MAIN_MENU:
             cout << "Going to main menu" << endl;
-            go = menu.displayMainMenu(window, title_theme, sfx_interact);
+            go = menu.displayMainMenu(window, music, sfx);
             break;
         case GO_OPTIONS_MENU:
             cout << "Going to options menu" << endl;
-            go = menu.displayOptions(window, title_theme, sfx_interact);
+            go = menu.displayOptions(window, music, sfx);
             break;
         case GO_GAMEPLAY:
             cout << "Going to gameplay" << endl;
-            title_theme.stop();
-            go = gameplay.display(window, title_theme);
+            go = gameplay.display(window, music);
             break;
         case GO_END:
             cout << "Going to end" << endl;
-            go = end.display(window, title_theme);
+            go = end.display(window, music);
             break;
         case GO_HIGHSCORE:
             cout << "Going to highscore" << endl;
-            go = highscore.display(window, title_theme);
+            go = highscore.display(window, music);
             break;
         case QUIT:
             window.close();
