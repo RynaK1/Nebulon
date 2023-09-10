@@ -4,9 +4,10 @@
 #include <SFML\Audio.hpp>
 
 #include "Externs.h"
+#include "Gameplay_back.h"
 
 class Gameplay {
 private:
 public:
-	int display(sf::RenderWindow &window, sf::Music& music);
+	int display(sf::RenderWindow &window);
 };

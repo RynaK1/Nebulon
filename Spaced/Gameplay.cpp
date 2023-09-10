@@ -1,8 +1,28 @@
 #include "Gameplay.h"
+#include "Player.h"
 
+int Gameplay::display(sf::RenderWindow& window) {
 
-int Gameplay::display(sf::RenderWindow& window, sf::Music& music) {
+    //sound
+    sf::Music music;
+    if (!music.openFromFile("../Resources/Audio/gameplay_music.ogg")) {
+        std::cerr << "Gameplay music file missing" << std::endl;
+    }
+    sf::Music sfx;
+    if (!sfx.openFromFile("../Resources/Audio/sfx_enemy_hurt.ogg")) {
+        std::cerr << "Sfx enemy gameplay file missing" << std::endl;
+    }
 
+    sf::Vector2f sounds = calcVolTotal();
+    music.setVolume(sounds.x);
+    sfx.setVolume(sounds.y);
+
+    music.play();
+
+    //set clock
+    sf::Clock clock;
+    float time{};
+ 
     // ****************** graphic initializations ***********************
     //background
     sf::Texture bround;
@@ -10,14 +30,9 @@ int Gameplay::display(sf::RenderWindow& window, sf::Music& music) {
     sf::Sprite background(bround);
 
     //player
-    sf::RectangleShape player(sf::Vector2f(20.0f, 20.0f));
-    player.setFillColor(sf::Color::Cyan);
-    player.setOrigin(sf::Vector2f(10.0f, 10.0f));
+    Player player;
 
-    player.setPosition(10.0f, 10.0f);
-    window.draw(player);
-
-    int moving = 0;
+    window.draw(player.getSprite());
 
     while (window.isOpen()) {
 
@@ -27,35 +42,20 @@ int Gameplay::display(sf::RenderWindow& window, sf::Music& music) {
             if (evnt.type == sf::Event::Closed) {
                 window.close();
                 return QUIT;
-            }
-        }
+            } 
+        }        
 
-        sf::Vector2f v;
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up)) {
-            v.y -= 0.4f;
-        }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left)) {
-            v.x -= 0.4f;
-        }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down)) {
-            v.y += 0.4f;
-        }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right)) {
-            v.x += 0.4f;
-        }
+        player.move(time);
+        if (checkPlayerBounds()) {
 
-        if (v.x != 0 && v.y != 0) {
-            v /= std::sqrt(2.0f);
         }
-
-        
-
-        player.move(v);
         
         window.clear();
         window.draw(background);
-        window.draw(player);
+        window.draw(player.getSprite());
         window.display();
+
+        time = clock.restart().asSeconds();
     }
     return 1;
 }

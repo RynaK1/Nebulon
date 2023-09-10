@@ -53,7 +53,8 @@ int main() {
             break;
         case GO_GAMEPLAY:
             cout << "Going to gameplay" << endl;
-            go = gameplay.display(window, music);
+            music.stop();
+            go = gameplay.display(window);
             break;
         case GO_END:
             cout << "Going to end" << endl;

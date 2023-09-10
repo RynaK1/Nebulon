@@ -19,6 +19,12 @@
     <Filter Include="Header Files\Screens">
       <UniqueIdentifier>{3bd73476-10ed-475b-a992-08f307aa4ac4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Gameplay_back">
+      <UniqueIdentifier>{74e9bd1b-f269-4f81-95c8-697712a6f14e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Gameplay_back">
+      <UniqueIdentifier>{f91000e8-fb81-4728-85b3-c91aa77c1a1f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -33,11 +39,17 @@
     <ClCompile Include="Highscore.cpp">
       <Filter>Source Files\Screens</Filter>
     </ClCompile>
+    <ClCompile Include="Externs.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="Gameplay.cpp">
       <Filter>Source Files\Screens</Filter>
     </ClCompile>
-    <ClCompile Include="Externs.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Gameplay_back.cpp">
+      <Filter>Source Files\Gameplay_back</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Source Files\Gameplay_back</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -55,6 +67,12 @@
     </ClInclude>
     <ClInclude Include="Externs.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Gameplay_back.h">
+      <Filter>Header Files\Gameplay_back</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Header Files\Gameplay_back</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
