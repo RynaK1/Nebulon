@@ -1,3 +1,4 @@
+#include "Game.h"
 #include "Gameplay.h"
 #include "Player.h"
 
@@ -29,7 +30,7 @@ int Gameplay::display(sf::RenderWindow& window) {
     bround.loadFromFile("../Resources/Textures/spaceBackground.png");
     sf::Sprite background(bround);
 
-    //player
+    Game game;
     Player player;
 
     window.draw(player.getSprite());
@@ -44,12 +45,11 @@ int Gameplay::display(sf::RenderWindow& window) {
                 return QUIT;
             } 
         }        
-
-        player.move(time);
-        if (checkPlayerBounds()) {
-
-        }
         
+        sf::FloatRect pos = player.getSprite().getGlobalBounds();
+        std::array<bool, 4> bounds = game.checkPlayerBounds(pos, window.getSize());
+        player.move(time, bounds);
+
         window.clear();
         window.draw(background);
         window.draw(player.getSprite());

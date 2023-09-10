@@ -343,6 +343,7 @@ int Menu::displayOptions(sf::RenderWindow& window, sf::Music& music, sf::Music& 
                     sfx.stop();
                     sfx.play();
                     window.create(sf::VideoMode(1920, 1080), "Nebulon", sf::Style::Close);
+                    window.setPosition(sf::Vector2i(-8, -31));
                     writeToFile("1920x1080", "resolution");
                     return GO_OPTIONS_MENU;
                 }

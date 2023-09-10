@@ -2,9 +2,10 @@
 
 #include <SFML\Graphics.hpp>
 #include <SFML\Audio.hpp>
+//#include<array>
 
 #include "Externs.h"
-#include "Gameplay_back.h"
+#include "Game.h"
 
 class Gameplay {
 private:

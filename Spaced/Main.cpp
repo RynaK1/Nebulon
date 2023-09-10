@@ -32,6 +32,9 @@ int main() {
     int window_y = stoi(res.substr(res.find('x') + 1));
 
     sf::RenderWindow window(sf::VideoMode(window_x, window_y), "Nebulon", sf::Style::Close);
+    if(window_x == 1920) {
+        window.setPosition(sf::Vector2i(-8, -31));
+    }
 
     Menu menu;
     Gameplay gameplay;

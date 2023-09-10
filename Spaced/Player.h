@@ -2,6 +2,8 @@
 #include <SFML\Graphics.hpp>
 #include <iostream>
 #include <fstream>
+#include <array>
+
 #include "Externs.h"
 
 class Player {
@@ -13,5 +15,5 @@ public:
 	Player();
 	sf::Sprite getSprite();
 	void shoot();
-	void move(float time);
+	void move(float time, std::array<bool, 4> bounds);
 };
