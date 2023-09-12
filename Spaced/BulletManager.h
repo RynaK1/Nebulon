@@ -1,13 +1,16 @@
 #pragma once
 
+#include <SFML\Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <iostream>
 #include <vector>
-#include <SFML\Graphics.hpp>
 
 #include "Externs.h"
 
 class BulletManager {
 private:
+	sf::SoundBuffer sfx_buffer;
+	sf::Sound sfx;
 	std::vector<sf::Sprite> bullets;
 	std::string res;
 	sf::Texture bullet_t;
@@ -18,5 +21,5 @@ public:
 	std::vector<sf::Sprite> getBullets();
 	int getBullets_size();
 	void shoot(sf::FloatRect pos);
-	void update();
+	void updateBullets(float time);
 };

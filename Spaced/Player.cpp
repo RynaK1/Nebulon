@@ -49,11 +49,14 @@ void Player::move(float time, std::array<bool, 4> bounds) {
     player.move(vel * time);
 }
 
-void Player::update() {
-    bulletManager.update();
+void Player::updateBullets(float time) {
+    bulletManager.updateBullets(time);
 }
 
 
 void Player::shoot() {
-    bulletManager.shoot(player.getGlobalBounds());
+    if (shootCD.getElapsedTime().asSeconds() >= 0.4f) {
+        bulletManager.shoot(player.getGlobalBounds());
+        shootCD.restart();
+    }
 }

@@ -11,14 +11,17 @@
 using namespace std;
 
 int main() {
+    //audio
     sf::Music music;
     if (!music.openFromFile("../Resources/Audio/theme_music.ogg")) {
         std::cerr << "Title theme music file missing" << std::endl;
     }
-    sf::Music sfx;
-    if (!sfx.openFromFile("../Resources/Audio/sfx_laser.ogg")) {
+    sf::SoundBuffer sfx_buffer;
+    if (!sfx_buffer.loadFromFile("../Resources/Audio/sfx_laser.ogg")) {
         std::cerr << "sfx file missing" << std::endl;
     }
+    sf::Sound sfx;
+    sfx.setBuffer(sfx_buffer);
 
     sf::Vector2f sounds = calcVolTotal();
     music.setVolume(sounds.x);

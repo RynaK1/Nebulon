@@ -13,6 +13,6 @@
 class Menu {
 private:
 public:
-	int displayMainMenu(sf::RenderWindow& window, sf::Music& music, sf::Music& sfx);
-	int displayOptions(sf::RenderWindow& window, sf::Music& music, sf::Music& sfx);
+	int displayMainMenu(sf::RenderWindow& window, sf::Music& music, sf::Sound& sfx);
+	int displayOptions(sf::RenderWindow& window, sf::Music& music, sf::Sound& sfx);
 };

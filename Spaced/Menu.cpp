@@ -1,11 +1,9 @@
 #include "Menu.h"
 
-int Menu::displayMainMenu(sf::RenderWindow& window, sf::Music& music, sf::Music& sfx) {
+int Menu::displayMainMenu(sf::RenderWindow& window, sf::Music& music, sf::Sound& sfx) {
 
     float win_x = (float)window.getSize().x;
     float win_y = (float)window.getSize().y;
-
-    //sounds
     
     // ****************** graphic initializations ***********************
     sf::Texture bround;
@@ -85,22 +83,18 @@ int Menu::displayMainMenu(sf::RenderWindow& window, sf::Music& music, sf::Music&
             // button actions
             if (evnt.type == sf::Event::MouseButtonPressed && evnt.mouseButton.button == sf::Mouse::Left) {
                 if (buttonBounds(mousePos, start_txt)) {
-                    sfx.stop();
                     sfx.play();
                     return GO_GAMEPLAY;
                 }
                 else if (buttonBounds(mousePos, options_txt)) {
-                    sfx.stop();
                     sfx.play();
                     return GO_OPTIONS_MENU;
                 }
                 else if (buttonBounds(mousePos, highscores_txt)) {
-                    sfx.stop();
                     sfx.play();
                     return GO_HIGHSCORE;
                 }
                 else if (buttonBounds(mousePos, quit_txt)) {
-                    sfx.stop();
                     sfx.play();
                     return QUIT;
                 }
@@ -123,7 +117,7 @@ int Menu::displayMainMenu(sf::RenderWindow& window, sf::Music& music, sf::Music&
 
 
 
-int Menu::displayOptions(sf::RenderWindow& window, sf::Music& music, sf::Music& sfx) {
+int Menu::displayOptions(sf::RenderWindow& window, sf::Music& music, sf::Sound& sfx) {
 
     // ****************** graphic initializations ***********************
     // background
@@ -328,19 +322,16 @@ int Menu::displayOptions(sf::RenderWindow& window, sf::Music& music, sf::Music& 
 
             if (evnt.type == sf::Event::MouseButtonPressed && evnt.mouseButton.button == sf::Mouse::Left) {   
                 if (buttonBounds(mousePos, bind_txt)) {
-                    sfx.stop();
                     sfx.play();
                     //key binds
                 }
                 else if (buttonBounds(mousePos, low_txt)) {
-                    sfx.stop();
                     sfx.play();
                     window.create(sf::VideoMode(1280, 720), "Nebulon", sf::Style::Close);
                     writeToFile("1280x720", "resolution");
                     return GO_OPTIONS_MENU;
                 }
                 else if (buttonBounds(mousePos, high_txt)) {
-                    sfx.stop();
                     sfx.play();
                     window.create(sf::VideoMode(1920, 1080), "Nebulon", sf::Style::Close);
                     window.setPosition(sf::Vector2i(-8, -31));
@@ -348,7 +339,6 @@ int Menu::displayOptions(sf::RenderWindow& window, sf::Music& music, sf::Music& 
                     return GO_OPTIONS_MENU;
                 }
                 else if (buttonBounds(mousePos, back_txt)) {
-                    sfx.stop();
                     sfx.play();
                     return GO_MAIN_MENU;
                 }

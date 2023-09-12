@@ -13,11 +13,12 @@ private:
 	sf::Sprite player;
 	BulletManager bulletManager;
 	float mvmt_speed;
+	sf::Clock shootCD;
 public:
 	Player();
 	sf::Sprite getSprite();
 	BulletManager getBulletManager();
 	void shoot();
-	void update();
+	void updateBullets(float time);
 	void move(float time, std::array<bool, 4> bounds);
 };
