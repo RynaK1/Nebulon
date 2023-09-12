@@ -140,6 +140,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BulletManager.cpp" />
     <ClCompile Include="End.cpp" />
     <ClCompile Include="Externs.cpp" />
     <ClCompile Include="Gameplay.cpp" />
@@ -150,6 +151,7 @@
     <ClCompile Include="Player.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BulletManager.h" />
     <ClInclude Include="End.h" />
     <ClInclude Include="Externs.h" />
     <ClInclude Include="Gameplay.h" />

@@ -1,25 +1,29 @@
 #include "Player.h"
 
 Player::Player() {
-    if (!texture.loadFromFile("../Resources/Textures/spaceSprites.png", sf::IntRect(0, 1, 31, 27))) {
-        std::cerr << "spaceSprites.png file missing" << std::endl;
+    if (!player_t.loadFromFile("../Resources/Textures/spaceSprites.png", sf::IntRect(0, 1, 31, 27))) {
+        std::cerr << "spaceSprites.png file missing <player>" << std::endl;
     }
-    sprite.setTexture(texture);
-
+    player.setTexture(player_t);
     mvmt_speed = 600;
-    sprite.setScale(1.5, 1.5);
-    sprite.setOrigin(14, 16);
-    sprite.setPosition(640, 540);
+    player.setScale(1.5, 1.5);
+    player.setOrigin(14, 16);
+    player.setPosition(640, 540);
+
 
     if (readFromFile("resolution").compare("1920x1080") == 0) {
         mvmt_speed = 900;
-        sprite.setScale(2.25f, 2.25f);
-        sprite.setPosition(960, 810);
+        player.setScale(2.25, 2.25);
+        player.setPosition(960, 810);
     }
 }
 
 sf::Sprite Player::getSprite() {
-    return sprite;
+    return player;
+}
+
+BulletManager Player::getBulletManager() {
+    return bulletManager;
 }
 
 void Player::move(float time, std::array<bool, 4> bounds) {
@@ -42,10 +46,14 @@ void Player::move(float time, std::array<bool, 4> bounds) {
         vel /= std::sqrt(2.0f);
     }
 
-    sprite.move(vel * time);
+    player.move(vel * time);
+}
+
+void Player::update() {
+    bulletManager.update();
 }
 
 
 void Player::shoot() {
-
+    bulletManager.shoot(player.getGlobalBounds());
 }
