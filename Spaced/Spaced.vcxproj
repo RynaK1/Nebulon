@@ -142,6 +142,7 @@
   <ItemGroup>
     <ClCompile Include="BulletManager.cpp" />
     <ClCompile Include="End.cpp" />
+    <ClCompile Include="EnemyManager.cpp" />
     <ClCompile Include="Externs.cpp" />
     <ClCompile Include="Gameplay.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -153,6 +154,7 @@
   <ItemGroup>
     <ClInclude Include="BulletManager.h" />
     <ClInclude Include="End.h" />
+    <ClInclude Include="EnemyManager.h" />
     <ClInclude Include="Externs.h" />
     <ClInclude Include="Gameplay.h" />
     <ClInclude Include="Game.h" />

@@ -2,9 +2,10 @@
 
 #include <SFML\Graphics.hpp>
 #include <SFML\Audio.hpp>
-//#include<array>
 
 #include "Externs.h"
+#include "EnemyManager.h"
+#include "Player.h"
 #include "Game.h"
 
 class Gameplay {

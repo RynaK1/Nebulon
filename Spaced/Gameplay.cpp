@@ -1,6 +1,4 @@
-#include "Game.h"
 #include "Gameplay.h"
-#include "Player.h"
 
 int Gameplay::display(sf::RenderWindow& window) {
     //sound
@@ -11,6 +9,7 @@ int Gameplay::display(sf::RenderWindow& window) {
 
     sf::Vector2f sounds = calcVolTotal();
     music.setVolume(sounds.x);
+    music.play();
 
     //set clock
     sf::Clock clock;
@@ -24,6 +23,7 @@ int Gameplay::display(sf::RenderWindow& window) {
 
     Game game;
     Player player;
+    EnemyManager enemyManager;
 
     window.draw(player.getSprite());
 
@@ -37,7 +37,20 @@ int Gameplay::display(sf::RenderWindow& window) {
                 window.close();
                 return QUIT;
                 break;
+                // TESTING FOR ENEMY SPAWN <===================================================
+            case sf::Event::KeyPressed:
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::P)) {
+                    Equation eq;
+                    eq.pwr = 3;
+                    eq.horiz = -150;
+                    eq.vert = -350;
+                    eq.mult_vert = 0.005f;
+                    eq.mult_horiz = 0.25f;
+                    eq.x = 431;
+                    enemyManager.spawn(1, eq);
+                }
             }
+
         }        
         
         // player movement and boundary
@@ -45,6 +58,7 @@ int Gameplay::display(sf::RenderWindow& window) {
         std::array<bool, 4> bounds = game.checkPlayerBounds(pos, window.getSize());
         player.move(time, bounds);
         player.updateBullets(time);
+        enemyManager.updateEnemies(time);
 
         time = clock.restart().asSeconds();
 
@@ -54,11 +68,21 @@ int Gameplay::display(sf::RenderWindow& window) {
    
         window.clear();
         window.draw(background);
+
         int bullets_size = player.getBulletManager().getBullets_size();
         std::vector<sf::Sprite> bs = player.getBulletManager().getBullets();
         for (int i = 0; i < bullets_size; i++) {
             window.draw(bs[i]);
         }
+
+        int enemies_size = enemyManager.getEnemies_size();
+        std::vector<Enemy> enmies = enemyManager.getEnemies();
+        for (int i = 0; i < enemies_size; i++) {
+            //std::cout << enmies[i].getSprite().getPosition().x << " " <<
+                         //enmies[i].getSprite().getPosition().y << std::endl;
+            window.draw(enmies[i].getSprite());
+        }
+
         window.draw(player.getSprite());
         window.display();
 

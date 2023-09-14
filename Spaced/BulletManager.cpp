@@ -29,7 +29,7 @@ void BulletManager::shoot(sf::FloatRect player_pos) {
     sf::Sprite bullet;
     bullet.setTexture(bullet_t);
 
-    bullet.move(player_pos.left + 14, player_pos.top - 6);
+    bullet.setPosition(player_pos.left + 14, player_pos.top - 6);
     bullet.setScale(3, 3);
     if (res.compare("1920x1080") == 0) {
         bullet.setScale(4.5, 4.5);
@@ -42,6 +42,11 @@ void BulletManager::shoot(sf::FloatRect player_pos) {
 
 
 void BulletManager::updateBullets(float time) {
+    float speed = -750;
+    if (res == "1920x1080") {
+        speed = -1125;
+    }
+
     for (int i = 0; i < bullets_size; i++) {
         sf::Vector2f bullet_pos = bullets[i].getPosition();
 
@@ -51,7 +56,7 @@ void BulletManager::updateBullets(float time) {
             bullets_size -= 1;
         }
         else {
-            bullets[i].move(0, -750 * time);
+            bullets[i].move(0, speed * time);
         }
     }
 }

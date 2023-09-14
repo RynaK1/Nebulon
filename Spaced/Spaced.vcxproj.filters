@@ -54,6 +54,9 @@
     <ClCompile Include="BulletManager.cpp">
       <Filter>Source Files\Gameplay_back</Filter>
     </ClCompile>
+    <ClCompile Include="EnemyManager.cpp">
+      <Filter>Source Files\Gameplay_back</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Menu.h">
@@ -78,6 +81,9 @@
       <Filter>Header Files\Gameplay_back</Filter>
     </ClInclude>
     <ClInclude Include="BulletManager.h">
+      <Filter>Header Files\Gameplay_back</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyManager.h">
       <Filter>Header Files\Gameplay_back</Filter>
     </ClInclude>
   </ItemGroup>
