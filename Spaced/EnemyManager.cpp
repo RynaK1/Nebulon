@@ -44,46 +44,40 @@ void EnemyManager::spawn(int type, Equation mv) {
 
 
 void EnemyManager::updateEnemies(float time) {
+    sf::IntRect window_bound(0, 0, 1280, 720);
     int x_max = 1280;
     int y_max = 720;
     if (res.compare("1920x1080") == 0) {
+        window_bound = sf::IntRect(0, 0, 1920, 1080);
         x_max = 1920;
         y_max = 1080;
     }
 
     for (int i = 0; i < enemies_size; i++) {
         Equation mv = enemies[i].getMvmt();
-        enemies[i].setEqX(mv.x + 1);
-        mv.x += 1;
+        sf::Sprite sprite = enemies[i].getSprite();
+
+        enemies[i].setEqX(mv.x + 150 * time);
+        //mv.x += 150 * time;
         float he = pow((mv.mult_horiz * mv.x) + mv.horiz, mv.pwr);
         float result = (he * mv.mult_vert) + mv.vert;
-        enemies[i].getSprite().setPosition(mv.x, -result);
+        sprite.setPosition(mv.x, -result);
+        enemies[i].setSprite(sprite);
 
-        switch (enemies[i].getType()) {
-        case 1:
-            if (mv.x <= -23 || mv.x >= x_max + 23 ||
-                result >= 28 || result <= -y_max - 28) {
-                enemies.erase(enemies.begin() + i);
-                i -= 1;
-                enemies_size -= 1;
-            }
-            break;
-        case 2:
-            if (mv.x <= -30 || mv.x >= x_max + 30 ||
-                result >= 29 || result <= -y_max - 29) {
-                enemies.erase(enemies.begin() + i);
-                i -= 1;
-                enemies_size -= 1;
-            }
-            break;
-        default:
-            break;
+        if (!window_bound.intersects((sf::IntRect)enemies[i].getSprite().getGlobalBounds())) {
+            enemies.erase(enemies.begin() + i);
+            i -= 1;
+            enemies_size -= 1;
         }
+        std::cout << mv.x << std::endl;
     }
-
-    std::cout << enemies_size << std::endl;
 }
 
+
+
+void Enemy::setSprite(sf::Sprite sprite) {
+    this->sprite = sprite;
+}
 
 
 void Enemy::setEqX(float x) {

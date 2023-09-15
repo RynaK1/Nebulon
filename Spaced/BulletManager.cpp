@@ -29,7 +29,7 @@ void BulletManager::shoot(sf::FloatRect player_pos) {
     sf::Sprite bullet;
     bullet.setTexture(bullet_t);
 
-    bullet.setPosition(player_pos.left + 14, player_pos.top - 6);
+    bullet.setPosition(player_pos.left + 18, player_pos.top - 6);
     bullet.setScale(3, 3);
     if (res.compare("1920x1080") == 0) {
         bullet.setScale(4.5, 4.5);

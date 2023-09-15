@@ -49,6 +49,26 @@ int Gameplay::display(sf::RenderWindow& window) {
                     eq.x = 431;
                     enemyManager.spawn(1, eq);
                 }
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::O)) {
+                    Equation eq;
+                    eq.pwr = 2;
+                    eq.horiz = -25;
+                    eq.vert = -650;
+                    eq.mult_vert = 1.5f;
+                    eq.mult_horiz = 0.05f;
+                    eq.x = 83;
+                    enemyManager.spawn(2, eq);
+                }
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::I)) {
+                    Equation eq;
+                    eq.pwr = 0;
+                    eq.horiz = 0;
+                    eq.vert = -200;
+                    eq.mult_vert = 0;
+                    eq.mult_horiz = 0;
+                    eq.x = -60;
+                    enemyManager.spawn(3, eq);
+                }
             }
 
         }        
@@ -78,8 +98,6 @@ int Gameplay::display(sf::RenderWindow& window) {
         int enemies_size = enemyManager.getEnemies_size();
         std::vector<Enemy> enmies = enemyManager.getEnemies();
         for (int i = 0; i < enemies_size; i++) {
-            //std::cout << enmies[i].getSprite().getPosition().x << " " <<
-                         //enmies[i].getSprite().getPosition().y << std::endl;
             window.draw(enmies[i].getSprite());
         }
 

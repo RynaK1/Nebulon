@@ -22,6 +22,7 @@ protected:
 	Equation mvmt;
 	int type;
 public:
+	void setSprite(sf::Sprite sprite);
 	void setEqX(float x);
 	int getType();
 	Equation getMvmt();
