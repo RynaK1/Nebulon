@@ -42,15 +42,18 @@ void BulletManager::shoot(sf::FloatRect player_pos) {
 
 
 void BulletManager::updateBullets(float time) {
+    sf::IntRect window_bound(0, 0, 1280, 720);
     float speed = -750;
     if (res == "1920x1080") {
+        window_bound = sf::IntRect(0, 0, 1920, 1080);
         speed = -1125;
+
     }
 
     for (int i = 0; i < bullets_size; i++) {
         sf::Vector2f bullet_pos = bullets[i].getPosition();
 
-        if (bullet_pos.y <= -6) {
+        if (!window_bound.intersects((sf::IntRect)bullets[i].getGlobalBounds())) {
             bullets.erase(bullets.begin() + i);
             i -= 1;
             bullets_size -= 1;

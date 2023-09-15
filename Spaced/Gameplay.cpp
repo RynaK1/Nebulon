@@ -41,31 +41,31 @@ int Gameplay::display(sf::RenderWindow& window) {
             case sf::Event::KeyPressed:
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::P)) {
                     Equation eq;
-                    eq.pwr = 3;
-                    eq.horiz = -150;
-                    eq.vert = -350;
-                    eq.mult_vert = 0.005f;
-                    eq.mult_horiz = 0.25f;
+                    eq.pt = 3;
+                    eq.xt = -150;
+                    eq.yt = -350;
+                    eq.m_xt = 0.25f;
+                    eq.m_yt = 0.005f;
                     eq.x = 431;
                     enemyManager.spawn(1, eq);
                 }
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::O)) {
                     Equation eq;
-                    eq.pwr = 2;
-                    eq.horiz = -25;
-                    eq.vert = -650;
-                    eq.mult_vert = 1.5f;
-                    eq.mult_horiz = 0.05f;
+                    eq.pt = 2;
+                    eq.xt = -25;
+                    eq.yt = -650;
+                    eq.m_xt = 0.05f;
+                    eq.m_yt = 1.5f;
                     eq.x = 83;
                     enemyManager.spawn(2, eq);
                 }
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::I)) {
                     Equation eq;
-                    eq.pwr = 0;
-                    eq.horiz = 0;
-                    eq.vert = -200;
-                    eq.mult_vert = 0;
-                    eq.mult_horiz = 0;
+                    eq.pt = 0;
+                    eq.xt = 0;
+                    eq.yt = -200;
+                    eq.m_xt = 0;
+                    eq.m_yt = 0;
                     eq.x = -60;
                     enemyManager.spawn(3, eq);
                 }

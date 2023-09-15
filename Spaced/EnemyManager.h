@@ -7,11 +7,11 @@
 #include "Externs.h"
 
 struct Equation {
-	float pwr;
-	float horiz;
-	float vert;
-	float mult_vert;
-	float mult_horiz;
+	float pt;
+	float xt;
+	float yt;
+	float m_xt;
+	float m_yt;
 	float x;
 };
 
@@ -22,6 +22,7 @@ protected:
 	Equation mvmt;
 	int type;
 public:
+	Enemy();
 	void setSprite(sf::Sprite sprite);
 	void setEqX(float x);
 	int getType();
