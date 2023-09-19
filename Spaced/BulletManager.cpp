@@ -20,6 +20,7 @@ std::vector<sf::Sprite> BulletManager::getBullets() {
 }
 
 
+
 int BulletManager::getBullets_size() {
     return bullets_size;
 }

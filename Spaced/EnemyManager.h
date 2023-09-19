@@ -70,4 +70,5 @@ public:
 	std::vector<Enemy> getEnemies();
 	void spawn(int type, Equation mv);
 	void updateEnemies(float time);
+	void removeEnemy(int index);
 };

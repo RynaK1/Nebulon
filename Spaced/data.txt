@@ -1,4 +1,4 @@
 main_volume=100.000000
-music_volume=0.000000
-sfx_volume=100.000000
+music_volume=69.000000
+sfx_volume=97.000000
 resolution=1280x720

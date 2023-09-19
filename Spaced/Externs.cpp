@@ -1,27 +1,10 @@
 #include "Externs.h"
 
-/*
-* calcVolPercent
-*
-* Description: Calculates the position of the volume knob with respect to the volume bar
-*			   and takes into account the space between the edge of the window and volume 
-			   bar. Result is divided by the length of the volume bar length to get a
-			   percentage.
-* Parameters: int knob_pos: x-coordinate pixel position of the volume knob
-*			  float window_x: x-axis width of the window
-*/
 float calcVolPercent(float knob_pos, float offset) {
 	return std::round((knob_pos - offset) / 2.3f);
 }
 
 
-/*
-* calcVolTotal
-*
-* Description: Calculates the total volume output of either music or sfx volume by taking
-			   the main volume into consideration.
-* Parameters: string vol_type: which volume to calculate for
-*/
 sf::Vector2f calcVolTotal() {
 	float main = stof(readFromFile("main_volume"));
 	float x = (main / 100) * stof(readFromFile("music_volume"));
@@ -30,10 +13,7 @@ sf::Vector2f calcVolTotal() {
 	return sf::Vector2f(x, y);
 }
 
-/*
-* Description: Translates the integer volume percentage into a string then removes excess
-*			   numbers and adds a percentage symbol.
-*/
+
 std::string getVolPercentString(float percent) {
 	std::string main_vol = std::to_string(percent);
 	main_vol = main_vol.substr(0, main_vol.find('.'));
@@ -42,15 +22,6 @@ std::string getVolPercentString(float percent) {
 }
 
 
-/*
-* buttonBounds
-*
-* Description: Checks if the mouse position is within the boundaries of a texture using
-			   the contains method.
-*			   (overloaded function specifically for sf::Text texture)
-* Parameters: sf::Vector2i mousePos: position of the mouse
-*			  sf::Text shape: the text with which to check the boundaries
-*/
 bool buttonBounds(sf::Vector2i mousePos, sf::Text text) {
 	sf::FloatRect bound = text.getGlobalBounds();
 	if (bound.contains((float)mousePos.x, (float)mousePos.y)) {
@@ -60,15 +31,6 @@ bool buttonBounds(sf::Vector2i mousePos, sf::Text text) {
 }
 
 
-/*
-* buttonBounds
-*
-* Description: Checks if the mouse position is within the boundaries of a texture using
-			   the contains method.
-*			   (overloaded function specifically for sf::RectangleShape texture)
-* Parameters: sf::Vector2i mousePos: position of the mouse
-*			  sf::RectangleShape shape: the shape with which to check the boundaries
-*/
 bool buttonBounds(sf::Vector2i mousePos, sf::RectangleShape shape) {
 	sf::FloatRect bound = shape.getGlobalBounds();
 	bound.top -= 13;
@@ -80,15 +42,6 @@ bool buttonBounds(sf::Vector2i mousePos, sf::RectangleShape shape) {
 }
 
 
-/*
-* writeToFile
-*
-* Description: Grabs data from the file before emptying it and rewriting the values back to
-			   to the file. A particular value is changed for the wanted key while
-			   rewriting.
-* Parameters: string value: the new wanted value of the particular option
-*			  string key: the particular option
-*/
 void writeToFile(std::string value, std::string key) {
 
 	//get data from file
@@ -127,13 +80,6 @@ void writeToFile(std::string value, std::string key) {
 }
 
 
-/*
-* readFromFile
-*
-* Description: Reads through the file until the wanted key is found. The value of the key
-*			   is then returned.
-* Parameters: string key: the particular option
-*/
 std::string readFromFile(std::string key) {
 	std::ifstream inFile("data.txt");
 	if (!inFile.is_open()) {

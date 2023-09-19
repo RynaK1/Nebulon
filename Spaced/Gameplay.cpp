@@ -85,6 +85,19 @@ int Gameplay::display(sf::RenderWindow& window) {
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Keyboard::Space)) {
             player.shoot();
         }
+
+        // check collisions
+        if (game.checkPlayerCollision(player, enemyManager)) {
+            // IMPLEMENT PLAYER TO ENEMY COLLISION
+        }
+
+        std::vector<Enemy> es = enemyManager.getEnemies();
+        int enemyManager_size = enemyManager.getEnemies_size();
+        for (int i = 0; i < enemyManager_size; i++) {
+            if (game.checkEnemyCollision(es[i], player.getBulletManager())) {
+                // IMPLEMENT ENEMY TO BULLET COLLISION
+            }
+        }
    
         window.clear();
         window.draw(background);
@@ -107,3 +120,8 @@ int Gameplay::display(sf::RenderWindow& window) {
     }
     return 1;
 }
+
+
+// IMPLEMENT HEALTH
+//OPTIMIZE CHECKS FOR HITS
+//      currently n^2 for enemy to bullet       

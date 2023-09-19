@@ -22,9 +22,11 @@ sf::Sprite Player::getSprite() {
     return player;
 }
 
+
 BulletManager Player::getBulletManager() {
     return bulletManager;
 }
+
 
 void Player::move(float time, std::array<bool, 4> bounds) {
     sf::Vector2f vel;

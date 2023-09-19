@@ -5,6 +5,7 @@
 #include <fstream>
 #include <string>
 
+
 //global variables
 const static int QUIT = -1;
 const static int GO_MAIN_MENU = 0;

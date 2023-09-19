@@ -6,12 +6,11 @@
 #include "Gameplay.h"
 #include "End.h"
 #include "Highscore.h"
-#include "Externs.h"
 
 using namespace std;
 
 int main() {
-    //audio
+    // audios
     sf::Music music;
     if (!music.openFromFile("../Resources/Audio/theme_music.ogg")) {
         std::cerr << "Title theme music file missing" << std::endl;
@@ -29,14 +28,14 @@ int main() {
 
     music.play();
 
+    // window resolution
     string res = readFromFile("resolution");
-    // set resolution data
     int window_x = stoi(res.substr(0, res.find('x')));
     int window_y = stoi(res.substr(res.find('x') + 1));
 
     sf::RenderWindow window(sf::VideoMode(window_x, window_y), "Nebulon", sf::Style::Close);
     if(window_x == 1920) {
-        window.setPosition(sf::Vector2i(-8, -31));
+        window.setPosition(sf::Vector2i(-8, -31)); //position correction for HD
     }
 
     Menu menu;

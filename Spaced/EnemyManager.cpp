@@ -147,3 +147,9 @@ void EnemyManager::updateEnemies(float time) {
         }
     }
 }
+
+
+void EnemyManager::removeEnemy(int index) {
+    enemies.erase(enemies.begin() + index);
+    enemies_size -= 1;
+}

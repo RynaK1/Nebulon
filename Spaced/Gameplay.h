@@ -4,7 +4,6 @@
 #include <SFML\Audio.hpp>
 
 #include "Externs.h"
-#include "EnemyManager.h"
 #include "Player.h"
 #include "Game.h"
 

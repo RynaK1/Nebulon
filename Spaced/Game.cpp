@@ -23,3 +23,30 @@ std::array<bool, 4> Game::checkPlayerBounds(sf::FloatRect pos, sf::Vector2u win_
 
 	return bounds;
 }
+
+
+bool Game::checkPlayerCollision(Player player, EnemyManager em) { //enemy attack
+	std::vector<Enemy> enemies = em.getEnemies();
+	sf::Sprite player_s = player.getSprite();
+	int em_size = em.getEnemies_size();
+	for (int i = 0; i < em_size; i++) {
+		if (enemies[i].getSprite().getGlobalBounds().intersects(player_s.getGlobalBounds())) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+
+bool Game::checkEnemyCollision(Enemy e, BulletManager bm) {
+	std::vector<sf::Sprite> bullets = bm.getBullets();
+
+	int bullets_size = bullets.size();
+	for (int i = 0; i < bullets_size; i++) {
+		if (bullets[i].getGlobalBounds().intersects(e.getSprite().getGlobalBounds())) {
+			return true;
+		}
+	}
+	return false;
+}
