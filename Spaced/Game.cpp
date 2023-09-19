@@ -25,28 +25,25 @@ std::array<bool, 4> Game::checkPlayerBounds(sf::FloatRect pos, sf::Vector2u win_
 }
 
 
-bool Game::checkPlayerCollision(Player player, EnemyManager em) { //enemy attack
+void Game::updateCollisions(EnemyManager& em, Player& player) {
 	std::vector<Enemy> enemies = em.getEnemies();
+
+	for (int i = 0; i < enemies.size(); i++) {
+		std::vector<sf::Sprite> bullets = player.getBulletManager().getBullets();
+		for (int j = 0; j < bullets.size(); j++) {
+			if (bullets[j].getGlobalBounds().intersects(enemies[i].getSprite().getGlobalBounds())) {
+				enemies[i].setHealth(enemies[i].getHealth() - 10);
+				player.removeBullet(j);
+			}
+		}
+	}
+
 	sf::Sprite player_s = player.getSprite();
-	int em_size = em.getEnemies_size();
-	for (int i = 0; i < em_size; i++) {
+	int enemies_size = enemies.size();
+	for (int i = 0; i < enemies_size; i++) {
 		if (enemies[i].getSprite().getGlobalBounds().intersects(player_s.getGlobalBounds())) {
-			return true;
+			player.playerDamaged(10);
+			std::cout << player.getHealth() << std::endl;
 		}
 	}
-
-	return false;
-}
-
-
-bool Game::checkEnemyCollision(Enemy e, BulletManager bm) {
-	std::vector<sf::Sprite> bullets = bm.getBullets();
-
-	int bullets_size = bullets.size();
-	for (int i = 0; i < bullets_size; i++) {
-		if (bullets[i].getGlobalBounds().intersects(e.getSprite().getGlobalBounds())) {
-			return true;
-		}
-	}
-	return false;
 }

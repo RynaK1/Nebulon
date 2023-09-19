@@ -22,4 +22,5 @@ public:
 	int getBullets_size();
 	void shoot(sf::FloatRect pos);
 	void updateBullets(float time);
+	void removeBullet(int index);
 };

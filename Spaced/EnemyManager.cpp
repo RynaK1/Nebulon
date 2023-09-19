@@ -2,6 +2,7 @@
 
 Enemy::Enemy() {
     type = 0;
+    health = 0;
     mvmt.pt = 0;
     mvmt.xt = 0;
     mvmt. yt = 0;
@@ -16,6 +17,16 @@ void Enemy::setSprite(sf::Sprite sprite) {
 
 void Enemy::setEqX(float x) {
     mvmt.x = x;
+}
+
+
+void Enemy::setHealth(int health) {
+    this->health = health;
+}
+
+
+int Enemy::getHealth() {
+    return health;
 }
 
 
@@ -43,6 +54,7 @@ EnemyT1::EnemyT1(Equation mv) {
     sprite.setOrigin(12, 14);
     type = 1;
     mvmt = mv;
+    health = 15;
 }
 
 
@@ -56,6 +68,7 @@ EnemyT2::EnemyT2(Equation mv) {
     sprite.setOrigin(15, 15);
     type = 2;
     mvmt = mv;
+    health = 10;
 }
 
 
@@ -69,6 +82,7 @@ EnemyBoss::EnemyBoss(Equation mv) {
     sprite.setOrigin(91, 166);
     type = 10;
     mvmt = mv;
+    health = 100;
 }
 
 void EnemyBoss::attack() {
@@ -83,6 +97,11 @@ EnemyManager::EnemyManager() {
     enemy_boss.loadFromFile("../Resources/Textures/spaceSprites.png", sf::IntRect(0, 80, 182, 332));
     res = readFromFile("resolution");
     enemies_size = 0;
+}
+
+
+void EnemyManager::setEnemyHealth(int health, int index) {
+    enemies[index].setHealth(health);
 }
 
 
@@ -140,10 +159,11 @@ void EnemyManager::updateEnemies(float time) {
         sprite.setPosition(mv.x, -r);
         enemies[i].setSprite(sprite);
 
-        if (!window_bound.intersects((sf::IntRect)enemies[i].getSprite().getGlobalBounds())) {
-            enemies.erase(enemies.begin() + i);
+        // bound and health check
+        if (!window_bound.intersects((sf::IntRect)enemies[i].getSprite().getGlobalBounds())
+            || enemies[i].getHealth() <= 0) {
+            removeEnemy(i);
             i -= 1;
-            enemies_size -= 1;
         }
     }
 }

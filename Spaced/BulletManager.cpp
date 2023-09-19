@@ -55,12 +55,17 @@ void BulletManager::updateBullets(float time) {
         sf::Vector2f bullet_pos = bullets[i].getPosition();
 
         if (!window_bound.intersects((sf::IntRect)bullets[i].getGlobalBounds())) {
-            bullets.erase(bullets.begin() + i);
+            removeBullet(i);
             i -= 1;
-            bullets_size -= 1;
         }
         else {
             bullets[i].move(0, speed * time);
         }
     }
+}
+
+
+void BulletManager::removeBullet(int index) {
+    bullets.erase(bullets.begin() + index);
+    bullets_size -= 1;
 }

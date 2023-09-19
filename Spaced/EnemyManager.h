@@ -20,14 +20,17 @@ class Enemy {
 protected:
 	sf::Sprite sprite;
 	Equation mvmt;
+	int health;
 	int type;
 public:
 	Enemy();
 	void setSprite(sf::Sprite sprite);
 	void setEqX(float x);
+	int getHealth();
 	int getType();
 	Equation getMvmt();
 	sf::Sprite& getSprite();
+	void setHealth(int health);
 	void attack();
 };
 
@@ -66,6 +69,7 @@ private:
 	int enemies_size;
 public:
 	EnemyManager();
+	void setEnemyHealth(int health, int index);
 	int getEnemies_size();
 	std::vector<Enemy> getEnemies();
 	void spawn(int type, Equation mv);

@@ -10,13 +10,25 @@ Player::Player() {
     player.setOrigin(14, 16);
     player.setPosition(640, 540);
 
-
     if (readFromFile("resolution").compare("1920x1080") == 0) {
         mvmt_speed = 900;
         player.setScale(2.25, 2.25);
         player.setPosition(960, 810);
     }
+
+    health = 100;
 }
+
+
+void Player::setHealth(int health) {
+    this->health = health;
+}
+
+
+int Player::getHealth() {
+    return health;
+}
+
 
 sf::Sprite Player::getSprite() {
     return player;
@@ -60,5 +72,18 @@ void Player::shoot() {
     if (shootCD.getElapsedTime().asSeconds() >= 0.4f) {
         bulletManager.shoot(player.getGlobalBounds());
         shootCD.restart();
+    }
+}
+
+
+void Player::removeBullet(int index) {
+    bulletManager.removeBullet(index);
+}
+
+
+void Player::playerDamaged(int dmg) {
+    if (damagedCD.getElapsedTime().asSeconds() >= 0.5f) {
+        setHealth(health - dmg);
+        damagedCD.restart();
     }
 }
