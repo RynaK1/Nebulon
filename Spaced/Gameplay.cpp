@@ -17,12 +17,31 @@ int Gameplay::display(sf::RenderWindow& window) {
  
     // ****************** graphic initializations ***********************
     //background
-    sf::Texture bround;
-    bround.loadFromFile("../Resources/Textures/spaceBackground.png");
-    sf::Sprite background(bround);
+    sf::Texture bround_t;
+    if (!bround_t.loadFromFile("../Resources/Textures/spaceBackground.png")) {
+        std::cerr << "spaceSprites.png file missing <background>" << std::endl;
+    }
+    sf::Sprite background(bround_t);
+
+    //player
+    sf::Texture player_t;
+    if (!player_t.loadFromFile("../Resources/Textures/spaceSprites.png", sf::IntRect(0, 1, 31, 29))) {
+        std::cerr << "spaceSprites.png file missing <player>" << std::endl;
+    }
+
+    //player bullets
+    sf::Texture bullet1_t;
+    if (!bullet1_t.loadFromFile("../Resources/Textures/spaceSprites.png", sf::IntRect(7, 32, 3, 6))) {
+        std::cerr << "spaceSprites.png file missing" << std::endl;
+    }
+
+    sf::Texture bullet2_t;
+    if (!bullet2_t.loadFromFile("../Resources/Textures/spaceSprites.png", sf::IntRect(0, 32, 5, 11))) {
+        std::cerr << "spaceSprites.png file missing" << std::endl;
+    }
 
     Game game;
-    Player player;
+    Player player(player_t);
     EnemyManager enemyManager;
 
     window.draw(player.getSprite());
@@ -37,7 +56,7 @@ int Gameplay::display(sf::RenderWindow& window) {
                 window.close();
                 return QUIT;
                 break;
-                // TESTING FOR ENEMY SPAWN <===================================================
+            // TESTING FOR ENEMY SPAWN <===================================================
             case sf::Event::KeyPressed:
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::P)) {
                     Equation eq;
@@ -77,25 +96,30 @@ int Gameplay::display(sf::RenderWindow& window) {
         sf::FloatRect pos = player.getSprite().getGlobalBounds();
         std::array<bool, 4> bounds = game.checkPlayerBounds(pos, window.getSize());
         player.move(time, bounds);
+
+        // update entities
         player.updateBullets(time);
         enemyManager.updateEnemies(time);
+        game.updateCollisions(enemyManager, player);
 
         time = clock.restart().asSeconds();
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Keyboard::Space)) {
-            player.shoot();
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
+            player.shoot(bullet1_t, 1);
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::X)) {
+            player.shoot(bullet2_t, 2);
         }
 
-        game.updateCollisions(enemyManager, player);
    
         // draw updated graphics
         window.clear();
         window.draw(background);
 
-        int bullets_size = player.getBulletManager().getBullets_size();
-        std::vector<sf::Sprite> bs = player.getBulletManager().getBullets();
+        std::vector<Bullet> bullets = player.getBullets();
+        size_t bullets_size = bullets.size();
         for (int i = 0; i < bullets_size; i++) {
-            window.draw(bs[i]);
+            window.draw(bullets[i].getSprite());
         }
 
         int enemies_size = enemyManager.getEnemies_size();
@@ -111,8 +135,6 @@ int Gameplay::display(sf::RenderWindow& window) {
     return 1;
 }
 
-
-// IMPLEMENT HEALTH
 // IMPLEMENT ENEMY ATTACK
 //OPTIMIZE CHECKS FOR HITS?
 //      currently n^2 for enemy to bullet       

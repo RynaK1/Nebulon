@@ -1,19 +1,18 @@
 #include "Player.h"
 
-Player::Player() {
-    if (!player_t.loadFromFile("../Resources/Textures/spaceSprites.png", sf::IntRect(0, 1, 31, 27))) {
-        std::cerr << "spaceSprites.png file missing <player>" << std::endl;
-    }
-    player.setTexture(player_t);
+Player::Player(sf::Texture& texture) {
+    sprite.setTexture(texture);
+
     mvmt_speed = 600;
-    player.setScale(1.5, 1.5);
-    player.setOrigin(14, 16);
-    player.setPosition(640, 540);
+    sprite.setScale(1.5, 1.5);
+    sprite.setPosition(640, 540);
+    fhd = false;
 
     if (readFromFile("resolution").compare("1920x1080") == 0) {
         mvmt_speed = 900;
-        player.setScale(2.25, 2.25);
-        player.setPosition(960, 810);
+        sprite.setScale(2.25, 2.25);
+        sprite.setPosition(960, 810);
+        fhd = true;
     }
 
     health = 100;
@@ -31,13 +30,14 @@ int Player::getHealth() {
 
 
 sf::Sprite Player::getSprite() {
-    return player;
+    return sprite;
 }
 
 
-BulletManager Player::getBulletManager() {
-    return bulletManager;
+std::vector<Bullet> Player::getBullets() {
+    return bulletManager.getBullets();
 }
+
 
 
 void Player::move(float time, std::array<bool, 4> bounds) {
@@ -60,18 +60,18 @@ void Player::move(float time, std::array<bool, 4> bounds) {
         vel /= std::sqrt(2.0f);
     }
 
-    player.move(vel * time);
-}
-
-void Player::updateBullets(float time) {
-    bulletManager.updateBullets(time);
+    sprite.move(vel * time);
 }
 
 
-void Player::shoot() {
-    if (shootCD.getElapsedTime().asSeconds() >= 0.4f) {
-        bulletManager.shoot(player.getGlobalBounds());
-        shootCD.restart();
+void Player::shoot(sf::Texture& texture, int type) {
+    if (type == 1 && shoot1CD.getElapsedTime().asSeconds() >= 0.5f) {
+        bulletManager.shoot(texture, this->getGlobalBounds(), 1);
+        shoot1CD.restart();
+    }
+    else if (type == 2 && shoot2CD.getElapsedTime().asSeconds() >= 1.5f) {
+        bulletManager.shoot(texture, this->getGlobalBounds(), 2);
+        shoot2CD.restart();
     }
 }
 
@@ -81,9 +81,18 @@ void Player::removeBullet(int index) {
 }
 
 
+void Player::updateBullets(float time) {
+    bulletManager.updateBullets(time);
+}
+
+
 void Player::playerDamaged(int dmg) {
     if (damagedCD.getElapsedTime().asSeconds() >= 0.5f) {
         setHealth(health - dmg);
-        damagedCD.restart();
     }
+}
+
+
+sf::FloatRect Player::getGlobalBounds() {
+    return sprite.getGlobalBounds();
 }

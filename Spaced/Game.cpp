@@ -29,21 +29,20 @@ void Game::updateCollisions(EnemyManager& em, Player& player) {
 	std::vector<Enemy> enemies = em.getEnemies();
 
 	for (int i = 0; i < enemies.size(); i++) {
-		std::vector<sf::Sprite> bullets = player.getBulletManager().getBullets();
+		std::vector<Bullet> bullets = player.getBullets();
 		for (int j = 0; j < bullets.size(); j++) {
 			if (bullets[j].getGlobalBounds().intersects(enemies[i].getSprite().getGlobalBounds())) {
-				enemies[i].setHealth(enemies[i].getHealth() - 10);
+				em.setEnemyHealth(enemies[i].getHealth() - bullets[j].getDamage(), i);
 				player.removeBullet(j);
 			}
 		}
 	}
 
 	sf::Sprite player_s = player.getSprite();
-	int enemies_size = enemies.size();
+	size_t enemies_size = enemies.size();
 	for (int i = 0; i < enemies_size; i++) {
 		if (enemies[i].getSprite().getGlobalBounds().intersects(player_s.getGlobalBounds())) {
 			player.playerDamaged(10);
-			std::cout << player.getHealth() << std::endl;
 		}
 	}
 }
