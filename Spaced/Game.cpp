@@ -45,4 +45,5 @@ void Game::updateCollisions(EnemyManager& em, Player& player) {
 			player.playerDamaged(10);
 		}
 	}
+	std::cout << player.getHealth() << std::endl;
 }

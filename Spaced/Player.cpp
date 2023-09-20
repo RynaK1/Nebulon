@@ -89,6 +89,7 @@ void Player::updateBullets(float time) {
 void Player::playerDamaged(int dmg) {
     if (damagedCD.getElapsedTime().asSeconds() >= 0.5f) {
         setHealth(health - dmg);
+        damagedCD.restart();
     }
 }
 
