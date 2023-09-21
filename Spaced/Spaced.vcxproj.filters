@@ -36,9 +36,6 @@
     <ClCompile Include="End.cpp">
       <Filter>Source Files\Screens</Filter>
     </ClCompile>
-    <ClCompile Include="Highscore.cpp">
-      <Filter>Source Files\Screens</Filter>
-    </ClCompile>
     <ClCompile Include="Externs.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -63,9 +60,6 @@
       <Filter>Header Files\Screens</Filter>
     </ClInclude>
     <ClInclude Include="End.h">
-      <Filter>Header Files\Screens</Filter>
-    </ClInclude>
-    <ClInclude Include="Highscore.h">
       <Filter>Header Files\Screens</Filter>
     </ClInclude>
     <ClInclude Include="Gameplay.h">

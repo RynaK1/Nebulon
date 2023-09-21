@@ -1,27 +1,48 @@
 #include "Gameplay.h"
 
 int Gameplay::display(sf::RenderWindow& window) {
-    //sound
+    //set clock
+    sf::Clock clock;
+    float time{};
+
+    // ****************** audio initializations ***********************
+    sf::Vector2f sounds = calcVolTotal();
+
     sf::Music music;
     if (!music.openFromFile("../Resources/Audio/gameplay_music.ogg")) {
         std::cerr << "Gameplay music file missing" << std::endl;
     }
-
-    sf::Vector2f sounds = calcVolTotal();
     music.setVolume(sounds.x);
     music.play();
 
-    //set clock
-    sf::Clock clock;
-    float time{};
+    sf::SoundBuffer sfx_bullet_bfr;
+    sf::Sound sfx_bullet;
+    if (!sfx_bullet_bfr.loadFromFile("../Resources/Audio/sfx_laser.ogg")) {
+        std::cerr << "sfx file missing" << std::endl;
+    }
+    sfx_bullet.setBuffer(sfx_bullet_bfr);
+    sfx_bullet.setVolume(sounds.y);
+
+    sf::SoundBuffer sfx_enemy_death_bfr;
+    sf::Sound sfx_enemy_death;
+    if (!sfx_enemy_death_bfr.loadFromFile("../Resources/Audio/sfx_enemy_hurt.ogg")) {
+        std::cerr << "sfx file missing" << std::endl;
+    }
+    sfx_enemy_death.setBuffer(sfx_enemy_death_bfr);
+    sfx_enemy_death.setVolume(sounds.y);
+
  
     // ****************** graphic initializations ***********************
     //background
-    sf::Texture bround_t;
-    if (!bround_t.loadFromFile("../Resources/Textures/spaceBackground.png")) {
-        std::cerr << "spaceSprites.png file missing <background>" << std::endl;
+    float win_x = (float)window.getSize().x;
+    sf::Texture bround;
+    if (win_x == 1920) {
+        bround.loadFromFile("../Resources/Textures/BackgroundGame_FHD.png");
     }
-    sf::Sprite background(bround_t);
+    else if (win_x == 1280) {
+        bround.loadFromFile("../Resources/Textures/BackgroundGame.png");
+    }
+    sf::Sprite background(bround);
 
     //player
     sf::Texture player_t;
@@ -100,15 +121,25 @@ int Gameplay::display(sf::RenderWindow& window) {
         // update entities
         player.updateBullets(time);
         enemyManager.updateEnemies(time);
-        game.updateCollisions(enemyManager, player);
+        std::array<bool, 2> death = game.updateCollisions(enemyManager, player);
+        if (death[0] == true) { //check player death
+            return GO_END;
+        }
+        if (death[1] == true) {
+            sfx_enemy_death.play();
+        }
 
         time = clock.restart().asSeconds();
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
-            player.shoot(bullet1_t, 1);
+            if (player.shoot(bullet1_t, 1)) {
+                sfx_bullet.play();
+            }
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::X)) {
-            player.shoot(bullet2_t, 2);
+            if (player.shoot(bullet2_t, 2)) {
+                sfx_bullet.play();
+            }
         }
 
    

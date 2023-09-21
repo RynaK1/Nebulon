@@ -24,7 +24,7 @@ public:
 	int getHealth();
 	sf::Sprite getSprite();
 	std::vector<Bullet> getBullets();
-	void shoot(sf::Texture& texture, int type);
+	bool shoot(sf::Texture& texture, int type);
 	void updateBullets(float time);
 	void removeBullet(int index);
 	void move(float time, std::array<bool, 4> bounds);

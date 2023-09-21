@@ -64,15 +64,19 @@ void Player::move(float time, std::array<bool, 4> bounds) {
 }
 
 
-void Player::shoot(sf::Texture& texture, int type) {
+bool Player::shoot(sf::Texture& texture, int type) {
     if (type == 1 && shoot1CD.getElapsedTime().asSeconds() >= 0.5f) {
         bulletManager.shoot(texture, this->getGlobalBounds(), 1);
         shoot1CD.restart();
+        return true;
     }
     else if (type == 2 && shoot2CD.getElapsedTime().asSeconds() >= 1.5f) {
         bulletManager.shoot(texture, this->getGlobalBounds(), 2);
         shoot2CD.restart();
+        return true;
     }
+
+    return false;
 }
 
 

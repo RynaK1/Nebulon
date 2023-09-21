@@ -7,7 +7,12 @@ int Menu::displayMainMenu(sf::RenderWindow& window, sf::Music& music, sf::Sound&
     
     // ****************** graphic initializations ***********************
     sf::Texture bround;
-    bround.loadFromFile("../Resources/Textures/spaceBackground.png");
+    if (win_x == 1920) {
+        bround.loadFromFile("../Resources/Textures/BackgroundMenu_FHD.png");
+    }
+    else if (win_x == 1280) {
+        bround.loadFromFile("../Resources/Textures/BackgroundMenu.png");
+    }
     sf::Sprite background(bround);
 
     sf::Font font;
@@ -90,10 +95,6 @@ int Menu::displayMainMenu(sf::RenderWindow& window, sf::Music& music, sf::Sound&
                     sfx.play();
                     return GO_OPTIONS_MENU;
                 }
-                else if (buttonBounds(mousePos, highscores_txt)) {
-                    sfx.play();
-                    return GO_HIGHSCORE;
-                }
                 else if (buttonBounds(mousePos, quit_txt)) {
                     sfx.play();
                     return QUIT;
@@ -121,16 +122,21 @@ int Menu::displayOptions(sf::RenderWindow& window, sf::Music& music, sf::Sound& 
 
     // ****************** graphic initializations ***********************
     // background
+    float win_x = (float)window.getSize().x;
+    float win_y = (float)window.getSize().y;
+
     sf::Texture bround;
-    bround.loadFromFile("../Resources/Textures/spaceBackground.png");
+    if (win_x == 1920) {
+        bround.loadFromFile("../Resources/Textures/BackgroundMenu_FHD.png");
+    }
+    else if (win_x == 1280) {
+        bround.loadFromFile("../Resources/Textures/BackgroundMenu.png");
+    }
     sf::Sprite background(bround);
 
     //texts and buttons
     sf::Font font;
     font.loadFromFile("../Resources/Textures/AlfaSlabOne-Regular.ttf"); 
-
-    float win_x = (float)window.getSize().x;
-    float win_y = (float)window.getSize().y;
 
     sf::Text options_txt("Options", font);
     options_txt.setCharacterSize(45);

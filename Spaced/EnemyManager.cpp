@@ -54,7 +54,7 @@ EnemyT1::EnemyT1(Equation mv) {
     sprite.setOrigin(12, 14);
     type = 1;
     mvmt = mv;
-    health = 15;
+    health = 10;
 }
 
 
@@ -68,7 +68,7 @@ EnemyT2::EnemyT2(Equation mv) {
     sprite.setOrigin(15, 15);
     type = 2;
     mvmt = mv;
-    health = 10;
+    health = 15;
 }
 
 
@@ -159,9 +159,8 @@ void EnemyManager::updateEnemies(float time) {
         sprite.setPosition(mv.x, -r);
         enemies[i].setSprite(sprite);
 
-        // bound and health check
-        if (!window_bound.intersects((sf::IntRect)enemies[i].getSprite().getGlobalBounds())
-            || enemies[i].getHealth() <= 0) {
+        // bound check
+        if (!window_bound.intersects((sf::IntRect)enemies[i].getSprite().getGlobalBounds())) {
             removeEnemy(i);
             i -= 1;
         }

@@ -5,11 +5,20 @@
 #include "Menu.h"
 #include "Gameplay.h"
 #include "End.h"
-#include "Highscore.h"
 
 using namespace std;
 
 int main() {
+    // window resolution
+    string res = readFromFile("resolution");
+    int window_x = stoi(res.substr(0, res.find('x')));
+    int window_y = stoi(res.substr(res.find('x') + 1));
+
+    sf::RenderWindow window(sf::VideoMode(window_x, window_y), "Nebulon", sf::Style::Close);
+    if (window_x == 1920) {
+        window.setPosition(sf::Vector2i(-8, -31)); //position correction for HD
+    }
+
     // audios
     sf::Music music;
     if (!music.openFromFile("../Resources/Audio/theme_music.ogg")) {
@@ -28,20 +37,9 @@ int main() {
 
     music.play();
 
-    // window resolution
-    string res = readFromFile("resolution");
-    int window_x = stoi(res.substr(0, res.find('x')));
-    int window_y = stoi(res.substr(res.find('x') + 1));
-
-    sf::RenderWindow window(sf::VideoMode(window_x, window_y), "Nebulon", sf::Style::Close);
-    if(window_x == 1920) {
-        window.setPosition(sf::Vector2i(-8, -31)); //position correction for HD
-    }
-
     Menu menu;
     Gameplay gameplay;
     End end;
-    Highscore highscore;
 
     int go = GO_MAIN_MENU; //which screen to go to
 
@@ -65,15 +63,10 @@ int main() {
             cout << "Going to end" << endl;
             go = end.display(window, music);
             break;
-        case GO_HIGHSCORE:
-            cout << "Going to highscore" << endl;
-            go = highscore.display(window, music);
-            break;
         case QUIT:
             window.close();
             break;
         }
-
     }
 
     return 0;

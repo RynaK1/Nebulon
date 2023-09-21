@@ -1,12 +1,6 @@
 #include "BulletManager.h"
 
-BulletManager::BulletManager() {
-    if (!sfx_buffer.loadFromFile("../Resources/Audio/sfx_laser.ogg")) {
-        std::cerr << "sfx file missing" << std::endl;
-    }
-    sfx.setBuffer(sfx_buffer);
-    sfx.setVolume(calcVolTotal().y);
-    
+BulletManager::BulletManager() {   
     num_bullets = 0;
     fhd = false;
     if (readFromFile("resolution").compare("1920x1080") == 0) {
