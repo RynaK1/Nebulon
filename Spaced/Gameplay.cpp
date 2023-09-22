@@ -86,8 +86,8 @@ int Gameplay::display(sf::RenderWindow& window) {
                     eq.pt = 3;
                     eq.xt = -150;
                     eq.yt = -350;
-                    eq.m_xt = 0.25;
-                    eq.m_yt = 0.005;
+                    eq.m_xt = 0.25f;
+                    eq.m_yt = 0.005f;
                     eq.x = 432;
                     if (win_x == 1920) {
                         eq.x = 680;
@@ -100,8 +100,8 @@ int Gameplay::display(sf::RenderWindow& window) {
                     eq.pt = 2;
                     eq.xt = -25;
                     eq.yt = -650;
-                    eq.m_xt = 0.05;
-                    eq.m_yt = 1.5;
+                    eq.m_xt = 0.05f;
+                    eq.m_yt = 1.5f;
                     eq.x = 84;
                     if (win_x == 1920) {
                         eq.x = 126;

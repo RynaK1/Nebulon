@@ -143,7 +143,6 @@ void EnemyManager::spawn(int type, Equation eq) {
     }
 
     float r = (pow((eq.m_xt * eq.x) + eq.xt, eq.pt) * eq.m_yt) + eq.yt;
-    std::cout << eq.x << " " << r << std::endl;
 
     enemy.getSprite().setPosition(eq.x, -r);
     enemies.push_back(enemy);
