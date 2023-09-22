@@ -4,13 +4,13 @@ Player::Player(sf::Texture& texture) {
     sprite.setTexture(texture);
 
     mvmt_speed = 600;
-    sprite.setScale(1.5, 1.5);
+    sprite.setScale(0.25, 0.25);
     sprite.setPosition(640, 540);
     fhd = false;
 
     if (readFromFile("resolution").compare("1920x1080") == 0) {
         mvmt_speed = 900;
-        sprite.setScale(2.25, 2.25);
+        sprite.setScale(0.375, 0.375);
         sprite.setPosition(960, 810);
         fhd = true;
     }

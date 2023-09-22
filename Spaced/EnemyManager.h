@@ -6,16 +6,6 @@
 
 #include "Externs.h"
 
-struct Equation {
-	float pt;
-	float xt;
-	float yt;
-	float m_xt;
-	float m_yt;
-	float x;
-};
-
-
 class Enemy {
 protected:
 	sf::Sprite sprite;
@@ -65,14 +55,14 @@ private:
 	sf::Texture enemy_t2;
 	sf::Texture enemy_boss;
 	std::vector<Enemy> enemies;
-	std::string res;
+	bool fhd;
 	int enemies_size;
 public:
 	EnemyManager();
 	void setEnemyHealth(int health, int index);
 	int getEnemies_size();
 	std::vector<Enemy> getEnemies();
-	void spawn(int type, Equation mv);
+	void spawn(int type, Equation eq);
 	void updateEnemies(float time);
 	void removeEnemy(int index);
 };

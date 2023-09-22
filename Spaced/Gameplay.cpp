@@ -35,6 +35,8 @@ int Gameplay::display(sf::RenderWindow& window) {
     // ****************** graphic initializations ***********************
     //background
     float win_x = (float)window.getSize().x;
+    float win_y = (float)window.getSize().y;
+
     sf::Texture bround;
     if (win_x == 1920) {
         bround.loadFromFile("../Resources/Textures/BackgroundGame_FHD.png");
@@ -46,8 +48,8 @@ int Gameplay::display(sf::RenderWindow& window) {
 
     //player
     sf::Texture player_t;
-    if (!player_t.loadFromFile("../Resources/Textures/spaceSprites.png", sf::IntRect(0, 1, 31, 29))) {
-        std::cerr << "spaceSprites.png file missing <player>" << std::endl;
+    if (!player_t.loadFromFile("../Resources/Textures/ship_sprite4.png", sf::IntRect(768, 32, 227, 171))) {
+        std::cerr << "ship_sprite.png file missing <player>" << std::endl;
     }
 
     //player bullets
@@ -84,9 +86,13 @@ int Gameplay::display(sf::RenderWindow& window) {
                     eq.pt = 3;
                     eq.xt = -150;
                     eq.yt = -350;
-                    eq.m_xt = 0.25f;
-                    eq.m_yt = 0.005f;
-                    eq.x = 431;
+                    eq.m_xt = 0.25;
+                    eq.m_yt = 0.005;
+                    eq.x = 432;
+                    if (win_x == 1920) {
+                        eq.x = 680;
+                    }
+
                     enemyManager.spawn(1, eq);
                 }
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::O)) {
@@ -94,9 +100,13 @@ int Gameplay::display(sf::RenderWindow& window) {
                     eq.pt = 2;
                     eq.xt = -25;
                     eq.yt = -650;
-                    eq.m_xt = 0.05f;
-                    eq.m_yt = 1.5f;
-                    eq.x = 83;
+                    eq.m_xt = 0.05;
+                    eq.m_yt = 1.5;
+                    eq.x = 84;
+                    if (win_x == 1920) {
+                        eq.x = 126;
+                    }
+
                     enemyManager.spawn(2, eq);
                 }
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::I)) {
@@ -107,7 +117,7 @@ int Gameplay::display(sf::RenderWindow& window) {
                     eq.m_xt = 0;
                     eq.m_yt = 0;
                     eq.x = -60;
-                    enemyManager.spawn(3, eq);
+                    enemyManager.spawn(10, eq);
                 }
             }
 
@@ -166,6 +176,6 @@ int Gameplay::display(sf::RenderWindow& window) {
     return 1;
 }
 
-// IMPLEMENT ENEMY ATTACK
-//OPTIMIZE CHECKS FOR HITS?
-//      currently n^2 for enemy to bullet       
+// scale enemy movement for resolution
+// enemy movement in the -x direction
+// create class for moving objects in background

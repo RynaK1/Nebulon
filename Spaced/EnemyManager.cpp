@@ -95,7 +95,11 @@ EnemyManager::EnemyManager() {
     enemy_t1.loadFromFile("../Resources/Textures/spaceSprites.png", sf::IntRect(0, 48, 23, 28));
     enemy_t2.loadFromFile("../Resources/Textures/spaceSprites.png", sf::IntRect(25, 48, 30, 29));
     enemy_boss.loadFromFile("../Resources/Textures/spaceSprites.png", sf::IntRect(0, 80, 182, 332));
-    res = readFromFile("resolution");
+    
+    fhd = false;
+    if (readFromFile("resolution").compare("1920x1080") == 0) {
+        fhd = true;
+    }
     enemies_size = 0;
 }
 
@@ -115,23 +119,33 @@ std::vector<Enemy> EnemyManager::getEnemies() {
 }
 
 
-void EnemyManager::spawn(int type, Equation mv) {
-    Enemy enemy;
-    if (type == 1) {
-        enemy = EnemyT1(mv);
-        enemy.getSprite().setTexture(enemy_t1);
-    }
-    else if (type == 2) {
-        enemy = EnemyT2(mv);
-        enemy.getSprite().setTexture(enemy_t2);
-    }
-    else {
-        enemy = EnemyBoss(mv);
-        enemy.getSprite().setTexture(enemy_boss);
+void EnemyManager::spawn(int type, Equation eq) {
+    if (fhd == true) {
+        eq.m_yt *= 0.667f;
+        eq.xt *= 1.5;
+        eq.yt *= 1.5;
     }
 
-    float r = (pow((mv.m_xt * mv.x) + mv.xt, mv.pt) * mv.m_yt) + mv.yt;
-    enemy.getSprite().setPosition(mv.x, -r);
+    Enemy enemy;
+    switch (type) {
+    case 1:
+        enemy = EnemyT1(eq);
+        enemy.getSprite().setTexture(enemy_t1);
+        break;
+    case 2:
+        enemy = EnemyT2(eq);
+        enemy.getSprite().setTexture(enemy_t2);
+        break;
+    case 10:
+        enemy = EnemyBoss(eq);
+        enemy.getSprite().setTexture(enemy_boss);
+        break;
+    }
+
+    float r = (pow((eq.m_xt * eq.x) + eq.xt, eq.pt) * eq.m_yt) + eq.yt;
+    std::cout << eq.x << " " << r << std::endl;
+
+    enemy.getSprite().setPosition(eq.x, -r);
     enemies.push_back(enemy);
 
     enemies_size += 1;
@@ -140,23 +154,21 @@ void EnemyManager::spawn(int type, Equation mv) {
 
 void EnemyManager::updateEnemies(float time) {
     sf::IntRect window_bound(0, 0, 1280, 720);
-    int x_max = 1280;
-    int y_max = 720;
-    if (res.compare("1920x1080") == 0) {
+    float scale = 1;
+    if (fhd == true) {
         window_bound = sf::IntRect(0, 0, 1920, 1080);
-        x_max = 1920;
-        y_max = 1080;
+        scale = 1.5;
     }
 
     for (int i = 0; i < enemies_size; i++) {
-        Equation mv = enemies[i].getMvmt();
+        Equation eq = enemies[i].getMvmt();
         sf::Sprite sprite = enemies[i].getSprite();
 
-        mv.x += 150 * time;
-        enemies[i].setEqX(mv.x);
-        float r = (pow((mv.m_xt * mv.x) + mv.xt, mv.pt) * mv.m_yt) + mv.yt;
+        eq.x += (150 * scale) * time;
+        enemies[i].setEqX(eq.x);
+        float r = (pow((eq.m_xt * eq.x) + eq.xt, eq.pt) * eq.m_yt) + eq.yt;
 
-        sprite.setPosition(mv.x, -r);
+        sprite.setPosition(eq.x, -r);
         enemies[i].setSprite(sprite);
 
         // bound check
