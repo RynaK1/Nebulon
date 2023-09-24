@@ -41,6 +41,7 @@ int main() {
     Gameplay gameplay;
     End end;
 
+
     int go = GO_MAIN_MENU; //which screen to go to
 
     while (window.isOpen()) {

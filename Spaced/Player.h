@@ -9,7 +9,6 @@
 
 class Player {
 private:
-	sf::Texture texture;
 	BulletManager bulletManager;
 	sf::Sprite sprite;
 	float mvmt_speed;

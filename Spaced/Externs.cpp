@@ -1,5 +1,26 @@
 #include "Externs.h"
 
+Equation::Equation() {
+	pt = 0;
+	xt = 0;
+	yt = 0;
+	m_xt = 0;
+	m_yt = 0;
+	x = 0;
+	reverse = false;
+}
+
+
+Equation::Equation(float pt, float xt, float yt, float m_xt, float m_yt, float x, bool reverse) {
+	this->pt = pt;
+	this->xt = xt;
+	this->yt = yt;
+	this->m_xt = m_xt;
+	this->m_yt = m_yt;
+	this->x = x;
+	this->reverse = reverse;
+}
+
 float calcVolPercent(float knob_pos, float offset) {
 	return std::round((knob_pos - offset) / 2.3f);
 }

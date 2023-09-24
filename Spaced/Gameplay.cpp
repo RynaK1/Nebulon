@@ -54,20 +54,25 @@ int Gameplay::display(sf::RenderWindow& window) {
 
     //player bullets
     sf::Texture bullet1_t;
-    if (!bullet1_t.loadFromFile("../Resources/Textures/spaceSprites.png", sf::IntRect(7, 32, 3, 6))) {
+    sf::Texture bullet2_t;
+    if (!bullet1_t.loadFromFile("../Resources/Textures/spaceSprites.png", sf::IntRect(7, 32, 3, 6)) || 
+        !bullet2_t.loadFromFile("../Resources/Textures/spaceSprites.png", sf::IntRect(0, 32, 5, 11))) {
         std::cerr << "spaceSprites.png file missing" << std::endl;
     }
 
-    sf::Texture bullet2_t;
-    if (!bullet2_t.loadFromFile("../Resources/Textures/spaceSprites.png", sf::IntRect(0, 32, 5, 11))) {
-        std::cerr << "spaceSprites.png file missing" << std::endl;
+    //enemies
+    sf::Texture enemy1_t;
+    sf::Texture enemy2_t;
+    sf::Texture enemyBoss_t;
+    if (!enemy1_t.loadFromFile("../Resources/Textures/ship_sprite5.png", sf::IntRect(695, 515, 284, 118)) ||
+        !enemy2_t.loadFromFile("../Resources/Textures/ship_sprite5.png", sf::IntRect(707, 238, 256, 244)) ||
+        !enemyBoss_t.loadFromFile("../Resources/Textures/ship_sprite5.png", sf::IntRect(56, 56, 285, 188))) {
+        std::cerr << "ship_sprite5.png file missing" << std::endl;
     }
 
     Game game;
     Player player(player_t);
     EnemyManager enemyManager;
-
-    window.draw(player.getSprite());
 
     while (window.isOpen()) {
 
@@ -82,42 +87,25 @@ int Gameplay::display(sf::RenderWindow& window) {
             // TESTING FOR ENEMY SPAWN <===================================================
             case sf::Event::KeyPressed:
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::P)) {
-                    Equation eq;
-                    eq.pt = 3;
-                    eq.xt = -150;
-                    eq.yt = -350;
-                    eq.m_xt = 0.25f;
-                    eq.m_yt = 0.005f;
-                    eq.x = 432;
+                    Equation eq(3, -150, -350, 0.25f, 0.005f, 764.5f, true);
                     if (win_x == 1920) {
-                        eq.x = 680;
+                        eq.x = 1116;
                     }
 
-                    enemyManager.spawn(1, eq);
+                    enemyManager.spawn(eq, enemy1_t, 1);
                 }
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::O)) {
-                    Equation eq;
-                    eq.pt = 2;
-                    eq.xt = -25;
-                    eq.yt = -650;
-                    eq.m_xt = 0.05f;
-                    eq.m_yt = 1.5f;
-                    eq.x = 84;
+                    Equation eq(2, -25, -650, 0.05f, 1.5f, 84, false);
                     if (win_x == 1920) {
                         eq.x = 126;
                     }
 
-                    enemyManager.spawn(2, eq);
+                    enemyManager.spawn(eq, enemy2_t, 2);
                 }
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::I)) {
-                    Equation eq;
-                    eq.pt = 0;
-                    eq.xt = 0;
-                    eq.yt = -200;
-                    eq.m_xt = 0;
-                    eq.m_yt = 0;
-                    eq.x = -60;
-                    enemyManager.spawn(10, eq);
+                    Equation eq(0, 0, -200, 0, 0, -60, false);
+
+                    enemyManager.spawn(eq, enemyBoss_t, 10);
                 }
             }
 
@@ -156,26 +144,19 @@ int Gameplay::display(sf::RenderWindow& window) {
         // draw updated graphics
         window.clear();
         window.draw(background);
-
         std::vector<Bullet> bullets = player.getBullets();
         size_t bullets_size = bullets.size();
         for (int i = 0; i < bullets_size; i++) {
             window.draw(bullets[i].getSprite());
         }
-
         int enemies_size = enemyManager.getEnemies_size();
-        std::vector<Enemy> enmies = enemyManager.getEnemies();
+        std::vector<Enemy> enemies = enemyManager.getEnemies();
         for (int i = 0; i < enemies_size; i++) {
-            window.draw(enmies[i].getSprite());
+            window.draw(enemies[i].getSprite());
         }
-
         window.draw(player.getSprite());
         window.display();
 
     }
-    return 1;
+    return QUIT;
 }
-
-// scale enemy movement for resolution
-// enemy movement in the -x direction
-// create class for moving objects in background

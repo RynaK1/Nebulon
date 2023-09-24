@@ -27,7 +27,7 @@ std::array<bool, 2> Game::updateCollisions(EnemyManager& em, Player& player) {
 	sf::Sprite player_s = player.getSprite();
 	size_t enemies_size = enemies.size();
 	for (int i = 0; i < enemies_size; i++) {
-		if (enemies[i].getSprite().getGlobalBounds().intersects(player_s.getGlobalBounds()))
+		if (enemies[i].getGlobalBounds().intersects(player_s.getGlobalBounds()))
 		{
 			int health = player.getHealth() - 10;
 			if (health <= 0) {
@@ -42,7 +42,7 @@ std::array<bool, 2> Game::updateCollisions(EnemyManager& em, Player& player) {
 	for (int i = 0; i < enemies.size(); i++) {
 		std::vector<Bullet> bullets = player.getBullets();
 		for (int j = 0; j < bullets.size(); j++) {
-			if (bullets[j].getGlobalBounds().intersects(enemies[i].getSprite().getGlobalBounds())) {
+			if (bullets[j].getGlobalBounds().intersects(enemies[i].getGlobalBounds())) {
 				int health = enemies[i].getHealth() - bullets[j].getDamage();
 				if (health <= 0) {
 					em.removeEnemy(i);

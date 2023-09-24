@@ -8,7 +8,7 @@ Player::Player(sf::Texture& texture) {
     sprite.setPosition(640, 540);
     fhd = false;
 
-    if (readFromFile("resolution").compare("1920x1080") == 0) {
+    if (fhd == true) {
         mvmt_speed = 900;
         sprite.setScale(0.375, 0.375);
         sprite.setPosition(960, 810);

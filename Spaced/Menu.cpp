@@ -1,22 +1,43 @@
 #include "Menu.h"
 
 int Menu::displayMainMenu(sf::RenderWindow& window, sf::Music& music, sf::Sound& sfx) {
+    //set clock
+    sf::Clock clock;
+    float time{};
 
     float win_x = (float)window.getSize().x;
     float win_y = (float)window.getSize().y;
     
     // ****************** graphic initializations ***********************
+    //background
     sf::Texture bround;
     if (win_x == 1920) {
-        bround.loadFromFile("../Resources/Textures/BackgroundMenu_FHD.png");
+        if (!bround.loadFromFile("../Resources/Textures/BackgroundMenu_FHD.png")) {
+            std::cerr << "Could not load BackgroundMenu_FHD.png" << std::endl;
+        }
     }
     else if (win_x == 1280) {
-        bround.loadFromFile("../Resources/Textures/BackgroundMenu.png");
+        if (!bround.loadFromFile("../Resources/Textures/BackgroundMenu.png")) {
+            std::cerr << "Could not load BackgroundMenu.png" << std::endl;
+        }
     }
     sf::Sprite background(bround);
 
+    //backEntities
+    BackEntityManager backEntityManager;
+
+    sf::Texture backEntity1_t;
+    if (!backEntity1_t.loadFromFile("../Resources/Textures/ship_sprite7.png", sf::IntRect(13, 7, 537, 305))) {
+        std::cerr << "Could not load ship_sprite7.png" << std::endl;
+    }
+    Equation eq1(1, 0, -300, 1, 0.23f, 1279, true);
+    backEntityManager.spawn(eq1, backEntity1_t, 0.1f, 30.0f);
+    
+    //texts
     sf::Font font;
-    font.loadFromFile("../Resources/Textures/AlfaSlabOne-Regular.ttf"); 
+    if (!font.loadFromFile("../Resources/Textures/AlfaSlabOne-Regular.ttf")) {
+        std::cerr << "Could not load font" << std::endl;
+    }
 
     sf::Text title_txt("Nebulon", font);
     title_txt.setCharacterSize(60);
@@ -52,7 +73,6 @@ int Menu::displayMainMenu(sf::RenderWindow& window, sf::Music& music, sf::Sound&
     quit_txt.setFillColor(sf::Color::White);
     quit_txt.setPosition(((win_x - quit_txt.getLocalBounds().width) / 2.0f),
                           (win_y - quit_txt.getLocalBounds().height) / 1.32f);
-
 
     while (window.isOpen()) {
 
@@ -100,22 +120,28 @@ int Menu::displayMainMenu(sf::RenderWindow& window, sf::Music& music, sf::Sound&
                     return QUIT;
                 }
             }
-
-            window.clear();
-            window.draw(background);
-            window.draw(start_txt);
-            window.draw(options_txt);
-            window.draw(highscores_txt);
-            window.draw(title_txt);
-            window.draw(quit_txt);
-            window.display();
         }
+        backEntityManager.updateBackEntities(time);
+        time = clock.restart().asSeconds();
+
+        window.clear();
+        window.draw(background);
+        int backEntityManager_size = backEntityManager.getBackEntities_size();
+        std::vector<BackEntity> backEntities = backEntityManager.getBackEntities();
+        for (int i = 0; i < backEntityManager_size; i++) {
+            window.draw(backEntities[i].getSprite());
+        }
+        window.draw(start_txt);
+        window.draw(options_txt);
+        window.draw(highscores_txt);
+        window.draw(title_txt);
+        window.draw(quit_txt);
+        window.display();
     }
 
     std::cerr << "Error: displayMainMenu end of function return" << std::endl;
     return QUIT;
 }
-
 
 
 int Menu::displayOptions(sf::RenderWindow& window, sf::Music& music, sf::Sound& sfx) {

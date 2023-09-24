@@ -9,18 +9,19 @@
 class Enemy {
 protected:
 	sf::Sprite sprite;
-	Equation mvmt;
+	Equation equation;
 	int health;
 	int type;
 public:
 	Enemy();
-	void setSprite(sf::Sprite sprite);
+	void setPosition(float x, float y);
+	void setHealth(int health);
 	void setEqX(float x);
 	int getHealth();
 	int getType();
-	Equation getMvmt();
-	sf::Sprite& getSprite();
-	void setHealth(int health);
+	sf::FloatRect getGlobalBounds();
+	Equation getEquation();
+	sf::Sprite getSprite();
 	void attack();
 };
 
@@ -29,7 +30,7 @@ class EnemyT1 : public Enemy {
 private:
 public:
 	void attack();
-	EnemyT1(Equation mv);
+	EnemyT1(Equation eq, sf::Texture& texture, bool fhd);
 };
 
 
@@ -37,7 +38,7 @@ class EnemyT2 : public Enemy {
 private:
 public:
 	void attack();
-	EnemyT2(Equation mv);
+	EnemyT2(Equation eq, sf::Texture& texture, bool fhd);
 };
 
 
@@ -45,15 +46,12 @@ class EnemyBoss : public Enemy {
 private:
 public:
 	void attack();
-	EnemyBoss(Equation mv);
+	EnemyBoss(Equation eq, sf::Texture& texture, bool fhd);
 };
 
 
 class EnemyManager {
 private:
-	sf::Texture enemy_t1;
-	sf::Texture enemy_t2;
-	sf::Texture enemy_boss;
 	std::vector<Enemy> enemies;
 	bool fhd;
 	int enemies_size;
@@ -62,7 +60,7 @@ public:
 	void setEnemyHealth(int health, int index);
 	int getEnemies_size();
 	std::vector<Enemy> getEnemies();
-	void spawn(int type, Equation eq);
+	void spawn(Equation eq, sf::Texture& texture, int type);
 	void updateEnemies(float time);
 	void removeEnemy(int index);
 };

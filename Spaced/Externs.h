@@ -20,7 +20,11 @@ struct Equation {
 	float m_xt;
 	float m_yt;
 	float x;
+	bool reverse;
+	Equation(float pt, float xt, float yt, float m_xt, float m_yt, float x, bool reverse);
+	Equation();
 };
+
 
 /*
 * calcVolPercent

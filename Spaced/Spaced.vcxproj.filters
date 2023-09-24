@@ -54,6 +54,9 @@
     <ClCompile Include="EnemyManager.cpp">
       <Filter>Source Files\Gameplay_back</Filter>
     </ClCompile>
+    <ClCompile Include="BackEntityManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Menu.h">
@@ -79,6 +82,9 @@
     </ClInclude>
     <ClInclude Include="EnemyManager.h">
       <Filter>Header Files\Gameplay_back</Filter>
+    </ClInclude>
+    <ClInclude Include="BackEntityManager.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

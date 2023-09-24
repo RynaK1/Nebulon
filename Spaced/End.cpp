@@ -2,5 +2,5 @@
 
 int End::display(sf::RenderWindow &window, sf::Music& music) {
 
-	return 1;
+	return QUIT;
 }

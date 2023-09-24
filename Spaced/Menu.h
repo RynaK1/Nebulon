@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "Externs.h"
+#include "BackEntityManager.h"
 
 
 class Menu {
