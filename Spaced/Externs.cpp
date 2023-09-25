@@ -21,6 +21,7 @@ Equation::Equation(float pt, float xt, float yt, float m_xt, float m_yt, float x
 	this->reverse = reverse;
 }
 
+
 float calcVolPercent(float knob_pos, float offset) {
 	return std::round((knob_pos - offset) / 2.3f);
 }

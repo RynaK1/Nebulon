@@ -1,13 +1,13 @@
 #include "Menu.h"
 
-int Menu::displayMainMenu(sf::RenderWindow& window, sf::Music& music, sf::Sound& sfx) {
+int Menu::displayMainMenu(sf::RenderWindow& window, sf::Music& music, sf::Sound& sfx, BackEntityManager& backEntityManager, std::array<sf::Texture, 5>& backEntities_t) {
     //set clock
     sf::Clock clock;
     float time{};
 
     float win_x = (float)window.getSize().x;
     float win_y = (float)window.getSize().y;
-    
+
     // ****************** graphic initializations ***********************
     //background
     sf::Texture bround;
@@ -22,16 +22,6 @@ int Menu::displayMainMenu(sf::RenderWindow& window, sf::Music& music, sf::Sound&
         }
     }
     sf::Sprite background(bround);
-
-    //backEntities
-    BackEntityManager backEntityManager;
-
-    sf::Texture backEntity1_t;
-    if (!backEntity1_t.loadFromFile("../Resources/Textures/ship_sprite7.png", sf::IntRect(13, 7, 537, 305))) {
-        std::cerr << "Could not load ship_sprite7.png" << std::endl;
-    }
-    Equation eq1(1, 0, -300, 1, 0.23f, 1279, true);
-    backEntityManager.spawn(eq1, backEntity1_t, 0.1f, 30.0f);
     
     //texts
     sf::Font font;
@@ -45,7 +35,7 @@ int Menu::displayMainMenu(sf::RenderWindow& window, sf::Music& music, sf::Sound&
     title_txt.setFillColor(sf::Color::White);
     title_txt.setPosition(((win_x - title_txt.getLocalBounds().width) / 2.0f), 
                            (win_y - title_txt.getLocalBounds().height) / 3.5f);
-
+    
     sf::Text start_txt("Start", font);
     start_txt.setCharacterSize(30);
     start_txt.setStyle(sf::Text::Bold);
@@ -121,6 +111,7 @@ int Menu::displayMainMenu(sf::RenderWindow& window, sf::Music& music, sf::Sound&
                 }
             }
         }
+        backEntityManager.spawn(backEntities_t);
         backEntityManager.updateBackEntities(time);
         time = clock.restart().asSeconds();
 
@@ -144,7 +135,10 @@ int Menu::displayMainMenu(sf::RenderWindow& window, sf::Music& music, sf::Sound&
 }
 
 
-int Menu::displayOptions(sf::RenderWindow& window, sf::Music& music, sf::Sound& sfx) {
+int Menu::displayOptions(sf::RenderWindow& window, sf::Music& music, sf::Sound& sfx, BackEntityManager& backEntityManager, std::array<sf::Texture, 5>& backEntities_t) {
+    //set clock
+    sf::Clock clock;
+    float time{};
 
     // ****************** graphic initializations ***********************
     // background
@@ -361,12 +355,16 @@ int Menu::displayOptions(sf::RenderWindow& window, sf::Music& music, sf::Sound& 
                     sfx.play();
                     window.create(sf::VideoMode(1280, 720), "Nebulon", sf::Style::Close);
                     writeToFile("1280x720", "resolution");
+                    backEntityManager.setFHD(false);
+                    backEntityManager.resetBackEntities();
                     return GO_OPTIONS_MENU;
                 }
                 else if (buttonBounds(mousePos, high_txt)) {
                     sfx.play();
                     window.create(sf::VideoMode(1920, 1080), "Nebulon", sf::Style::Close);
                     window.setPosition(sf::Vector2i(-8, -31));
+                    backEntityManager.setFHD(true);
+                    backEntityManager.resetBackEntities();
                     writeToFile("1920x1080", "resolution");
                     return GO_OPTIONS_MENU;
                 }
@@ -375,32 +373,40 @@ int Menu::displayOptions(sf::RenderWindow& window, sf::Music& music, sf::Sound& 
                     return GO_MAIN_MENU;
                 }
             }
-
-            window.clear();
-            window.draw(background);
-            window.draw(options_txt);
-
-            window.draw(mvol_txt);
-            window.draw(mvol_bar);
-            window.draw(mvol_num_txt);
-            window.draw(mvol_knob);
-
-            window.draw(svol_txt);
-            window.draw(svol_bar);
-            window.draw(svol_num_txt);
-            window.draw(svol_knob);
-
-            window.draw(muvol_txt);
-            window.draw(muvol_bar);
-            window.draw(muvol_num_txt);
-            window.draw(muvol_knob);
-
-            window.draw(bind_txt);
-            window.draw(low_txt);
-            window.draw(high_txt);
-            window.draw(back_txt);
-            window.display();
         }
+        backEntityManager.spawn(backEntities_t);
+        backEntityManager.updateBackEntities(time);
+        time = clock.restart().asSeconds();
+
+        window.clear();
+        window.draw(background);
+        int backEntityManager_size = backEntityManager.getBackEntities_size();
+        std::vector<BackEntity> backEntities = backEntityManager.getBackEntities();
+        for (int i = 0; i < backEntityManager_size; i++) {
+            window.draw(backEntities[i].getSprite());
+        }
+        window.draw(options_txt);
+
+        window.draw(mvol_txt);
+        window.draw(mvol_bar);
+        window.draw(mvol_num_txt);
+        window.draw(mvol_knob);
+
+        window.draw(svol_txt);
+        window.draw(svol_bar);
+        window.draw(svol_num_txt);
+        window.draw(svol_knob);
+
+        window.draw(muvol_txt);
+        window.draw(muvol_bar);
+        window.draw(muvol_num_txt);
+        window.draw(muvol_knob);
+
+        window.draw(bind_txt);
+        window.draw(low_txt);
+        window.draw(high_txt);
+        window.draw(back_txt);
+        window.display();
     }
 
     std::cerr << "Error: displayOptionsMenu end of function return" << std::endl;

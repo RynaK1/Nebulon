@@ -11,8 +11,18 @@ BackEntity::BackEntity(Equation eq, sf::Texture& texture, bool fhd, float scale,
 }
 
 
+void BackEntity::setRotation(float r) {
+	sprite.setRotation(r);
+}
+
+
 void BackEntity::setPosition(float x, float y) {
 	sprite.setPosition(x, y);
+}
+
+
+void BackEntity::setScale(float s1, float s2) {
+	sprite.setScale(s1, s2);
 }
 
 sf::FloatRect BackEntity::getGlobalBounds() {
@@ -21,6 +31,11 @@ sf::FloatRect BackEntity::getGlobalBounds() {
 
 void BackEntity::setEqX(float x) {
 	equation.x = x;
+}
+
+
+sf::Vector2f BackEntity::getScale() {
+	return sprite.getScale();
 }
 
 
@@ -45,6 +60,15 @@ BackEntityManager::BackEntityManager() {
 		fhd = true;
 	}
 	backEntities_size = 0;
+	int flags_size = sizeof(flags);
+	for (int i = 0; i < flags_size; i++) {
+		flags[i] = false;
+	}
+}
+
+
+void BackEntityManager::setFHD(bool fhd) {
+	this->fhd = fhd;
 }
 
 
@@ -58,21 +82,33 @@ std::vector<BackEntity> BackEntityManager::getBackEntities() {
 }
 
 
-void BackEntityManager::spawn(Equation eq, sf::Texture& texture, float scale, float s) {
+void BackEntityManager::spawn(std::array<sf::Texture, 5>& backEntities_t) {
+	float eq_scale = 1;
 	if (fhd == true) {
-		eq.m_yt *= 0.667f;
-		eq.xt *= 1.5;
-		eq.yt *= 1.5;
+		eq_scale *= 1.5f;
 	}
-
-	BackEntity backEntity(eq, texture, fhd, scale, s);
 	
-	float r = (pow((eq.m_xt * eq.x) + eq.xt, eq.pt) * eq.m_yt) + eq.yt;
+	float time = clock.getElapsedTime().asSeconds();
+	if ((int)time == 0 && flags[0] == false) {
+		Equation eq1(1, 0 * eq_scale, -300 * eq_scale, 1, 0.23f * (1 / eq_scale), 1279 * eq_scale, true);
+		BackEntity backEntity1(eq1, backEntities_t[0], fhd, 0.05f, 30.0f);
+		backEntity1.setRotation(10.0f);
+		backEntities.push_back(backEntity1);
 
-	backEntity.setPosition(eq.x, -r);
-	backEntities.push_back(backEntity);
+		Equation eq2(0, 0 * eq_scale, -300 * eq_scale, 0, 0 * (1 / eq_scale), -140 * eq_scale, false);
+		BackEntity backEntity2(eq2, backEntities_t[1], fhd, 0.3f, 10.0f);
+		backEntities.push_back(backEntity2);
 
-	backEntities_size += 1;
+		backEntities_size += 2;
+		flags[0] = true;
+	}
+	else if ((int)time == 120) {
+		int flags_size = sizeof(flags);
+		for (int i = 0; i < flags_size; i++) {
+			flags[i] = false;
+		}
+		clock.restart();
+	}
 }
 
 
@@ -112,4 +148,16 @@ void BackEntityManager::updateBackEntities(float time) {
 void BackEntityManager::removeBackEntity(int i) {
 	backEntities.erase(backEntities.begin() + i);
 	backEntities_size -= 1;
+}
+
+
+void BackEntityManager::resetBackEntities() {
+	backEntities.erase(backEntities.begin(), backEntities.end());
+	clock.restart();
+	backEntities_size = 0;
+	
+	int flags_size = sizeof(flags);
+	for (int i = 0; i < flags_size; i++) {
+		flags[i] = false;
+	}
 }

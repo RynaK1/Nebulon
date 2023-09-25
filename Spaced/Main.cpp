@@ -4,6 +4,7 @@
 
 #include "Menu.h"
 #include "Gameplay.h"
+#include "BackEntityManager.h"
 #include "End.h"
 
 using namespace std;
@@ -37,10 +38,17 @@ int main() {
 
     music.play();
 
+    // BackEntities
+    std::array<sf::Texture, 5> backEntities_t;
+    if (!backEntities_t[0].loadFromFile("../Resources/Textures/ship_sprite7.png", sf::IntRect(14, 14, 525, 294)) ||
+        !backEntities_t[1].loadFromFile("../Resources/Textures/ship_sprite8.png", sf::IntRect(516, 770, 473, 164))) {
+        std::cerr << "Could not load ship sprites <BackEntity>" << std::endl;
+    }
+
     Menu menu;
     Gameplay gameplay;
     End end;
-
+    BackEntityManager backEntityManager;
 
     int go = GO_MAIN_MENU; //which screen to go to
 
@@ -49,11 +57,11 @@ int main() {
         switch (go) {
         case GO_MAIN_MENU:
             cout << "Going to main menu" << endl;
-            go = menu.displayMainMenu(window, music, sfx);
+            go = menu.displayMainMenu(window, music, sfx, backEntityManager, backEntities_t);
             break;
         case GO_OPTIONS_MENU:
             cout << "Going to options menu" << endl;
-            go = menu.displayOptions(window, music, sfx);
+            go = menu.displayOptions(window, music, sfx, backEntityManager, backEntities_t);
             break;
         case GO_GAMEPLAY:
             cout << "Going to gameplay" << endl;

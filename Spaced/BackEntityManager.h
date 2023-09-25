@@ -2,6 +2,7 @@
 
 #include <SFML\Graphics.hpp>
 #include <vector>
+#include <array>
 
 #include "Externs.h"
 
@@ -13,7 +14,10 @@ private:
 	float speed;
 public:
 	BackEntity(Equation eq, sf::Texture& texture, bool fhd, float scale, float s);
+	void setRotation(float r);
 	void setPosition(float x, float y);
+	void setScale(float s1, float s2);
+	sf::Vector2f getScale();
 	sf::FloatRect getGlobalBounds();
 	void setEqX(float x);
 	float getSpeed();
@@ -24,14 +28,21 @@ public:
 
 class BackEntityManager {
 private:
+	sf::Clock clock;
 	std::vector<BackEntity> backEntities;
 	bool fhd;
 	int backEntities_size;
+	bool flags[3];
 public:
 	BackEntityManager();
-	void spawn(Equation eq, sf::Texture& texture, float scale, float s);
 	int getBackEntities_size();
 	std::vector<BackEntity> getBackEntities();
+	void setFHD(bool fhd);
+	void spawn(std::array<sf::Texture, 5>& backEntities_t);
 	void updateBackEntities(float time);
 	void removeBackEntity(int i);
+	void resetBackEntities();
 };
+
+// USE A CLOCK TO TRACK WHEN ENTITIES SHOULD SPAWN
+// FIND ALL SPRITES TO USE
