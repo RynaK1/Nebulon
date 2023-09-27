@@ -82,27 +82,49 @@ std::vector<BackEntity> BackEntityManager::getBackEntities() {
 }
 
 
-void BackEntityManager::spawn(std::array<sf::Texture, 5>& backEntities_t) {
+void BackEntityManager::spawn(std::array<sf::Texture, 10>& backEntities_t) {
 	float eq_scale = 1;
 	if (fhd == true) {
 		eq_scale *= 1.5f;
 	}
 	
+	//ships
 	float time = clock.getElapsedTime().asSeconds();
 	if ((int)time == 0 && flags[0] == false) {
-		Equation eq1(1, 0 * eq_scale, -300 * eq_scale, 1, 0.23f * (1 / eq_scale), 1279 * eq_scale, true);
-		BackEntity backEntity1(eq1, backEntities_t[0], fhd, 0.05f, 30.0f);
-		backEntity1.setRotation(10.0f);
+		Equation eq1(0, 0 * eq_scale, -300 * eq_scale, 0, 0 * (1 / eq_scale), -140 * eq_scale, false);
+		BackEntity backEntity1(eq1, backEntities_t[1], fhd, 0.3f, 10.0f);
 		backEntities.push_back(backEntity1);
 
-		Equation eq2(0, 0 * eq_scale, -300 * eq_scale, 0, 0 * (1 / eq_scale), -140 * eq_scale, false);
-		BackEntity backEntity2(eq2, backEntities_t[1], fhd, 0.3f, 10.0f);
+		Equation eq2(0, 0 * eq_scale, -450 * eq_scale, 0, 0 * (1 / eq_scale), 1030 * eq_scale, true);
+		BackEntity backEntity2(eq2, backEntities_t[3], fhd, 0.15f, 5.0f);
 		backEntities.push_back(backEntity2);
 
-		backEntities_size += 2;
+		Equation eq3(1, 0 * eq_scale, -300 * eq_scale, 1, 0.23f * (1 / eq_scale), 1279 * eq_scale, true);
+		BackEntity backEntity3(eq3, backEntities_t[0], fhd, 0.05f, 30.0f);
+		backEntity3.setRotation(10.0f);
+		backEntities.push_back(backEntity3);
+
+
+		Equation eq4(0, 0 * eq_scale, -100 * eq_scale, 0, 0 * (1 / eq_scale), 1279 * eq_scale, true);
+		BackEntity backEntity4(eq4, backEntities_t[4], fhd, 0.5f, 20.0f);
+		backEntities.push_back(backEntity4);
+
+		Equation eq5(0, 0 * eq_scale, -200 * eq_scale, 0, 0 * (1 / eq_scale), 1279 * eq_scale, true);
+		BackEntity backEntity5(eq5, backEntities_t[5], fhd, 0.5f, 30.0f);
+		backEntities.push_back(backEntity5);
+
+		backEntities_size += 5;
 		flags[0] = true;
 	}
-	else if ((int)time == 120) {
+	else if ((int)time == 10 && flags[1] == false) {
+		Equation eq1(0, 0 * eq_scale, -260 * eq_scale, 0, 0 * (1 / eq_scale), -70 * eq_scale, false);
+		BackEntity backEntity1(eq1, backEntities_t[2], fhd, 0.22f, 10.0f);
+		backEntities.push_back(backEntity1);
+
+		backEntities_size += 1;
+		flags[1] = true;
+	}
+	else if ((int)time == 140) {
 		int flags_size = sizeof(flags);
 		for (int i = 0; i < flags_size; i++) {
 			flags[i] = false;
@@ -161,3 +183,5 @@ void BackEntityManager::resetBackEntities() {
 		flags[i] = false;
 	}
 }
+
+//INHERITANCE TO IMPLEMENT TRANSPARENT RECTS?

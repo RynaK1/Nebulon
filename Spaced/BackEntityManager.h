@@ -38,7 +38,7 @@ public:
 	int getBackEntities_size();
 	std::vector<BackEntity> getBackEntities();
 	void setFHD(bool fhd);
-	void spawn(std::array<sf::Texture, 5>& backEntities_t);
+	void spawn(std::array<sf::Texture, 10>& backEntities_t);
 	void updateBackEntities(float time);
 	void removeBackEntity(int i);
 	void resetBackEntities();

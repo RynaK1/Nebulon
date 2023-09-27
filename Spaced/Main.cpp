@@ -39,10 +39,20 @@ int main() {
     music.play();
 
     // BackEntities
-    std::array<sf::Texture, 5> backEntities_t;
+    std::array<sf::Texture, 10> backEntities_t;
+    //ships sprites
     if (!backEntities_t[0].loadFromFile("../Resources/Textures/ship_sprite7.png", sf::IntRect(14, 14, 525, 294)) ||
-        !backEntities_t[1].loadFromFile("../Resources/Textures/ship_sprite8.png", sf::IntRect(516, 770, 473, 164))) {
+        !backEntities_t[1].loadFromFile("../Resources/Textures/ship_sprite8.png", sf::IntRect(516, 770, 473, 164)) ||
+        !backEntities_t[2].loadFromFile("../Resources/Textures/ship_sprite8.png", sf::IntRect(516, 578, 473, 173)) ||
+        !backEntities_t[3].loadFromFile("../Resources/Textures/ship_sprite8.png", sf::IntRect(9, 163, 483, 163)) ||
+        !backEntities_t[4].loadFromFile("../Resources/Textures/ship_sprite8.png", sf::IntRect(14, 675, 479, 137)) ||
+        !backEntities_t[5].loadFromFile("../Resources/Textures/ship_sprite8.png", sf::IntRect(57, 537, 404, 112))) {        
         std::cerr << "Could not load ship sprites <BackEntity>" << std::endl;
+    }
+
+    //transparent sprites
+    if (!backEntities_t[6].loadFromFile("../Resources/Textures/Transparent.png", sf::IntRect(0, 0, 100, 450))) {
+        std::cerr << "Could not load transparent sprites <BackEntity>" << std::endl;
     }
 
     Menu menu;

@@ -1,6 +1,6 @@
 #include "Menu.h"
 
-int Menu::displayMainMenu(sf::RenderWindow& window, sf::Music& music, sf::Sound& sfx, BackEntityManager& backEntityManager, std::array<sf::Texture, 5>& backEntities_t) {
+int Menu::displayMainMenu(sf::RenderWindow& window, sf::Music& music, sf::Sound& sfx, BackEntityManager& backEntityManager, std::array<sf::Texture, 10>& backEntities_t) {
     //set clock
     sf::Clock clock;
     float time{};
@@ -135,7 +135,7 @@ int Menu::displayMainMenu(sf::RenderWindow& window, sf::Music& music, sf::Sound&
 }
 
 
-int Menu::displayOptions(sf::RenderWindow& window, sf::Music& music, sf::Sound& sfx, BackEntityManager& backEntityManager, std::array<sf::Texture, 5>& backEntities_t) {
+int Menu::displayOptions(sf::RenderWindow& window, sf::Music& music, sf::Sound& sfx, BackEntityManager& backEntityManager, std::array<sf::Texture, 10>& backEntities_t) {
     //set clock
     sf::Clock clock;
     float time{};
