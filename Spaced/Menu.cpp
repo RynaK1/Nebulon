@@ -1,6 +1,45 @@
 #include "Menu.h"
 
-int Menu::displayMainMenu(sf::RenderWindow& window, sf::Music& music, sf::Sound& sfx, BackEntityManager& backEntityManager, std::array<sf::Texture, 10>& backEntities_t) {
+Menu::Menu() {
+    //background/BackEntityManager
+    if (readFromFile("resolution").compare("1920x1080") == 0) {
+        background_t.loadFromFile("../Resources/Textures/BackgroundMenu_FHD.png");
+        backEntityManager = BackEntityManager(true);
+    }
+    else {
+        background_t.loadFromFile("../Resources/Textures/BackgroundMenu.png");
+        backEntityManager = BackEntityManager(false);
+    }
+    background.setTexture(background_t);
+
+    //audio
+    if (!music.openFromFile("../Resources/Audio/theme_music.ogg")) {
+        std::cerr << "Could not load theme_music.ogg" << std::endl;
+    }
+    if (!sfx_buffer.loadFromFile("../Resources/Audio/sfx_laser.ogg")) {
+        std::cerr << "Could not load sfx_laser.ogg" << std::endl;
+    }
+    sfx.setBuffer(sfx_buffer);
+
+    sf::Vector2f sounds = calcVolTotal();
+    music.setVolume(sounds.x);
+    sfx.setVolume(sounds.y);
+
+    music.play();
+
+    //ship sprites
+    if (!backEntities_t[0].loadFromFile("../Resources/Textures/ship_sprite7.png", sf::IntRect(14, 14, 525, 294)) ||
+        !backEntities_t[1].loadFromFile("../Resources/Textures/ship_sprite8.png", sf::IntRect(516, 770, 473, 164)) ||
+        !backEntities_t[2].loadFromFile("../Resources/Textures/ship_sprite8.png", sf::IntRect(516, 578, 473, 173)) ||
+        !backEntities_t[3].loadFromFile("../Resources/Textures/ship_sprite8.png", sf::IntRect(9, 163, 483, 163)) ||
+        !backEntities_t[4].loadFromFile("../Resources/Textures/ship_sprite8.png", sf::IntRect(14, 675, 479, 137)) ||
+        !backEntities_t[5].loadFromFile("../Resources/Textures/ship_sprite8.png", sf::IntRect(57, 537, 404, 112))) {
+        std::cerr << "Could not load ship sprites <BackEntity>" << std::endl;
+    }
+}
+
+
+int Menu::displayMainMenu(sf::RenderWindow& window) {
     //set clock
     sf::Clock clock;
     float time{};
@@ -9,20 +48,6 @@ int Menu::displayMainMenu(sf::RenderWindow& window, sf::Music& music, sf::Sound&
     float win_y = (float)window.getSize().y;
 
     // ****************** graphic initializations ***********************
-    //background
-    sf::Texture bround;
-    if (win_x == 1920) {
-        if (!bround.loadFromFile("../Resources/Textures/BackgroundMenu_FHD.png")) {
-            std::cerr << "Could not load BackgroundMenu_FHD.png" << std::endl;
-        }
-    }
-    else if (win_x == 1280) {
-        if (!bround.loadFromFile("../Resources/Textures/BackgroundMenu.png")) {
-            std::cerr << "Could not load BackgroundMenu.png" << std::endl;
-        }
-    }
-    sf::Sprite background(bround);
-    
     //texts
     sf::Font font;
     if (!font.loadFromFile("../Resources/Textures/AlfaSlabOne-Regular.ttf")) {
@@ -99,6 +124,7 @@ int Menu::displayMainMenu(sf::RenderWindow& window, sf::Music& music, sf::Sound&
             if (evnt.type == sf::Event::MouseButtonPressed && evnt.mouseButton.button == sf::Mouse::Left) {
                 if (buttonBounds(mousePos, start_txt)) {
                     sfx.play();
+                    music.stop();
                     return GO_GAMEPLAY;
                 }
                 else if (buttonBounds(mousePos, options_txt)) {
@@ -135,24 +161,14 @@ int Menu::displayMainMenu(sf::RenderWindow& window, sf::Music& music, sf::Sound&
 }
 
 
-int Menu::displayOptions(sf::RenderWindow& window, sf::Music& music, sf::Sound& sfx, BackEntityManager& backEntityManager, std::array<sf::Texture, 10>& backEntities_t) {
+int Menu::displayOptions(sf::RenderWindow& window) {
     //set clock
     sf::Clock clock;
     float time{};
 
     // ****************** graphic initializations ***********************
-    // background
     float win_x = (float)window.getSize().x;
     float win_y = (float)window.getSize().y;
-
-    sf::Texture bround;
-    if (win_x == 1920) {
-        bround.loadFromFile("../Resources/Textures/BackgroundMenu_FHD.png");
-    }
-    else if (win_x == 1280) {
-        bround.loadFromFile("../Resources/Textures/BackgroundMenu.png");
-    }
-    sf::Sprite background(bround);
 
     //texts and buttons
     sf::Font font;
@@ -316,18 +332,16 @@ int Menu::displayOptions(sf::RenderWindow& window, sf::Music& music, sf::Sound& 
             if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 
                 if (buttonBounds(mousePos, mvol_bar)) {
-
                     mvol_knob.setPosition((float)mousePos.x, (win_y - mvol_bar.getLocalBounds().height) / 1.89f);
                     mvol_num = calcVolPercent((float)mousePos.x, mvol_bar.getPosition().x);
                     writeToFile(std::to_string(mvol_num), "main_volume");
 
-                    music.setVolume(calcVolTotal().x);
-                    sfx.setVolume(calcVolTotal().y);             
+                    sf::Vector2f sounds = calcVolTotal();
+                    music.setVolume(sounds.x);
+                    sfx.setVolume(sounds.y);             
                     mvol_num_txt.setString(getVolPercentString(mvol_num));
                 } 
-
                 else if (buttonBounds(mousePos, svol_bar)) {
-
                     svol_knob.setPosition((float)mousePos.x, (win_y - svol_bar.getLocalBounds().height) / 1.585f);
                     svol_num = calcVolPercent((float)mousePos.x, svol_bar.getPosition().x);
                     writeToFile(std::to_string(svol_num), "sfx_volume");
@@ -335,7 +349,6 @@ int Menu::displayOptions(sf::RenderWindow& window, sf::Music& music, sf::Sound& 
                     sfx.setVolume(calcVolTotal().y);
                     svol_num_txt.setString(getVolPercentString(svol_num));
                 }
-
                 else if (buttonBounds(mousePos, muvol_bar)) {
                     muvol_knob.setPosition((float)mousePos.x, (win_y - muvol_bar.getLocalBounds().height) / 1.585f);
                     muvol_num = calcVolPercent((float)mousePos.x, muvol_bar.getPosition().x);
@@ -354,18 +367,14 @@ int Menu::displayOptions(sf::RenderWindow& window, sf::Music& music, sf::Sound& 
                 else if (buttonBounds(mousePos, low_txt)) {
                     sfx.play();
                     window.create(sf::VideoMode(1280, 720), "Nebulon", sf::Style::Close);
-                    writeToFile("1280x720", "resolution");
-                    backEntityManager.setFHD(false);
-                    backEntityManager.resetBackEntities();
+                    resolutionReset(false);
                     return GO_OPTIONS_MENU;
                 }
                 else if (buttonBounds(mousePos, high_txt)) {
                     sfx.play();
                     window.create(sf::VideoMode(1920, 1080), "Nebulon", sf::Style::Close);
                     window.setPosition(sf::Vector2i(-8, -31));
-                    backEntityManager.setFHD(true);
-                    backEntityManager.resetBackEntities();
-                    writeToFile("1920x1080", "resolution");
+                    resolutionReset(true);
                     return GO_OPTIONS_MENU;
                 }
                 else if (buttonBounds(mousePos, back_txt)) {
@@ -380,28 +389,25 @@ int Menu::displayOptions(sf::RenderWindow& window, sf::Music& music, sf::Sound& 
 
         window.clear();
         window.draw(background);
+
         int backEntityManager_size = backEntityManager.getBackEntities_size();
         std::vector<BackEntity> backEntities = backEntityManager.getBackEntities();
         for (int i = 0; i < backEntityManager_size; i++) {
             window.draw(backEntities[i].getSprite());
         }
         window.draw(options_txt);
-
         window.draw(mvol_txt);
         window.draw(mvol_bar);
         window.draw(mvol_num_txt);
         window.draw(mvol_knob);
-
         window.draw(svol_txt);
         window.draw(svol_bar);
         window.draw(svol_num_txt);
         window.draw(svol_knob);
-
         window.draw(muvol_txt);
         window.draw(muvol_bar);
         window.draw(muvol_num_txt);
         window.draw(muvol_knob);
-
         window.draw(bind_txt);
         window.draw(low_txt);
         window.draw(high_txt);
@@ -411,4 +417,15 @@ int Menu::displayOptions(sf::RenderWindow& window, sf::Music& music, sf::Sound& 
 
     std::cerr << "Error: displayOptionsMenu end of function return" << std::endl;
     return QUIT;
+}
+
+
+void Menu::resolutionReset(bool fhd) {
+    backEntityManager = BackEntityManager(fhd);
+    if (fhd == true) {
+        writeToFile("1920x1080", "resolution");
+    }
+    else {
+        writeToFile("1280x720", "resolution");
+    }
 }

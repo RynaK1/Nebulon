@@ -54,21 +54,13 @@ Equation BackEntity::getEquation() {
 
 
 
-BackEntityManager::BackEntityManager() {
-	fhd = false;
-	if (readFromFile("resolution").compare("1920x1080") == 0) {
-		fhd = true;
-	}
+BackEntityManager::BackEntityManager(bool fhd) {
+	this->fhd = fhd;
 	backEntities_size = 0;
 	int flags_size = sizeof(flags);
 	for (int i = 0; i < flags_size; i++) {
 		flags[i] = false;
 	}
-}
-
-
-void BackEntityManager::setFHD(bool fhd) {
-	this->fhd = fhd;
 }
 
 
@@ -82,7 +74,7 @@ std::vector<BackEntity> BackEntityManager::getBackEntities() {
 }
 
 
-void BackEntityManager::spawn(std::array<sf::Texture, 10>& backEntities_t) {
+void BackEntityManager::spawn(sf::Texture* backEntities_t) {
 	float eq_scale = 1;
 	if (fhd == true) {
 		eq_scale *= 1.5f;
@@ -131,6 +123,8 @@ void BackEntityManager::spawn(std::array<sf::Texture, 10>& backEntities_t) {
 		}
 		clock.restart();
 	}
+
+	std::cout << "met" << std::endl;
 }
 
 
@@ -170,18 +164,6 @@ void BackEntityManager::updateBackEntities(float time) {
 void BackEntityManager::removeBackEntity(int i) {
 	backEntities.erase(backEntities.begin() + i);
 	backEntities_size -= 1;
-}
-
-
-void BackEntityManager::resetBackEntities() {
-	backEntities.erase(backEntities.begin(), backEntities.end());
-	clock.restart();
-	backEntities_size = 0;
-	
-	int flags_size = sizeof(flags);
-	for (int i = 0; i < flags_size; i++) {
-		flags[i] = false;
-	}
 }
 
 //INHERITANCE TO IMPLEMENT TRANSPARENT RECTS?

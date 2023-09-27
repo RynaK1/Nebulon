@@ -13,7 +13,16 @@
 
 class Menu {
 private:
+	sf::Texture background_t;
+	sf::Sprite background;
+	sf::Texture backEntities_t[10];
+	sf::Music music;
+	sf::SoundBuffer sfx_buffer;
+	sf::Sound sfx;
+	BackEntityManager backEntityManager;
 public:
-	int displayMainMenu(sf::RenderWindow& window, sf::Music& music, sf::Sound& sfx, BackEntityManager& backEntityManager, std::array<sf::Texture, 10>& backEntities_t);
-	int displayOptions(sf::RenderWindow& window, sf::Music& music, sf::Sound& sfx, BackEntityManager& backEntityManager, std::array<sf::Texture, 10>& backEntities_t);
+	Menu();
+	int displayMainMenu(sf::RenderWindow& window);
+	int displayOptions(sf::RenderWindow& window);
+	void resolutionReset(bool fhd);
 };

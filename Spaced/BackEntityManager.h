@@ -34,14 +34,13 @@ private:
 	int backEntities_size;
 	bool flags[3];
 public:
-	BackEntityManager();
+	BackEntityManager() {}
+	BackEntityManager(bool fhd);
 	int getBackEntities_size();
 	std::vector<BackEntity> getBackEntities();
-	void setFHD(bool fhd);
-	void spawn(std::array<sf::Texture, 10>& backEntities_t);
+	void spawn(sf::Texture* backEntities_t);
 	void updateBackEntities(float time);
 	void removeBackEntity(int i);
-	void resetBackEntities();
 };
 
 // USE A CLOCK TO TRACK WHEN ENTITIES SHOULD SPAWN

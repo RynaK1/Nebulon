@@ -1,6 +1,6 @@
 #include "End.h"
 
-int End::display(sf::RenderWindow &window, sf::Music& music) {
+int End::display(sf::RenderWindow &window) {
 
 	return QUIT;
 }
