@@ -3,7 +3,7 @@
 #include <SFML\Graphics.hpp>
 #include<array>
 
-#include "EnemyManager.h"
+#include "Enemy.h"
 #include "Player.h"
 
 class Game {

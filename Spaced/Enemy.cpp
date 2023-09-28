@@ -1,4 +1,4 @@
-#include "EnemyManager.h"
+#include "Enemy.h"
 
 Enemy::Enemy() {
     type = 0;

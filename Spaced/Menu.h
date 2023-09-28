@@ -8,18 +8,19 @@
 #include <vector>
 
 #include "Externs.h"
-#include "BackEntityManager.h"
+#include "Entity.h"
 
 
 class Menu {
 private:
 	sf::Texture background_t;
+	sf::Texture backgroundFHD_t;
 	sf::Sprite background;
-	sf::Texture backEntities_t[10];
+	sf::Texture movingEntities_t[10];
+	MovingEntityManager movingEntityManager;
 	sf::Music music;
 	sf::SoundBuffer sfx_buffer;
 	sf::Sound sfx;
-	BackEntityManager backEntityManager;
 public:
 	Menu();
 	int displayMainMenu(sf::RenderWindow& window);

@@ -1,16 +1,17 @@
 #include "Menu.h"
 
 Menu::Menu() {
-    //background/BackEntityManager
+    //background and movingEntitiesManager
+    backgroundFHD_t.loadFromFile("../Resources/Textures/BackgroundMenu_FHD.png");
+    background_t.loadFromFile("../Resources/Textures/BackgroundMenu.png");
     if (readFromFile("resolution").compare("1920x1080") == 0) {
-        background_t.loadFromFile("../Resources/Textures/BackgroundMenu_FHD.png");
-        backEntityManager = BackEntityManager(true);
+        background.setTexture(backgroundFHD_t);
+        movingEntityManager = MovingEntityManager(true);
     }
     else {
-        background_t.loadFromFile("../Resources/Textures/BackgroundMenu.png");
-        backEntityManager = BackEntityManager(false);
+        background.setTexture(background_t);
+        movingEntityManager = MovingEntityManager(false);
     }
-    background.setTexture(background_t);
 
     //audio
     if (!music.openFromFile("../Resources/Audio/theme_music.ogg")) {
@@ -28,13 +29,13 @@ Menu::Menu() {
     music.play();
 
     //ship sprites
-    if (!backEntities_t[0].loadFromFile("../Resources/Textures/ship_sprite7.png", sf::IntRect(14, 14, 525, 294)) ||
-        !backEntities_t[1].loadFromFile("../Resources/Textures/ship_sprite8.png", sf::IntRect(516, 770, 473, 164)) ||
-        !backEntities_t[2].loadFromFile("../Resources/Textures/ship_sprite8.png", sf::IntRect(516, 578, 473, 173)) ||
-        !backEntities_t[3].loadFromFile("../Resources/Textures/ship_sprite8.png", sf::IntRect(9, 163, 483, 163)) ||
-        !backEntities_t[4].loadFromFile("../Resources/Textures/ship_sprite8.png", sf::IntRect(14, 675, 479, 137)) ||
-        !backEntities_t[5].loadFromFile("../Resources/Textures/ship_sprite8.png", sf::IntRect(57, 537, 404, 112))) {
-        std::cerr << "Could not load ship sprites <BackEntity>" << std::endl;
+    if (!movingEntities_t[0].loadFromFile("../Resources/Textures/ship_sprite7.png", sf::IntRect(14, 14, 525, 294)) ||
+        !movingEntities_t[1].loadFromFile("../Resources/Textures/ship_sprite8.png", sf::IntRect(516, 770, 473, 164)) ||
+        !movingEntities_t[2].loadFromFile("../Resources/Textures/ship_sprite8.png", sf::IntRect(516, 578, 473, 173)) ||
+        !movingEntities_t[3].loadFromFile("../Resources/Textures/ship_sprite8.png", sf::IntRect(9, 163, 483, 163)) ||
+        !movingEntities_t[4].loadFromFile("../Resources/Textures/ship_sprite8.png", sf::IntRect(14, 675, 479, 137)) ||
+        !movingEntities_t[5].loadFromFile("../Resources/Textures/ship_sprite8.png", sf::IntRect(57, 537, 404, 112))) {
+        std::cerr << "Could not load ship sprites <movingEntity>" << std::endl;
     }
 }
 
@@ -137,16 +138,16 @@ int Menu::displayMainMenu(sf::RenderWindow& window) {
                 }
             }
         }
-        backEntityManager.spawn(backEntities_t);
-        backEntityManager.updateBackEntities(time);
+        movingEntityManager.spawn(movingEntities_t);
+        movingEntityManager.updateMovingEntities(time);
         time = clock.restart().asSeconds();
 
         window.clear();
         window.draw(background);
-        int backEntityManager_size = backEntityManager.getBackEntities_size();
-        std::vector<BackEntity> backEntities = backEntityManager.getBackEntities();
-        for (int i = 0; i < backEntityManager_size; i++) {
-            window.draw(backEntities[i].getSprite());
+        int movingEntities_size = movingEntityManager.getMovingEntities_size();
+        std::vector<MovingEntity> movingEntities = movingEntityManager.getMovingEntities();
+        for (int i = 0; i < movingEntities_size; i++) {
+            window.draw(movingEntities[i].getSprite());
         }
         window.draw(start_txt);
         window.draw(options_txt);
@@ -383,17 +384,16 @@ int Menu::displayOptions(sf::RenderWindow& window) {
                 }
             }
         }
-        backEntityManager.spawn(backEntities_t);
-        backEntityManager.updateBackEntities(time);
+        movingEntityManager.spawn(movingEntities_t);
+        movingEntityManager.updateMovingEntities(time);
         time = clock.restart().asSeconds();
 
         window.clear();
         window.draw(background);
-
-        int backEntityManager_size = backEntityManager.getBackEntities_size();
-        std::vector<BackEntity> backEntities = backEntityManager.getBackEntities();
-        for (int i = 0; i < backEntityManager_size; i++) {
-            window.draw(backEntities[i].getSprite());
+        int movingEntities_size = movingEntityManager.getMovingEntities_size();
+        std::vector<MovingEntity> movingEntities = movingEntityManager.getMovingEntities();
+        for (int i = 0; i < movingEntities_size; i++) {
+            window.draw(movingEntities[i].getSprite());
         }
         window.draw(options_txt);
         window.draw(mvol_txt);
@@ -421,11 +421,15 @@ int Menu::displayOptions(sf::RenderWindow& window) {
 
 
 void Menu::resolutionReset(bool fhd) {
-    backEntityManager = BackEntityManager(fhd);
-    if (fhd == true) {
+    movingEntityManager = MovingEntityManager(fhd);
+    if (fhd) {
         writeToFile("1920x1080", "resolution");
+        background = sf::Sprite();
+        background.setTexture(backgroundFHD_t);
     }
     else {
         writeToFile("1280x720", "resolution");
+        background = sf::Sprite();
+        background.setTexture(background_t);
     }
 }

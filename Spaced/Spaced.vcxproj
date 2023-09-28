@@ -140,10 +140,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="BackEntityManager.cpp" />
+    <ClCompile Include="Entity.cpp" />
     <ClCompile Include="BulletManager.cpp" />
     <ClCompile Include="End.cpp" />
-    <ClCompile Include="EnemyManager.cpp" />
+    <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Externs.cpp" />
     <ClCompile Include="Gameplay.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -152,10 +152,10 @@
     <ClCompile Include="Player.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BackEntityManager.h" />
+    <ClInclude Include="Entity.h" />
     <ClInclude Include="BulletManager.h" />
     <ClInclude Include="End.h" />
-    <ClInclude Include="EnemyManager.h" />
+    <ClInclude Include="Enemy.h" />
     <ClInclude Include="Externs.h" />
     <ClInclude Include="Gameplay.h" />
     <ClInclude Include="Game.h" />
