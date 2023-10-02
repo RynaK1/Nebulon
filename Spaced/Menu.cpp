@@ -1,18 +1,12 @@
 #include "Menu.h"
 
 Menu::Menu() {
-    //background and movingEntitiesManager
-    backgroundFHD_t.loadFromFile("../Resources/Textures/BackgroundMenu_FHD.png");
-    background_t.loadFromFile("../Resources/Textures/BackgroundMenu.png");
+    win_x = 1280;
+    win_y = 720;
     if (readFromFile("resolution").compare("1920x1080") == 0) {
-        background.setTexture(backgroundFHD_t);
-        movingEntityManager = MovingEntityManager(true);
+        win_x = 1920;
+        win_y = 1080;
     }
-    else {
-        background.setTexture(background_t);
-        movingEntityManager = MovingEntityManager(false);
-    }
-
     //audio
     if (!music.openFromFile("../Resources/Audio/theme_music.ogg")) {
         std::cerr << "Could not load theme_music.ogg" << std::endl;
@@ -28,25 +22,39 @@ Menu::Menu() {
 
     music.play();
 
-    //ship sprites
+    //ship entities
     if (!movingEntities_t[0].loadFromFile("../Resources/Textures/ship_sprite7.png", sf::IntRect(14, 14, 525, 294)) ||
         !movingEntities_t[1].loadFromFile("../Resources/Textures/ship_sprite8.png", sf::IntRect(516, 770, 473, 164)) ||
         !movingEntities_t[2].loadFromFile("../Resources/Textures/ship_sprite8.png", sf::IntRect(516, 578, 473, 173)) ||
         !movingEntities_t[3].loadFromFile("../Resources/Textures/ship_sprite8.png", sf::IntRect(9, 163, 483, 163)) ||
         !movingEntities_t[4].loadFromFile("../Resources/Textures/ship_sprite8.png", sf::IntRect(14, 675, 479, 137)) ||
-        !movingEntities_t[5].loadFromFile("../Resources/Textures/ship_sprite8.png", sf::IntRect(57, 537, 404, 112))) {
+        !movingEntities_t[5].loadFromFile("../Resources/Textures/ship_sprite8.png", sf::IntRect(57, 537, 404, 112)) ||
+        !movingEntities_t[6].loadFromFile("../Resources/Textures/ship_sprite9.png", sf::IntRect(27, 1, 975, 396))) {
         std::cerr << "Could not load ship sprites <movingEntity>" << std::endl;
+    }
+
+    //background and movingEntitiesManager
+    backgroundFHD_t.loadFromFile("../Resources/Textures/BackgroundMenu_FHD.png");
+    background_t.loadFromFile("../Resources/Textures/BackgroundMenu.png");
+    transparent_t.loadFromFile("../Resources/Textures/TransparentMenu.png");
+    transparentFHD_t.loadFromFile("../Resources/Textures/TransparentMenu_FHD.png");
+    if (readFromFile("resolution").compare("1920x1080") == 0) {
+        background.setTexture(backgroundFHD_t);
+        transparent.setTexture(transparentFHD_t);
+        movingEntityManager = MovingEntityManager(movingEntities_t, true);
+    }
+    else {
+        background.setTexture(background_t);
+        transparent.setTexture(transparent_t);
+        movingEntityManager = MovingEntityManager(movingEntities_t, false);
     }
 }
 
 
-int Menu::displayMainMenu(sf::RenderWindow& window) {
+int Menu::displayMain(sf::RenderWindow& window) {
     //set clock
     sf::Clock clock;
     float time{};
-
-    float win_x = (float)window.getSize().x;
-    float win_y = (float)window.getSize().y;
 
     // ****************** graphic initializations ***********************
     //texts
@@ -138,16 +146,22 @@ int Menu::displayMainMenu(sf::RenderWindow& window) {
                 }
             }
         }
+        movingEntityManager.update(time);
         movingEntityManager.spawn(movingEntities_t);
-        movingEntityManager.updateMovingEntities(time);
         time = clock.restart().asSeconds();
 
         window.clear();
         window.draw(background);
-        int movingEntities_size = movingEntityManager.getMovingEntities_size();
-        std::vector<MovingEntity> movingEntities = movingEntityManager.getMovingEntities();
-        for (int i = 0; i < movingEntities_size; i++) {
-            window.draw(movingEntities[i].getSprite());
+        std::vector<MovingEntity> movingEntities1 = movingEntityManager.getMovingEntities1();
+        int movingEntities1_size = movingEntityManager.getMovingEntities1_size();
+        for (int i = 0; i < movingEntities1_size; i++) {
+            window.draw(movingEntities1[i].getSprite());
+        }
+        window.draw(transparent); //drawing ship sprites behind and in front of buildings
+        std::vector<MovingEntity> movingEntities2 = movingEntityManager.getMovingEntities2();
+        int movingEntities2_size = movingEntityManager.getMovingEntities2_size();
+        for (int i = 0; i < movingEntities2_size; i++) {
+            window.draw(movingEntities2[i].getSprite());
         }
         window.draw(start_txt);
         window.draw(options_txt);
@@ -168,9 +182,6 @@ int Menu::displayOptions(sf::RenderWindow& window) {
     float time{};
 
     // ****************** graphic initializations ***********************
-    float win_x = (float)window.getSize().x;
-    float win_y = (float)window.getSize().y;
-
     //texts and buttons
     sf::Font font;
     font.loadFromFile("../Resources/Textures/AlfaSlabOne-Regular.ttf"); 
@@ -368,14 +379,14 @@ int Menu::displayOptions(sf::RenderWindow& window) {
                 else if (buttonBounds(mousePos, low_txt)) {
                     sfx.play();
                     window.create(sf::VideoMode(1280, 720), "Nebulon", sf::Style::Close);
-                    resolutionReset(false);
+                    resolutionReset(movingEntities_t,false);
                     return GO_OPTIONS_MENU;
                 }
                 else if (buttonBounds(mousePos, high_txt)) {
                     sfx.play();
                     window.create(sf::VideoMode(1920, 1080), "Nebulon", sf::Style::Close);
                     window.setPosition(sf::Vector2i(-8, -31));
-                    resolutionReset(true);
+                    resolutionReset(movingEntities_t, true);
                     return GO_OPTIONS_MENU;
                 }
                 else if (buttonBounds(mousePos, back_txt)) {
@@ -384,16 +395,25 @@ int Menu::displayOptions(sf::RenderWindow& window) {
                 }
             }
         }
+        movingEntityManager.update(time);
         movingEntityManager.spawn(movingEntities_t);
-        movingEntityManager.updateMovingEntities(time);
         time = clock.restart().asSeconds();
 
         window.clear();
         window.draw(background);
-        int movingEntities_size = movingEntityManager.getMovingEntities_size();
-        std::vector<MovingEntity> movingEntities = movingEntityManager.getMovingEntities();
-        for (int i = 0; i < movingEntities_size; i++) {
-            window.draw(movingEntities[i].getSprite());
+        //drawing ship sprites behind and in front of buildings
+        int movingEntities1_size = movingEntityManager.getMovingEntities1_size();
+        std::vector<MovingEntity> movingEntities1 = movingEntityManager.getMovingEntities1();
+        //front
+        for (int i = 0; i < movingEntities1_size; i++) {
+            window.draw(movingEntities1[i].getSprite());
+        }
+        window.draw(transparent); 
+        //behind
+        int movingEntities2_size = movingEntityManager.getMovingEntities2_size();
+        std::vector<MovingEntity> movingEntities2 = movingEntityManager.getMovingEntities2();
+        for (int i = 0; i < movingEntities2_size; i++) {
+            window.draw(movingEntities2[i].getSprite());
         }
         window.draw(options_txt);
         window.draw(mvol_txt);
@@ -420,16 +440,24 @@ int Menu::displayOptions(sf::RenderWindow& window) {
 }
 
 
-void Menu::resolutionReset(bool fhd) {
-    movingEntityManager = MovingEntityManager(fhd);
+void Menu::resolutionReset(sf::Texture* movingEntities_t, bool fhd) {
+    movingEntityManager = MovingEntityManager(movingEntities_t, fhd);
     if (fhd) {
         writeToFile("1920x1080", "resolution");
         background = sf::Sprite();
         background.setTexture(backgroundFHD_t);
+        transparent = sf::Sprite();
+        transparent.setTexture(transparentFHD_t);
+        win_x = 1920;
+        win_y = 1080;
     }
     else {
         writeToFile("1280x720", "resolution");
         background = sf::Sprite();
         background.setTexture(background_t);
+        transparent = sf::Sprite();
+        transparent.setTexture(transparent_t);
+        win_x = 1280;
+        win_y = 720;
     }
 }

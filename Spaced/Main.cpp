@@ -31,7 +31,7 @@ int main() {
         switch (go) {
         case GO_MAIN_MENU:
             cout << "Going to main menu" << endl;
-            go = menu.displayMainMenu(window);
+            go = menu.displayMain(window);
             break;
         case GO_OPTIONS_MENU:
             cout << "Going to options menu" << endl;

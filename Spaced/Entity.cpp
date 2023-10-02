@@ -1,7 +1,7 @@
 #include "Entity.h"
 
-Entity::Entity() {
-	fhd = false;
+Entity::Entity(sf::Texture& texture) {
+	sprite.setTexture(texture);
 }
 
 
@@ -35,7 +35,6 @@ sf::Sprite Entity::getSprite() {
 
 
 MovingEntity::MovingEntity(Equation eq, sf::Texture& texture, bool fhd, float scale, float speed) {
-	this->fhd = fhd;
 	this->speed = speed;
 	equation = eq;
 	sprite.setTexture(texture);
@@ -61,20 +60,10 @@ Equation MovingEntity::getEquation() {
 }
 
 
-
-MovingEntityManager::MovingEntityManager() {
-	fhd = false;
-	movingEntities_size = 0;
-	int flags_size = sizeof(flags);
-	for (int i = 0; i < flags_size; i++) {
-		flags[i] = false;
-	}
-}
-
-
-MovingEntityManager::MovingEntityManager(bool fhd) {
+MovingEntityManager::MovingEntityManager(sf::Texture* movingEntities_t, bool fhd) {
 	this->fhd = fhd;
-	movingEntities_size = 0;
+	movingEntities1_size = 0;
+	movingEntities2_size = 0;
 	int flags_size = sizeof(flags);
 	for (int i = 0; i < flags_size; i++) {
 		flags[i] = false;
@@ -82,13 +71,24 @@ MovingEntityManager::MovingEntityManager(bool fhd) {
 }
 
 
-int MovingEntityManager::getMovingEntities_size() {
-	return movingEntities_size;
+int MovingEntityManager::getMovingEntities1_size() {
+	return movingEntities1_size;
 }
 
 
-std::vector<MovingEntity> MovingEntityManager::getMovingEntities() {
-	return movingEntities;
+int MovingEntityManager::getMovingEntities2_size() {
+	return movingEntities2_size;
+}
+
+
+
+std::vector<MovingEntity> MovingEntityManager::getMovingEntities1() {
+	return movingEntities1;
+}
+
+
+std::vector<MovingEntity> MovingEntityManager::getMovingEntities2() {
+	return movingEntities2;
 }
 
 
@@ -97,44 +97,48 @@ void MovingEntityManager::spawn(sf::Texture* movingEntities_t) {
 	if (fhd == true) {
 		eq_scale *= 1.5f;
 	}
-	
-	//ships
+
 	float time = clock.getElapsedTime().asSeconds();
 	if ((int)time == 0 && flags[0] == false) {
+		Equation eq0(1, 0 * eq_scale, -300 * eq_scale, 1, 0.23f * (1 / eq_scale), 1279 * eq_scale, true);
+		MovingEntity me0(eq0, movingEntities_t[0], fhd, 0.05f, 40.0f);
+		me0.setRotation(10.0f);
+		movingEntities2.push_back(me0); //top right, small, fast
+
 		Equation eq1(0, 0 * eq_scale, -300 * eq_scale, 0, 0 * (1 / eq_scale), -140 * eq_scale, false);
-		MovingEntity me1(eq1, movingEntities_t[1], fhd, 0.3f, 10.0f);
-		movingEntities.push_back(me1);
+		MovingEntity me1(eq1, movingEntities_t[1], fhd, 0.3f, 10.0f); //bottom left, lower
+		movingEntities1.push_back(me1);
 
-		Equation eq2(0, 0 * eq_scale, -450 * eq_scale, 0, 0 * (1 / eq_scale), 1030 * eq_scale, true);
-		MovingEntity me2(eq2, movingEntities_t[3], fhd, 0.15f, 5.0f);
-		movingEntities.push_back(me2);
-
-		Equation eq3(1, 0 * eq_scale, -300 * eq_scale, 1, 0.23f * (1 / eq_scale), 1279 * eq_scale, true);
-		MovingEntity me3(eq3, movingEntities_t[0], fhd, 0.05f, 40.0f);
-		me3.setRotation(10.0f);
-		movingEntities.push_back(me3);
-
+		Equation eq3(0, 0 * eq_scale, -450 * eq_scale, 0, 0 * (1 / eq_scale), 1030 * eq_scale, true);
+		MovingEntity me3(eq3, movingEntities_t[3], fhd, 0.15f, 5.0f);
+		movingEntities1.push_back(me3); //bottom right, behind tower
 
 		Equation eq4(0, 0 * eq_scale, -100 * eq_scale, 0, 0 * (1 / eq_scale), 1279 * eq_scale, true);
 		MovingEntity me4(eq4, movingEntities_t[4], fhd, 0.5f, 20.0f);
-		movingEntities.push_back(me4);
+		movingEntities2.push_back(me4); //top right, higher
 
-		Equation eq5(0, 0 * eq_scale, -200 * eq_scale, 0, 0 * (1 / eq_scale), 1279 * eq_scale, true);
-		MovingEntity me5(eq5, movingEntities_t[5], fhd, 0.5f, 30.0f);
-		movingEntities.push_back(me5);
+		Equation eq5(0, 0 * eq_scale, -175 * eq_scale, 0, 0 * (1 / eq_scale), 1279 * eq_scale, true);
+		MovingEntity me5(eq5, movingEntities_t[5], fhd, 0.5f, 25.0f);
+		movingEntities2.push_back(me5); //top right, lower
 
-		movingEntities_size += 5;
+		Equation eq6(0, 0 * eq_scale, -400 * eq_scale, 0, 0 * (1 / eq_scale), 200 * eq_scale, false);
+		MovingEntity me6(eq6, movingEntities_t[6], fhd, 0.10f, 3.0f);
+		movingEntities1.push_back(me6); //bottom left, behind tower
+
+
+		movingEntities1_size += 3;
+		movingEntities2_size += 3;
 		flags[0] = true;
 	}
 	else if ((int)time == 10 && flags[1] == false) {
-		Equation eq1(0, 0 * eq_scale, -260 * eq_scale, 0, 0 * (1 / eq_scale), -102 * eq_scale, false);
-		MovingEntity me1(eq1, movingEntities_t[2], fhd, 0.22f, 10.0f);
-		movingEntities.push_back(me1);
+		Equation eq2(0, 0 * eq_scale, -260 * eq_scale, 0, 0 * (1 / eq_scale), -102 * eq_scale, false);
+		MovingEntity me2(eq2, movingEntities_t[2], fhd, 0.22f, 10.0f);
+		movingEntities1.insert(movingEntities1.begin(), me2);
 
-		movingEntities_size += 1;
+		movingEntities1_size += 1;
 		flags[1] = true;
 	}
-	else if ((int)time == 140) {
+	else if ((int)time == 120) {
 		int flags_size = sizeof(flags);
 		for (int i = 0; i < flags_size; i++) {
 			flags[i] = false;
@@ -144,7 +148,7 @@ void MovingEntityManager::spawn(sf::Texture* movingEntities_t) {
 }
 
 
-void MovingEntityManager::updateMovingEntities(float time) {
+void MovingEntityManager::update(float time) {
 	sf::IntRect window_bound(0, 0, 1280, 720);
 	float scale = 1;
 	if (fhd == true) {
@@ -152,9 +156,10 @@ void MovingEntityManager::updateMovingEntities(float time) {
 		scale = 1.5;
 	}
 
-	for (int i = 0; i < movingEntities_size; i++) {
-		Equation eq = movingEntities[i].getEquation();
-		float speed = movingEntities[i].getSpeed() * scale;
+	//back
+	for (int i = 0; i < movingEntities1_size; i++) {
+		Equation eq = movingEntities1[i].getEquation();
+		float speed = movingEntities1[i].getSpeed() * scale;
 
 		if (eq.reverse == false) {
 			eq.x += speed * time;
@@ -163,23 +168,53 @@ void MovingEntityManager::updateMovingEntities(float time) {
 			eq.x -= speed * time;
 		}
 
-		movingEntities[i].setEqX(eq.x);
+		movingEntities1[i].setEqX(eq.x);
 		float r = (pow((eq.m_xt * eq.x) + eq.xt, eq.pt) * eq.m_yt) + eq.yt;
 
-		movingEntities[i].setPosition(eq.x, -r);
+		movingEntities1[i].setPosition(eq.x, -r);
 
 		// bound check
-		if (!window_bound.intersects((sf::IntRect)movingEntities[i].getGlobalBounds())) {
-			removeMovingEntity(i);
+		if (!window_bound.intersects((sf::IntRect)movingEntities1[i].getGlobalBounds())) {
+			remove1(i);
+			i -= 1;
+		}
+	}
+
+	//front
+	for (int i = 0; i < movingEntities2_size; i++) {
+		Equation eq = movingEntities2[i].getEquation();
+		float speed = movingEntities2[i].getSpeed() * scale;
+
+		if (eq.reverse == false) {
+			eq.x += speed * time;
+		}
+		else {
+			eq.x -= speed * time;
+		}
+
+		movingEntities2[i].setEqX(eq.x);
+		float r = (pow((eq.m_xt * eq.x) + eq.xt, eq.pt) * eq.m_yt) + eq.yt;
+
+		movingEntities2[i].setPosition(eq.x, -r);
+
+		// bound check
+		if (!window_bound.intersects((sf::IntRect)movingEntities2[i].getGlobalBounds())) {
+			remove2(i);
 			i -= 1;
 		}
 	}
 }
 
 
-void MovingEntityManager::removeMovingEntity(int i) {
-	movingEntities.erase(movingEntities.begin() + i);
-	movingEntities_size -= 1;
+void MovingEntityManager::remove1(int i) {
+	movingEntities1.erase(movingEntities1.begin() + i);
+	movingEntities1_size -= 1;
+}
+
+
+void MovingEntityManager::remove2(int i) {
+	movingEntities2.erase(movingEntities2.begin() + i);
+	movingEntities2_size -= 1;
 }
 
 //INHERITANCE TO IMPLEMENT TRANSPARENT RECTS?
