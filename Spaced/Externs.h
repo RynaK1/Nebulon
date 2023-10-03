@@ -13,18 +13,6 @@ const static int GO_OPTIONS_MENU = 1;
 const static int GO_GAMEPLAY = 2;
 const static int GO_END = 3;
 
-struct Equation {
-	float pt;
-	float xt;
-	float yt;
-	float m_xt;
-	float m_yt;
-	float x;
-	bool reverse;
-	Equation(float pt, float xt, float yt, float m_xt, float m_yt, float x, bool reverse);
-	Equation();
-};
-
 
 /*
 * calcVolPercent

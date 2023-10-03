@@ -5,22 +5,23 @@
 #include <cmath>
 
 #include "Externs.h"
+#include "Movement.h"
 
+/*
 class Enemy {
 protected:
 	sf::Sprite sprite;
-	Equation equation;
+	Movement mvmt;
 	int health;
 	int type;
 public:
-	Enemy();
+	Enemy() : type(0), health(0) {};
 	void setPosition(float x, float y);
 	void setHealth(int health);
-	void setEqX(float x);
 	int getHealth();
 	int getType();
+	sf::Vector2f update();
 	sf::FloatRect getGlobalBounds();
-	Equation getEquation();
 	sf::Sprite getSprite();
 	void attack();
 };
@@ -30,7 +31,7 @@ class EnemyT1 : public Enemy {
 private:
 public:
 	void attack();
-	EnemyT1(Equation eq, sf::Texture& texture, bool fhd);
+	EnemyT1(Movement mvmt, sf::Texture& texture, bool fhd);
 };
 
 
@@ -38,7 +39,7 @@ class EnemyT2 : public Enemy {
 private:
 public:
 	void attack();
-	EnemyT2(Equation eq, sf::Texture& texture, bool fhd);
+	EnemyT2(Movement mvmt, sf::Texture& texture, bool fhd);
 };
 
 
@@ -46,7 +47,7 @@ class EnemyBoss : public Enemy {
 private:
 public:
 	void attack();
-	EnemyBoss(Equation eq, sf::Texture& texture, bool fhd);
+	EnemyBoss(Movement mvmt, sf::Texture& texture, bool fhd);
 };
 
 
@@ -60,7 +61,8 @@ public:
 	void setEnemyHealth(int health, int index);
 	int getEnemies_size();
 	std::vector<Enemy> getEnemies();
-	void spawn(Equation eq, sf::Texture& texture, int type);
+	void spawn(Movement mvmt, sf::Texture& texture, int type);
 	void updateEnemies(float time);
 	void removeEnemy(int index);
 };
+*/

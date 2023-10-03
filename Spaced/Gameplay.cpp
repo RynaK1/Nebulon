@@ -1,6 +1,7 @@
 #include "Gameplay.h"
 
 int Gameplay::display(sf::RenderWindow& window) {
+    /*
     //set clock
     sf::Clock clock;
     float time{};
@@ -158,5 +159,6 @@ int Gameplay::display(sf::RenderWindow& window) {
         window.display();
 
     }
+    */
     return QUIT;
 }

@@ -1,5 +1,6 @@
 #include "Game.h"
 
+/*
 std::array<bool, 4> Game::checkPlayerBounds(sf::FloatRect pos, sf::Vector2u win_size) {
 	std::array<bool, 4> bounds = {true, true, true, true};
 
@@ -58,3 +59,4 @@ std::array<bool, 2> Game::updateCollisions(EnemyManager& em, Player& player) {
 	
 	return death;
 }
+*/

@@ -1,22 +1,8 @@
 #include "Enemy.h"
 
-Enemy::Enemy() {
-    type = 0;
-    health = 0;
-    equation.pt = 0;
-    equation.xt = 0;
-    equation. yt = 0;
-    equation. m_xt = 0;
-    equation. m_yt = 0;
-}
-
+/*
 void Enemy::setPosition(float x, float y) {
     sprite.setPosition(x, y);
-}
-
-
-void Enemy::setEqX(float x) {
-    equation.x = x;
 }
 
 
@@ -39,30 +25,29 @@ sf::FloatRect Enemy::getGlobalBounds() {
 }
 
 
-Equation Enemy::getEquation() {
-    return equation;
-}
-
-
 sf::Sprite Enemy::getSprite() {
     return sprite;
 }
 
+
+sf::Vector2f Enemy::update() {
+
+}
 
 
 void Enemy::attack() {}
 
 
 
-EnemyT1::EnemyT1(Equation eq, sf::Texture& texture, bool fhd) {
+EnemyT1::EnemyT1(Movement mvmt, sf::Texture& texture, bool fhd) {
     sprite.setTexture(texture);
     sprite.setScale(0.25f, 0.25f);
     if (fhd == true) {
         sprite.setScale(0.325f, 0.325f);
     }
     sprite.setOrigin(sprite.getGlobalBounds().width / 2, sprite.getGlobalBounds().height / 2);
+    this->mvmt = mvmt;
     type = 1;
-    this->equation = eq;
     health = 10;
 }
 
@@ -73,7 +58,7 @@ void EnemyT1::attack() {
 
 
 
-EnemyT2::EnemyT2(Equation eq, sf::Texture& texture, bool fhd) {
+EnemyT2::EnemyT2(Movement mvmt, sf::Texture& texture, bool fhd) {
     sprite.setTexture(texture);
     sprite.setScale(0.18f, 0.18f);
     if (fhd == true) {
@@ -81,8 +66,8 @@ EnemyT2::EnemyT2(Equation eq, sf::Texture& texture, bool fhd) {
     }
     sprite.setOrigin(sprite.getGlobalBounds().width / 2, sprite.getGlobalBounds().height / 2);
     sprite.setRotation(180);
+    this->mvmt = mvmt;
     type = 2;
-    this->equation = eq;
     health = 15;
 }
 
@@ -93,15 +78,15 @@ void EnemyT2::attack() {
 
 
 
-EnemyBoss::EnemyBoss(Equation eq, sf::Texture& texture, bool fhd) {
+EnemyBoss::EnemyBoss(Movement mvmt, sf::Texture& texture, bool fhd) {
     sprite.setTexture(texture);
     sprite.setScale(0.75, 0.75);
     if (fhd == true) {
         sprite.setScale(1.125f, 1.125f);
     }
     sprite.setOrigin(sprite.getGlobalBounds().width / 2, sprite.getGlobalBounds().height / 2);
+    this->mvmt = mvmt;
     type = 10;
-    this->equation = eq;
     health = 100;
 }
 
@@ -135,27 +120,22 @@ std::vector<Enemy> EnemyManager::getEnemies() {
 }
 
 
-void EnemyManager::spawn(Equation eq, sf::Texture& texture, int type) {
-    if (fhd == true) {
-        eq.m_yt *= 0.667f;
-        eq.xt *= 1.5;
-        eq.yt *= 1.5;
-    }
-
+void EnemyManager::spawn(Movement mvmt, sf::Texture& texture, int type) {
     Enemy enemy;
     switch (type) {
     case 1:
-        enemy = EnemyT1(eq, texture, fhd);
+        enemy = EnemyT1(mvmt, texture, fhd);
         break;
     case 2:
-        enemy = EnemyT2(eq, texture, fhd);
+        enemy = EnemyT2(mvmt, texture, fhd);
         break;
     case 10:
-        enemy = EnemyBoss(eq, texture, fhd);
+        enemy = EnemyBoss(mvmt, texture, fhd);
         break;
     }
 
-    float r = (pow((eq.m_xt * eq.x) + eq.xt, eq.pt) * eq.m_yt) + eq.yt;
+    sf::Vector2f result = movingEntities1[i].update();
+    movingEntities1[i].setPosition(result.x, -result.y);
 
     enemy.setPosition(eq.x, -r);
     enemies.push_back(enemy);
@@ -200,3 +180,4 @@ void EnemyManager::removeEnemy(int index) {
     enemies.erase(enemies.begin() + index);
     enemies_size -= 1;
 }
+*/

@@ -3,8 +3,9 @@
 #include <SFML\Graphics.hpp>
 #include <vector>
 #include <array>
+#include <iostream>
 
-#include "Externs.h"
+#include "Movement.h"
 
 
 class Entity {
@@ -24,14 +25,11 @@ public:
 
 class MovingEntity : public Entity {
 private:
-	Equation equation;
-	float speed;
+	Movement mvmt;
 public:
-	MovingEntity() : speed(0) {}
-	MovingEntity(Equation eq, sf::Texture& texture, bool fhd, float scale, float speed);
-	void setEqX(float x);
-	float getSpeed();
-	Equation getEquation();
+	MovingEntity() {}
+	MovingEntity(Movement mvmt, sf::Texture& texture, float scale, bool fhd);
+	sf::Vector2f update(float time);
 };
 
 
@@ -56,6 +54,3 @@ public:
 	void remove2(int i);
 	void spawn(sf::Texture* movingEntities_t);
 };
-
-// USE A CLOCK TO TRACK WHEN ENTITIES SHOULD SPAWN
-// FIND ALL SPRITES TO USE
