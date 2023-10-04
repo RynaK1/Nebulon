@@ -10,8 +10,11 @@ Equation::Equation(float pt, float xt, float yt, float m_xt, float m_yt, float x
 	this->speed = speed;
 	this->reverse = reverse;
 	if (fhd == true) {
-		if (this->pt > 1) {
+		if (this->pt == 2) {
 			this->m_yt *= 0.66667f;
+		}
+		else if (this->pt == 3) {
+			this->m_yt *= 0.4433f;
 		}
 		this->xt *= 1.5f;
 		this->yt *= 1.5f;

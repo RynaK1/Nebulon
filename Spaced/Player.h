@@ -19,7 +19,7 @@ private:
 	bool fhd;
 public:
 	Player() : mvmt_speed(0), health(0), fhd(false) {};
-	Player(sf::Texture& texture);
+	Player(sf::Texture& texture, bool fhd);
 	void setHealth(int health);
 	int getHealth();
 	sf::Sprite getSprite();

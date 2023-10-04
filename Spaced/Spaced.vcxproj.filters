@@ -39,9 +39,6 @@
     <ClCompile Include="Gameplay.cpp">
       <Filter>Source Files\Screens</Filter>
     </ClCompile>
-    <ClCompile Include="Game.cpp">
-      <Filter>Source Files\Gameplay_back</Filter>
-    </ClCompile>
     <ClCompile Include="Player.cpp">
       <Filter>Source Files\Gameplay_back</Filter>
     </ClCompile>
@@ -73,9 +70,6 @@
     </ClInclude>
     <ClInclude Include="Externs.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Game.h">
-      <Filter>Header Files\Gameplay_back</Filter>
     </ClInclude>
     <ClInclude Include="Player.h">
       <Filter>Header Files\Gameplay_back</Filter>

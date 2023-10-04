@@ -2,15 +2,14 @@
 
 Gameplay::Gameplay() {
     fhd = false;
-    enemyManager = EnemyManager(fhd);
 
     if (!player_t.loadFromFile("../Resources/Textures/ship_sprite4.png", sf::IntRect(768, 32, 227, 171))) {
         std::cerr << "ship_sprite.png file missing <player>" << std::endl;
     }
-    player = Player(player_t);
 }
 
 int Gameplay::display(sf::RenderWindow& window) {
+    //set resolution again in case of res change
     fhd = false;
     if (readFromFile("resolution").compare("1920x1080") == 0) {
         fhd = true;
@@ -78,6 +77,9 @@ int Gameplay::display(sf::RenderWindow& window) {
         std::cerr << "ship_sprite5.png file missing" << std::endl;
     }
 
+    enemyManager = EnemyManager(fhd);
+    player = Player(player_t, fhd);
+
     while (window.isOpen()) {
 
         sf::Event evnt;
@@ -93,6 +95,7 @@ int Gameplay::display(sf::RenderWindow& window) {
                 float MAX = 9999;
                 float MIN = -1000;
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::P)) {
+                    //          pt, xt, yt, m_xt, m_yt, x_max, speed, reverse, fhd
                     Equation eq0(3, -150, -350, 0.25f, 0.005f, MIN, 70, true, fhd);
                     Movement mvmt0(764.5f, fhd);
                     mvmt0.push_back(eq0);
@@ -116,13 +119,13 @@ int Gameplay::display(sf::RenderWindow& window) {
         
         // player movement and boundary
         sf::FloatRect pos = player.getSprite().getGlobalBounds();
-        std::array<bool, 4> bounds = game.checkPlayerBounds(pos, window.getSize());
+        std::array<bool, 4> bounds = checkPlayerBounds(pos, window.getSize());
         player.move(time, bounds);
 
         // update entities
         player.updateBullets(time);
         enemyManager.update(time);
-        std::array<bool, 2> death = game.updateCollisions(enemyManager, player);
+        std::array<bool, 2> death = updateCollisions(enemyManager, player);
         if (death[0] == true) { //check player death
             return GO_END;
         }
@@ -162,4 +165,64 @@ int Gameplay::display(sf::RenderWindow& window) {
 
     }
     return QUIT;
+}
+
+
+std::array<bool, 4> Gameplay::checkPlayerBounds(sf::FloatRect pos, sf::Vector2u win_size) {
+    std::array<bool, 4> bounds = { true, true, true, true };
+
+    if (pos.left <= 0) {
+        bounds[0] = false;
+    }
+    if (pos.left + pos.width >= win_size.x) {
+        bounds[1] = false;
+    }
+    if (pos.top <= 0) {
+        bounds[2] = false;
+    }
+    if (pos.top + pos.height >= win_size.y) {
+        bounds[3] = false;
+    }
+
+    return bounds;
+}
+
+
+std::array<bool, 2> Gameplay::updateCollisions(EnemyManager& em, Player& player) {
+    std::array<bool, 2> death = { false, false };
+
+    std::vector<Enemy> enemies = em.getEnemies();
+    sf::Sprite player_s = player.getSprite();
+    size_t enemies_size = enemies.size();
+    for (int i = 0; i < enemies_size; i++) {
+        if (enemies[i].getGlobalBounds().intersects(player_s.getGlobalBounds()))
+        {
+            int health = player.getHealth() - 10;
+            if (health <= 0) {
+                death[0] = true;
+            }
+            else {
+                player.playerDamaged(10);
+            }
+        }
+    }
+
+    for (int i = 0; i < enemies.size(); i++) {
+        std::vector<Bullet> bullets = player.getBullets();
+        for (int j = 0; j < bullets.size(); j++) {
+            if (bullets[j].getGlobalBounds().intersects(enemies[i].getGlobalBounds())) {
+                int health = enemies[i].getHealth() - bullets[j].getDamage();
+                if (health <= 0) {
+                    em.remove(i);
+                    death[1] = true;
+                }
+                else {
+                    em.setEnemyHealth(health, i);
+                }
+                player.removeBullet(j);
+            }
+        }
+    }
+
+    return death;
 }

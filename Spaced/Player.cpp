@@ -1,16 +1,16 @@
 #include "Player.h"
 
-Player::Player(sf::Texture& texture) {
+Player::Player(sf::Texture& texture, bool fhd) {
+    this->fhd = fhd;
     sprite.setTexture(texture);
 
     mvmt_speed = 600;
-    sprite.setScale(0.25, 0.25);
+    sprite.setScale(0.2f, 0.2f);
     sprite.setPosition(640, 540);
-    fhd = false;
 
-    if (fhd == true) {
+    if (fhd) {
         mvmt_speed = 900;
-        sprite.setScale(0.375, 0.375);
+        sprite.setScale(0.3f, 0.3f);
         sprite.setPosition(960, 810);
         fhd = true;
     }
