@@ -24,7 +24,7 @@ public:
 
 
 class MovingEntity : public Entity {
-private:
+protected:
 	Movement mvmt;
 public:
 	MovingEntity() {}

@@ -18,6 +18,7 @@ private:
 	sf::Clock damagedCD;
 	bool fhd;
 public:
+	Player() : mvmt_speed(0), health(0), fhd(false) {};
 	Player(sf::Texture& texture);
 	void setHealth(int health);
 	int getHealth();

@@ -4,26 +4,26 @@
 #include <iostream>
 #include <cmath>
 
-#include "Externs.h"
+#include "Entity.h"
 #include "Movement.h"
 
-/*
-class Enemy {
+class Enemy : public MovingEntity {
 protected:
-	sf::Sprite sprite;
-	Movement mvmt;
 	int health;
 	int type;
 public:
 	Enemy() : type(0), health(0) {};
-	void setPosition(float x, float y);
 	void setHealth(int health);
 	int getHealth();
 	int getType();
-	sf::Vector2f update();
-	sf::FloatRect getGlobalBounds();
-	sf::Sprite getSprite();
+};
+
+
+class EnemyT0 : public Enemy {
+private:
+public:
 	void attack();
+	EnemyT0(Movement mvmt, sf::Texture& texture, bool fhd);
 };
 
 
@@ -32,14 +32,6 @@ private:
 public:
 	void attack();
 	EnemyT1(Movement mvmt, sf::Texture& texture, bool fhd);
-};
-
-
-class EnemyT2 : public Enemy {
-private:
-public:
-	void attack();
-	EnemyT2(Movement mvmt, sf::Texture& texture, bool fhd);
 };
 
 
@@ -57,12 +49,12 @@ private:
 	bool fhd;
 	int enemies_size;
 public:
-	EnemyManager();
+	EnemyManager() : fhd(0), enemies_size(0) {};
+	EnemyManager(bool fhd);
 	void setEnemyHealth(int health, int index);
 	int getEnemies_size();
 	std::vector<Enemy> getEnemies();
-	void spawn(Movement mvmt, sf::Texture& texture, int type);
-	void updateEnemies(float time);
-	void removeEnemy(int index);
+	void spawn(Movement mvmt, sf::Texture& texture, int type, float time);
+	void update(float time);
+	void remove(int index);
 };
-*/

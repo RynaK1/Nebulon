@@ -99,37 +99,37 @@ void MovingEntityManager::spawn(sf::Texture* movingEntities_t) {
 	if ((int)time == 0 && flags[0] == false) {
 		//          pt, xt, yt, m_xt, m_yt, x_max, speed, reverse, fhd
 		Equation eq0(1, 0, -300, 1, 0.23f, MIN, 40 ,true, fhd);
-		Movement mvmt0(1280, true, fhd);
+		Movement mvmt0(1280, fhd);
 		mvmt0.push_back(eq0);
 		MovingEntity me0(mvmt0, movingEntities_t[0], 0.07f, fhd);
 		movingEntities2.push_back(me0);
 
 		Equation eq1(0, 0, -300, 0, 0, MAX, 10, false, fhd);
-		Movement mvmt1(-135, true, fhd);
+		Movement mvmt1(-135, fhd);
 		mvmt1.push_back(eq1);
 		MovingEntity me1(mvmt1, movingEntities_t[1], 0.3f, fhd); //bottom left, lower
 		movingEntities1.push_back(me1);
 
 		Equation eq3(0, 0, -450, 0, 0, MIN, 5, true, fhd);
-		Movement mvmt3(1020, true, fhd);
+		Movement mvmt3(1020, fhd);
 		mvmt3.push_back(eq3);
 		MovingEntity me3(mvmt3, movingEntities_t[3], 0.2f, fhd);
 		movingEntities1.push_back(me3); //bottom right, behind tower
 
 		Equation eq4(0, 0, -100, 0, 0, MIN, 25, true, fhd);
-		Movement mvmt4(1280, true, fhd);
+		Movement mvmt4(1280, fhd);
 		mvmt4.push_back(eq4);
 		MovingEntity me4(mvmt4, movingEntities_t[4], 0.5f, fhd);
 		movingEntities2.push_back(me4); //top right, higher
 
 		Equation eq5(0, 0, -175, 0, 0, MIN, 20, true, fhd);
-		Movement mvmt5(1280, true, fhd);
+		Movement mvmt5(1280, fhd);
 		mvmt5.push_back(eq5);
 		MovingEntity me5(mvmt5, movingEntities_t[5], 0.5f, fhd);
 		movingEntities2.push_back(me5); //top right, lower
 
 		Equation eq6(0, 0, -400, 0, 0, MAX, 3, false, fhd);
-		Movement mvmt6(200, true, fhd);
+		Movement mvmt6(200, fhd);
 		mvmt6.push_back(eq6);
 		MovingEntity me6(mvmt6, movingEntities_t[6], 0.10f, fhd);
 		movingEntities1.push_back(me6); //bottom left, behind tower
@@ -140,7 +140,7 @@ void MovingEntityManager::spawn(sf::Texture* movingEntities_t) {
 	}
 	else if ((int)time == 10 && flags[1] == false) {
 		Equation eq2(0, 0, -260, 0, 0, MAX, 10, false, fhd);
-		Movement mvmt2(-102, true, fhd);
+		Movement mvmt2(-102, fhd);
 		mvmt2.push_back(eq2);
 		MovingEntity me2(mvmt2, movingEntities_t[2], 0.22f, fhd);
 		movingEntities1.push_back(me2);
@@ -163,7 +163,7 @@ void MovingEntityManager::update(float time) {
 	float scale = 1;
 	if (fhd == true) {
 		window_bound = sf::IntRect(0, 0, 1920, 1080);
-		scale = 1.5;
+		scale = 1.5f;
 	}
 
 	//back

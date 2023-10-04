@@ -1,6 +1,5 @@
 #include "Game.h"
 
-/*
 std::array<bool, 4> Game::checkPlayerBounds(sf::FloatRect pos, sf::Vector2u win_size) {
 	std::array<bool, 4> bounds = {true, true, true, true};
 
@@ -46,7 +45,7 @@ std::array<bool, 2> Game::updateCollisions(EnemyManager& em, Player& player) {
 			if (bullets[j].getGlobalBounds().intersects(enemies[i].getGlobalBounds())) {
 				int health = enemies[i].getHealth() - bullets[j].getDamage();
 				if (health <= 0) {
-					em.removeEnemy(i);
+					em.remove(i);
 					death[1] = true;
 				}
 				else {
@@ -59,4 +58,3 @@ std::array<bool, 2> Game::updateCollisions(EnemyManager& em, Player& player) {
 	
 	return death;
 }
-*/

@@ -1,7 +1,20 @@
 #include "Gameplay.h"
 
+Gameplay::Gameplay() {
+    fhd = false;
+    enemyManager = EnemyManager(fhd);
+
+    if (!player_t.loadFromFile("../Resources/Textures/ship_sprite4.png", sf::IntRect(768, 32, 227, 171))) {
+        std::cerr << "ship_sprite.png file missing <player>" << std::endl;
+    }
+    player = Player(player_t);
+}
+
 int Gameplay::display(sf::RenderWindow& window) {
-    /*
+    fhd = false;
+    if (readFromFile("resolution").compare("1920x1080") == 0) {
+        fhd = true;
+    }
     //set clock
     sf::Clock clock;
     float time{};
@@ -47,12 +60,6 @@ int Gameplay::display(sf::RenderWindow& window) {
     }
     sf::Sprite background(bround);
 
-    //player
-    sf::Texture player_t;
-    if (!player_t.loadFromFile("../Resources/Textures/ship_sprite4.png", sf::IntRect(768, 32, 227, 171))) {
-        std::cerr << "ship_sprite.png file missing <player>" << std::endl;
-    }
-
     //player bullets
     sf::Texture bullet1_t;
     sf::Texture bullet2_t;
@@ -62,18 +69,14 @@ int Gameplay::display(sf::RenderWindow& window) {
     }
 
     //enemies
+    sf::Texture enemy0_t;
     sf::Texture enemy1_t;
-    sf::Texture enemy2_t;
     sf::Texture enemyBoss_t;
-    if (!enemy1_t.loadFromFile("../Resources/Textures/ship_sprite5.png", sf::IntRect(695, 515, 284, 118)) ||
-        !enemy2_t.loadFromFile("../Resources/Textures/ship_sprite5.png", sf::IntRect(707, 238, 256, 244)) ||
+    if (!enemy0_t.loadFromFile("../Resources/Textures/ship_sprite5.png", sf::IntRect(695, 515, 284, 118)) ||
+        !enemy1_t.loadFromFile("../Resources/Textures/ship_sprite5.png", sf::IntRect(707, 238, 256, 244)) ||
         !enemyBoss_t.loadFromFile("../Resources/Textures/ship_sprite5.png", sf::IntRect(56, 56, 285, 188))) {
         std::cerr << "ship_sprite5.png file missing" << std::endl;
     }
-
-    Game game;
-    Player player(player_t);
-    EnemyManager enemyManager;
 
     while (window.isOpen()) {
 
@@ -87,26 +90,25 @@ int Gameplay::display(sf::RenderWindow& window) {
                 break;
             // TESTING FOR ENEMY SPAWN <===================================================
             case sf::Event::KeyPressed:
+                float MAX = 9999;
+                float MIN = -1000;
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::P)) {
-                    Equation eq(3, -150, -350, 0.25f, 0.005f, 764.5f, true);
-                    if (win_x == 1920) {
-                        eq.x = 1116;
-                    }
-
-                    enemyManager.spawn(eq, enemy1_t, 1);
+                    Equation eq0(3, -150, -350, 0.25f, 0.005f, MIN, 70, true, fhd);
+                    Movement mvmt0(764.5f, fhd);
+                    mvmt0.push_back(eq0);
+                    enemyManager.spawn(mvmt0, enemy0_t, 0, time);
                 }
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::O)) {
-                    Equation eq(2, -25, -650, 0.05f, 1.5f, 84, false);
-                    if (win_x == 1920) {
-                        eq.x = 126;
-                    }
-
-                    enemyManager.spawn(eq, enemy2_t, 2);
+                    Equation eq1(2, -25, -650, 0.05f, 1.5f, MAX, 60, false, fhd);
+                    Movement mvmt1(84, fhd);
+                    mvmt1.push_back(eq1);
+                    enemyManager.spawn(mvmt1, enemy1_t, 1, time);
                 }
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::I)) {
-                    Equation eq(0, 0, -200, 0, 0, -60, false);
-
-                    enemyManager.spawn(eq, enemyBoss_t, 10);
+                    Equation eq2(0, 0, -200, 0, 0, MAX, 40, false, fhd);
+                    Movement mvmt2(-60, fhd);
+                    mvmt2.push_back(eq2);
+                    enemyManager.spawn(mvmt2, enemyBoss_t, 10, time);
                 }
             }
 
@@ -119,7 +121,7 @@ int Gameplay::display(sf::RenderWindow& window) {
 
         // update entities
         player.updateBullets(time);
-        enemyManager.updateEnemies(time);
+        enemyManager.update(time);
         std::array<bool, 2> death = game.updateCollisions(enemyManager, player);
         if (death[0] == true) { //check player death
             return GO_END;
@@ -159,6 +161,5 @@ int Gameplay::display(sf::RenderWindow& window) {
         window.display();
 
     }
-    */
     return QUIT;
 }

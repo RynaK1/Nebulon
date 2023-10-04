@@ -1,11 +1,5 @@
 #include "Enemy.h"
 
-/*
-void Enemy::setPosition(float x, float y) {
-    sprite.setPosition(x, y);
-}
-
-
 void Enemy::setHealth(int health) {
     this->health = health;
 }
@@ -20,26 +14,9 @@ int Enemy::getType() {
     return type;
 }
 
-sf::FloatRect Enemy::getGlobalBounds() {
-    return sprite.getGlobalBounds();
-}
 
 
-sf::Sprite Enemy::getSprite() {
-    return sprite;
-}
-
-
-sf::Vector2f Enemy::update() {
-
-}
-
-
-void Enemy::attack() {}
-
-
-
-EnemyT1::EnemyT1(Movement mvmt, sf::Texture& texture, bool fhd) {
+EnemyT0::EnemyT0(Movement mvmt, sf::Texture& texture, bool fhd) {
     sprite.setTexture(texture);
     sprite.setScale(0.25f, 0.25f);
     if (fhd == true) {
@@ -52,13 +29,13 @@ EnemyT1::EnemyT1(Movement mvmt, sf::Texture& texture, bool fhd) {
 }
 
 
-void EnemyT1::attack() {
+void EnemyT0::attack() {
 
 }
 
 
 
-EnemyT2::EnemyT2(Movement mvmt, sf::Texture& texture, bool fhd) {
+EnemyT1::EnemyT1(Movement mvmt, sf::Texture& texture, bool fhd) {
     sprite.setTexture(texture);
     sprite.setScale(0.18f, 0.18f);
     if (fhd == true) {
@@ -72,7 +49,7 @@ EnemyT2::EnemyT2(Movement mvmt, sf::Texture& texture, bool fhd) {
 }
 
 
-void EnemyT2::attack() {
+void EnemyT1::attack() {
 
 }
 
@@ -96,11 +73,8 @@ void EnemyBoss::attack() {
 
 
 
-EnemyManager::EnemyManager() {
-    fhd = false;
-    if (readFromFile("resolution").compare("1920x1080") == 0) {
-        fhd = true;
-    }
+EnemyManager::EnemyManager(bool fhd) {
+    this->fhd = fhd;
     enemies_size = 0;
 }
 
@@ -120,64 +94,49 @@ std::vector<Enemy> EnemyManager::getEnemies() {
 }
 
 
-void EnemyManager::spawn(Movement mvmt, sf::Texture& texture, int type) {
+void EnemyManager::spawn(Movement mvmt, sf::Texture& texture, int type, float time) {
     Enemy enemy;
     switch (type) {
+    case 0:
+        enemy = EnemyT0(mvmt, texture, fhd);
+        break;
     case 1:
         enemy = EnemyT1(mvmt, texture, fhd);
-        break;
-    case 2:
-        enemy = EnemyT2(mvmt, texture, fhd);
         break;
     case 10:
         enemy = EnemyBoss(mvmt, texture, fhd);
         break;
     }
 
-    sf::Vector2f result = movingEntities1[i].update();
-    movingEntities1[i].setPosition(result.x, -result.y);
-
-    enemy.setPosition(eq.x, -r);
+    sf::Vector2f result = mvmt.update(time);
+    enemy.setPosition(result.x, -result.y);
     enemies.push_back(enemy);
 
     enemies_size += 1;
 }
 
 
-void EnemyManager::updateEnemies(float time) {
+void EnemyManager::update(float time) {
     sf::IntRect window_bound(0, 0, 1280, 720);
     float scale = 1;
     if (fhd == true) {
         window_bound = sf::IntRect(0, 0, 1920, 1080);
-        scale = 1.5;
+        scale = 1.5f;
     }
 
     for (int i = 0; i < enemies_size; i++) {
-        Equation eq = enemies[i].getEquation();
-
-        if (eq.reverse == false) {
-            eq.x += 150 * scale * time;
-        }
-        else if (eq.reverse == true) {
-            eq.x -= 150 * scale * time;
-        }
-
-        enemies[i].setEqX(eq.x);
-        float r = (pow((eq.m_xt * eq.x) + eq.xt, eq.pt) * eq.m_yt) + eq.yt;
-
-        enemies[i].setPosition(eq.x, -r);
-
+        sf::Vector2f result = enemies[i].update(time);
+        enemies[i].setPosition(result.x, -result.y);
         // bound check
         if (!window_bound.intersects((sf::IntRect)enemies[i].getGlobalBounds())) {
-            removeEnemy(i);
+            remove(i);
             i -= 1;
         }
     }
 }
 
 
-void EnemyManager::removeEnemy(int index) {
+void EnemyManager::remove(int index) {
     enemies.erase(enemies.begin() + index);
     enemies_size -= 1;
 }
-*/

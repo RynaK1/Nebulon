@@ -22,11 +22,10 @@ class Movement {
 private:
 	int eq_curr;
 	float x;
-	bool leave;
 	std::vector<Equation> eqs;
 public:
-	Movement() : eq_curr(0), x(0), leave(true) {};
-	Movement(float x, bool leave, bool fhd);
+	Movement() : eq_curr(0), x(0) {};
+	Movement(float x, bool fhd);
 	void push_back(Equation eq);
 	sf::Vector2f update(float time);
 };

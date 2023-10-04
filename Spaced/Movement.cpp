@@ -22,10 +22,9 @@ Equation::Equation(float pt, float xt, float yt, float m_xt, float m_yt, float x
 
 
 
-Movement::Movement(float x, bool leave, bool fhd) {
+Movement::Movement(float x, bool fhd) {
 	eq_curr = 0;
 	this->x = x;
-	this->leave = leave;
 	if (fhd == true) {
 		this->x *= 1.5f;
 	}
@@ -55,5 +54,3 @@ sf::Vector2f Movement::update(float time) {
 	r = (pow((eqs[eq_curr].m_xt * x) + eqs[eq_curr].xt, eqs[eq_curr].pt) * eqs[eq_curr].m_yt) + eqs[eq_curr].yt;
 	return sf::Vector2f(x, r);
 }
-
-
