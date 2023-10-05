@@ -3,9 +3,24 @@
 Gameplay::Gameplay() {
     fhd = false;
 
-    if (!player_t.loadFromFile("../Resources/Textures/ship_sprite4.png", sf::IntRect(768, 32, 227, 171))) {
-        std::cerr << "ship_sprite.png file missing <player>" << std::endl;
+    if (!background_t.loadFromFile("../Resources/Textures/BackgroundGame.png") ||
+        !backgroundFHD_t.loadFromFile("../Resources/Textures/BackgroundGame_FHD.png")) {
+        std::cerr << "BackgroundGame(_FHD).png file missing" << std::endl;
     }
+    if (!player_t.loadFromFile("../Resources/Textures/ship_sprite4.png", sf::IntRect(768, 32, 227, 171))) {
+        std::cerr << "ship_sprite.png file missing" << std::endl;
+    }
+    if (!atk1_t.loadFromFile("../Resources/Textures/Game_UI.png", sf::IntRect(125, 433, 141, 125)) ||
+        !atk2_t.loadFromFile("../Resources/Textures/Game_UI.png", sf::IntRect(199, 47, 172, 159)) ||
+        !health_t.loadFromFile("../Resources/Textures/Game_UI.png", sf::IntRect(625, 852, 330, 109)) ||
+        !healthbar_t.loadFromFile("../Resources/Textures/Game_UI.png", sf::IntRect(676, 968, 246, 24))) {
+        std::cerr << "Game_UI.png file missing" << std::endl;
+    }
+
+    atk1.setTexture(atk1_t);
+    atk2.setTexture(atk2_t);
+    health.setTexture(health_t);
+    healthbar.setTexture(healthbar_t);
 }
 
 int Gameplay::display(sf::RenderWindow& window) {
@@ -14,6 +29,8 @@ int Gameplay::display(sf::RenderWindow& window) {
     if (readFromFile("resolution").compare("1920x1080") == 0) {
         fhd = true;
     }
+    scaleUI(fhd);
+
     //set clock
     sf::Clock clock;
     float time{};
@@ -49,15 +66,6 @@ int Gameplay::display(sf::RenderWindow& window) {
     //background
     float win_x = (float)window.getSize().x;
     float win_y = (float)window.getSize().y;
-
-    sf::Texture bround;
-    if (win_x == 1920) {
-        bround.loadFromFile("../Resources/Textures/BackgroundGame_FHD.png");
-    }
-    else if (win_x == 1280) {
-        bround.loadFromFile("../Resources/Textures/BackgroundGame.png");
-    }
-    sf::Sprite background(bround);
 
     //player bullets
     sf::Texture bullet1_t;
@@ -161,6 +169,10 @@ int Gameplay::display(sf::RenderWindow& window) {
             window.draw(enemies[i].getSprite());
         }
         window.draw(player.getSprite());
+        window.draw(atk1);
+        window.draw(atk2);
+        window.draw(health);
+        window.draw(healthbar);
         window.display();
 
     }
@@ -225,4 +237,28 @@ std::array<bool, 2> Gameplay::updateCollisions(EnemyManager& em, Player& player)
     }
 
     return death;
+}
+
+
+void Gameplay::scaleUI(bool fhd) {
+    float scale;
+    if (!fhd) {
+        scale = 1;
+        background = sf::Sprite();
+        background.setTexture(background_t);
+    }
+    else if (fhd) {
+        scale = 1.5;
+        background = sf::Sprite();
+        background.setTexture(backgroundFHD_t);
+    }
+    atk1.setScale(0.4f * scale, 0.4f * scale);
+    atk2.setScale(0.32f * scale, 0.32f * scale);
+    health.setScale(0.65f * scale, 0.65f * scale);
+    healthbar.setScale(0.65f * scale, 0.65f * scale);
+
+    atk1.setPosition(905 * scale, 645 * scale);
+    atk2.setPosition(970 * scale, 645 * scale);
+    health.setPosition(1050 * scale, 635 * scale);
+    healthbar.setPosition(1080 * scale, 662 * scale);
 }
