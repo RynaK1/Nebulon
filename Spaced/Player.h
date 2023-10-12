@@ -30,4 +30,5 @@ public:
 	void move(float time, std::array<bool, 4> bounds);
 	void playerDamaged(int dmg);
 	sf::FloatRect getGlobalBounds();
+	float getCDPercent(int num);
 };

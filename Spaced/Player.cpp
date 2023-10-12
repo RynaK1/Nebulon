@@ -39,6 +39,24 @@ std::vector<Bullet> Player::getBullets() {
 }
 
 
+float Player::getCDPercent(int num) {
+    float result = 100;
+    switch (num) {
+    case 1:
+        result = shoot1CD.getElapsedTime().asSeconds() / 0.5f;
+        break;
+    case 2:
+        result = shoot2CD.getElapsedTime().asSeconds() / 1.5f;
+        break;
+    }
+    
+    if (result > 1) {
+        result = 1;
+    }
+
+    return result * 255;
+}
+
 
 void Player::move(float time, std::array<bool, 4> bounds) {
     sf::Vector2f vel;

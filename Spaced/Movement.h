@@ -10,9 +10,9 @@ struct Equation {
 	float m_xt;
 	float m_yt;
 	float x_max;
-	bool reverse;
+	bool negative;
 	float speed;
-	Equation() : pt(0), xt(0), yt(0), m_xt(0), m_yt(0), x_max(0), speed(0), reverse(false) {};
+	Equation() : pt(0), xt(0), yt(0), m_xt(0), m_yt(0), x_max(0), speed(0), negative(false) {};
 	Equation(float pt, float xt, float yt, float m_xt, float m_yt, float x_max, float speed, bool reverse, bool fhd);
 };
 
@@ -29,3 +29,9 @@ public:
 	void push_back(Equation eq);
 	sf::Vector2f update(float time);
 };
+
+
+// game UI functionality
+// money and(or) point system
+// game upgrades
+// levels

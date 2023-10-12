@@ -29,7 +29,7 @@ int Gameplay::display(sf::RenderWindow& window) {
     if (readFromFile("resolution").compare("1920x1080") == 0) {
         fhd = true;
     }
-    scaleUI(fhd);
+    scaleUI();
 
     //set clock
     sf::Clock clock;
@@ -116,9 +116,16 @@ int Gameplay::display(sf::RenderWindow& window) {
                     enemyManager.spawn(mvmt1, enemy1_t, 1, time);
                 }
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::I)) {
-                    Equation eq2(0, 0, -200, 0, 0, MAX, 40, false, fhd);
+                    Equation eq2(0, 0, -200, 0, 0, 1200, 60, false, fhd);
+                    Equation eq3(0, 0, -200, 0, 0, 80, 60, true, fhd);
+                    Equation eq4(0, 0, -200, 0, 0, MAX, 60, false, fhd);
                     Movement mvmt2(-60, fhd);
                     mvmt2.push_back(eq2);
+                    mvmt2.push_back(eq3);
+                    mvmt2.push_back(eq2);
+                    mvmt2.push_back(eq3);
+                    mvmt2.push_back(eq4);
+
                     enemyManager.spawn(mvmt2, enemyBoss_t, 10, time);
                 }
             }
@@ -137,7 +144,7 @@ int Gameplay::display(sf::RenderWindow& window) {
         if (death[0] == true) { //check player death
             return GO_END;
         }
-        if (death[1] == true) {
+        if (death[1] == true) { //check enemy death
             sfx_enemy_death.play();
         }
 
@@ -169,9 +176,14 @@ int Gameplay::display(sf::RenderWindow& window) {
             window.draw(enemies[i].getSprite());
         }
         window.draw(player.getSprite());
+
+        atk1.setColor(sf::Color(255, 255, 255, (uint8_t)player.getCDPercent(1)));
         window.draw(atk1);
+        atk2.setColor(sf::Color(255, 255, 255, (uint8_t)player.getCDPercent(2)));
         window.draw(atk2);
+
         window.draw(health);
+        healthbar.setTextureRect(sf::IntRect(676, 968, 246 * player.getHealth() / 100, 24));
         window.draw(healthbar);
         window.display();
 
@@ -240,7 +252,7 @@ std::array<bool, 2> Gameplay::updateCollisions(EnemyManager& em, Player& player)
 }
 
 
-void Gameplay::scaleUI(bool fhd) {
+void Gameplay::scaleUI() {
     float scale;
     if (!fhd) {
         scale = 1;
@@ -261,4 +273,9 @@ void Gameplay::scaleUI(bool fhd) {
     atk2.setPosition(970 * scale, 645 * scale);
     health.setPosition(1050 * scale, 635 * scale);
     healthbar.setPosition(1080 * scale, 662 * scale);
+}
+
+
+void Gameplay::updateUI() {
+    //shoot cooldown, health bar
 }

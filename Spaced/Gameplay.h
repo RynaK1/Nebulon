@@ -28,5 +28,6 @@ public:
 	int display(sf::RenderWindow &window);
 	std::array<bool, 4> checkPlayerBounds(sf::FloatRect pos, sf::Vector2u win_size);
 	std::array<bool, 2> updateCollisions(EnemyManager& em, Player& player);
-	void scaleUI(bool fhd);
+	void scaleUI();
+	void updateUI();
 };

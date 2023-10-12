@@ -101,7 +101,7 @@ void MovingEntityManager::spawn(sf::Texture* movingEntities_t) {
 		Equation eq0(1, 0, -300, 1, 0.23f, MIN, 40 ,true, fhd);
 		Movement mvmt0(1280, fhd);
 		mvmt0.push_back(eq0);
-		MovingEntity me0(mvmt0, movingEntities_t[0], 0.07f, fhd);
+		MovingEntity me0(mvmt0, movingEntities_t[0], 0.07f, fhd); //top right, fast
 		movingEntities2.push_back(me0);
 
 		Equation eq1(0, 0, -300, 0, 0, MAX, 10, false, fhd);

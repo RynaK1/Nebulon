@@ -8,7 +8,7 @@ Equation::Equation(float pt, float xt, float yt, float m_xt, float m_yt, float x
 	this->m_yt = m_yt;
 	this->x_max = x_max;
 	this->speed = speed;
-	this->reverse = reverse;
+	this->negative = reverse;
 	if (fhd == true) {
 		if (this->pt == 2) {
 			this->m_yt *= 0.66667f;
@@ -42,15 +42,15 @@ void Movement::push_back(Equation eq) {
 sf::Vector2f Movement::update(float time) {
 	float r;
 
-	if (eqs[eq_curr].reverse == true) {
+	if (eqs[eq_curr].negative == true) {
 		x -= eqs[eq_curr].speed * time;
 	}
 	else {
 		x += eqs[eq_curr].speed * time;
 	}
 
-	if ((eqs[eq_curr].reverse == false && x >= eqs[eq_curr].x_max) ||
-		(eqs[eq_curr].reverse == true && x <= eqs[eq_curr].x_max)) {
+	if ((eqs[eq_curr].negative == false && x >= eqs[eq_curr].x_max) ||
+		(eqs[eq_curr].negative == true && x <= eqs[eq_curr].x_max)) {
 		eq_curr += 1;
 	};
 
