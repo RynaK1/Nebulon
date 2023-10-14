@@ -2,12 +2,15 @@
 
 #include <SFML\Graphics.hpp>
 #include <SFML\Audio.hpp>
+#include <string>
 
 #include "Player.h"
 #include "Enemy.h"
 
 class Gameplay {
 private:
+	sf::Font font;
+	sf::Text money_txt;
 	sf::Texture background_t;
 	sf::Texture backgroundFHD_t;
 	sf::Texture player_t;
@@ -23,6 +26,7 @@ private:
 	sf::Sprite health;
 	sf::Sprite healthbar;
 	bool fhd;
+	int money;
 public:
 	Gameplay();
 	int display(sf::RenderWindow &window);

@@ -1,11 +1,14 @@
 #include "Menu.h"
 
 Menu::Menu() {
-    win_x = 1280;
-    win_y = 720;
+    fhd = false;
     if (readFromFile("resolution").compare("1920x1080") == 0) {
-        win_x = 1920;
-        win_y = 1080;
+        fhd = true;
+    }
+
+    //text font
+    if (!font.loadFromFile("../Resources/Textures/AlfaSlabOne-Regular.ttf")) {
+        std::cerr << "Could not load font" << std::endl;
     }
     //audio
     if (!music.openFromFile("../Resources/Audio/theme_music.ogg")) {
@@ -56,13 +59,15 @@ int Menu::displayMain(sf::RenderWindow& window) {
     sf::Clock clock;
     float time{};
 
-    // ****************** graphic initializations ***********************
-    //texts
-    sf::Font font;
-    if (!font.loadFromFile("../Resources/Textures/AlfaSlabOne-Regular.ttf")) {
-        std::cerr << "Could not load font" << std::endl;
+    int win_x = 1280;
+    int win_y = 720;
+    if (fhd) {
+        win_x = 1920;
+        win_y = 1080;
     }
 
+    // ****************** graphic initializations ***********************
+    //texts and buttons
     sf::Text title_txt("Nebulon", font);
     title_txt.setCharacterSize(60);
     title_txt.setStyle(sf::Text::Bold);
@@ -181,11 +186,15 @@ int Menu::displayOptions(sf::RenderWindow& window) {
     sf::Clock clock;
     float time{};
 
+    int win_x = 1280;
+    int win_y = 720;
+    if (fhd) {
+        win_x = 1920;
+        win_y = 1080;
+    }
+
     // ****************** graphic initializations ***********************
     //texts and buttons
-    sf::Font font;
-    font.loadFromFile("../Resources/Textures/AlfaSlabOne-Regular.ttf"); 
-
     sf::Text options_txt("Options", font);
     options_txt.setCharacterSize(45);
     options_txt.setStyle(sf::Text::Bold);
@@ -379,7 +388,7 @@ int Menu::displayOptions(sf::RenderWindow& window) {
                 else if (buttonBounds(mousePos, low_txt)) {
                     sfx.play();
                     window.create(sf::VideoMode(1280, 720), "Nebulon", sf::Style::Close);
-                    resolutionReset(movingEntities_t,false);
+                    resolutionReset(movingEntities_t, false);
                     return GO_OPTIONS_MENU;
                 }
                 else if (buttonBounds(mousePos, high_txt)) {
@@ -448,8 +457,7 @@ void Menu::resolutionReset(sf::Texture* movingEntities_t, bool fhd) {
         background.setTexture(backgroundFHD_t);
         transparent = sf::Sprite();
         transparent.setTexture(transparentFHD_t);
-        win_x = 1920;
-        win_y = 1080;
+        this->fhd = fhd;
     }
     else {
         writeToFile("1280x720", "resolution");
@@ -457,7 +465,6 @@ void Menu::resolutionReset(sf::Texture* movingEntities_t, bool fhd) {
         background.setTexture(background_t);
         transparent = sf::Sprite();
         transparent.setTexture(transparent_t);
-        win_x = 1280;
-        win_y = 720;
+        this->fhd = fhd;
     }
 }

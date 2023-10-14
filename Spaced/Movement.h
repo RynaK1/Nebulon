@@ -31,7 +31,6 @@ public:
 };
 
 
-// game UI functionality
 // money and(or) point system
 // game upgrades
 // levels

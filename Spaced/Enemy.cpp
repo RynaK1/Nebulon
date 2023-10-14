@@ -10,10 +10,9 @@ int Enemy::getHealth() {
 }
 
 
-int Enemy::getType() {
-    return type;
+int Enemy::getValue() {
+    return value;
 }
-
 
 
 EnemyT0::EnemyT0(Movement mvmt, sf::Texture& texture, bool fhd) {
@@ -24,7 +23,7 @@ EnemyT0::EnemyT0(Movement mvmt, sf::Texture& texture, bool fhd) {
     }
     sprite.setOrigin(sprite.getGlobalBounds().width / 2, sprite.getGlobalBounds().height / 2);
     this->mvmt = mvmt;
-    type = 1;
+    value = 1;
     health = 10;
 }
 
@@ -44,7 +43,7 @@ EnemyT1::EnemyT1(Movement mvmt, sf::Texture& texture, bool fhd) {
     sprite.setOrigin(sprite.getGlobalBounds().width / 2, sprite.getGlobalBounds().height / 2);
     sprite.setRotation(180);
     this->mvmt = mvmt;
-    type = 2;
+    value = 1;
     health = 15;
 }
 
@@ -63,7 +62,7 @@ EnemyBoss::EnemyBoss(Movement mvmt, sf::Texture& texture, bool fhd) {
     }
     sprite.setOrigin(sprite.getGlobalBounds().width / 2, sprite.getGlobalBounds().height / 2);
     this->mvmt = mvmt;
-    type = 10;
+    value = 10;
     health = 100;
 }
 
@@ -81,6 +80,11 @@ EnemyManager::EnemyManager(bool fhd) {
 
 void EnemyManager::setEnemyHealth(int health, int index) {
     enemies[index].setHealth(health);
+}
+
+
+Enemy EnemyManager::getEnemy(int i) {
+    return enemies[i];
 }
 
 

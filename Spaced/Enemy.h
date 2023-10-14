@@ -10,12 +10,12 @@
 class Enemy : public MovingEntity {
 protected:
 	int health;
-	int type;
+	int value;
 public:
-	Enemy() : type(0), health(0) {};
+	Enemy() : value(0), health(0) {};
 	void setHealth(int health);
 	int getHealth();
-	int getType();
+	int getValue();
 };
 
 
@@ -52,6 +52,7 @@ public:
 	EnemyManager() : fhd(0), enemies_size(0) {};
 	EnemyManager(bool fhd);
 	void setEnemyHealth(int health, int index);
+	Enemy getEnemy(int i);
 	int getEnemies_size();
 	std::vector<Enemy> getEnemies();
 	void spawn(Movement mvmt, sf::Texture& texture, int type, float time);

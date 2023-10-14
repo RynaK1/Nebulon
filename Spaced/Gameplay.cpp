@@ -1,7 +1,26 @@
 #include "Gameplay.h"
 
 Gameplay::Gameplay() {
+    if (!font.loadFromFile("../Resources/Textures/AlfaSlabOne-Regular.ttf")) {
+        std::cerr << "Could not load font" << std::endl;
+    }
+
+    int win_x = 1280;
+    int win_y = 720;
+    if (fhd) {
+        win_x = 1920;
+        win_y = 1080;
+    }
+
+    money_txt = sf::Text(readFromFile("money"), font);
+    money_txt.setCharacterSize(30);
+    money_txt.setFillColor(sf::Color::White);
+    money_txt.setPosition(((win_x - money_txt.getLocalBounds().width) / 1.03f),
+        (win_y - money_txt.getLocalBounds().height) / 50);
+    
+
     fhd = false;
+    money = stoi(readFromFile("money"));
 
     if (!background_t.loadFromFile("../Resources/Textures/BackgroundGame.png") ||
         !backgroundFHD_t.loadFromFile("../Resources/Textures/BackgroundGame_FHD.png")) {
@@ -24,7 +43,7 @@ Gameplay::Gameplay() {
 }
 
 int Gameplay::display(sf::RenderWindow& window) {
-    //set resolution again in case of res change
+    //set resolution in case of res change
     fhd = false;
     if (readFromFile("resolution").compare("1920x1080") == 0) {
         fhd = true;
@@ -141,10 +160,11 @@ int Gameplay::display(sf::RenderWindow& window) {
         player.updateBullets(time);
         enemyManager.update(time);
         std::array<bool, 2> death = updateCollisions(enemyManager, player);
-        if (death[0] == true) { //check player death
+        if (death[0] == true) { //player death
+            writeToFile(std::to_string(money), "money");
             return GO_END;
         }
-        if (death[1] == true) { //check enemy death
+        if (death[1] == true) { //enemy death
             sfx_enemy_death.play();
         }
 
@@ -185,6 +205,7 @@ int Gameplay::display(sf::RenderWindow& window) {
         window.draw(health);
         healthbar.setTextureRect(sf::IntRect(676, 968, 246 * player.getHealth() / 100, 24));
         window.draw(healthbar);
+        window.draw(money_txt);
         window.display();
 
     }
@@ -237,6 +258,8 @@ std::array<bool, 2> Gameplay::updateCollisions(EnemyManager& em, Player& player)
             if (bullets[j].getGlobalBounds().intersects(enemies[i].getGlobalBounds())) {
                 int health = enemies[i].getHealth() - bullets[j].getDamage();
                 if (health <= 0) {
+                    money += em.getEnemy(i).getValue();
+                    money_txt.setString(std::to_string(money));
                     em.remove(i);
                     death[1] = true;
                 }

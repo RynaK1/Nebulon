@@ -13,6 +13,7 @@
 
 class Menu {
 private:
+	sf::Font font;
 	sf::Texture background_t;
 	sf::Texture transparent_t;
 	sf::Texture backgroundFHD_t;
@@ -24,8 +25,7 @@ private:
 	sf::Music music;
 	sf::SoundBuffer sfx_buffer;
 	sf::Sound sfx;
-	float win_x;
-	float win_y;
+	bool fhd;
 public:
 	Menu();
 	int displayMain(sf::RenderWindow& window);
