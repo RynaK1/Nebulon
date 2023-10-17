@@ -57,6 +57,9 @@
     <ClCompile Include="Movement.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Gameover.cpp">
+      <Filter>Source Files\Screens</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Menu.h">
@@ -85,6 +88,9 @@
     </ClInclude>
     <ClInclude Include="Movement.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Gameover.h">
+      <Filter>Header Files\Screens</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

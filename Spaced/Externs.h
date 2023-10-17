@@ -12,6 +12,7 @@ const static int GO_MAIN_MENU = 0;
 const static int GO_OPTIONS_MENU = 1;
 const static int GO_GAMEPLAY = 2;
 const static int GO_END = 3;
+const static int GO_GAMEOVER = 4;
 
 
 /*

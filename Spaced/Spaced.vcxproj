@@ -145,6 +145,7 @@
     <ClCompile Include="End.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Externs.cpp" />
+    <ClCompile Include="Gameover.cpp" />
     <ClCompile Include="Gameplay.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Menu.cpp" />
@@ -157,6 +158,7 @@
     <ClInclude Include="End.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Externs.h" />
+    <ClInclude Include="Gameover.h" />
     <ClInclude Include="Gameplay.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="Movement.h" />

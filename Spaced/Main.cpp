@@ -45,6 +45,9 @@ int main() {
             cout << "Going to end" << endl;
             go = end.display(window);
             break;
+        case GO_GAMEOVER:
+            cout << "Going to gameover" << std::endl;
+            break;
         case QUIT:
             window.close();
             break;

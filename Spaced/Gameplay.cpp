@@ -12,15 +12,9 @@ Gameplay::Gameplay() {
         win_y = 1080;
     }
 
-    money_txt = sf::Text(readFromFile("money"), font);
-    money_txt.setCharacterSize(30);
-    money_txt.setFillColor(sf::Color::White);
-    money_txt.setPosition(((win_x - money_txt.getLocalBounds().width) / 1.03f),
-        (win_y - money_txt.getLocalBounds().height) / 50);
-    
+    money = stoi(readFromFile("money"));
 
     fhd = false;
-    money = stoi(readFromFile("money"));
 
     if (!background_t.loadFromFile("../Resources/Textures/BackgroundGame.png") ||
         !backgroundFHD_t.loadFromFile("../Resources/Textures/BackgroundGame_FHD.png")) {
@@ -29,18 +23,24 @@ Gameplay::Gameplay() {
     if (!player_t.loadFromFile("../Resources/Textures/ship_sprite4.png", sf::IntRect(768, 32, 227, 171))) {
         std::cerr << "ship_sprite.png file missing" << std::endl;
     }
-    if (!atk1_t.loadFromFile("../Resources/Textures/Game_UI.png", sf::IntRect(125, 433, 141, 125)) ||
-        !atk2_t.loadFromFile("../Resources/Textures/Game_UI.png", sf::IntRect(199, 47, 172, 159)) ||
+    if (!atk1_t.loadFromFile("../Resources/Textures/Game_UI.png", sf::IntRect(125, 433, 141, 126)) ||
+        !atk2_t.loadFromFile("../Resources/Textures/Game_UI.png", sf::IntRect(199, 47, 172, 160)) ||
         !health_t.loadFromFile("../Resources/Textures/Game_UI.png", sf::IntRect(625, 852, 330, 109)) ||
         !healthbar_t.loadFromFile("../Resources/Textures/Game_UI.png", sf::IntRect(676, 968, 246, 24))) {
         std::cerr << "Game_UI.png file missing" << std::endl;
+    }
+
+    if (!moneyc_t.loadFromFile("../Resources/Textures/Game_UI2.png", sf::IntRect(505, 746, 81, 79))) {
+        std::cerr << "Game_UI2.png file missing" << std::endl;
     }
 
     atk1.setTexture(atk1_t);
     atk2.setTexture(atk2_t);
     health.setTexture(health_t);
     healthbar.setTexture(healthbar_t);
+    moneyc.setTexture(moneyc_t);
 }
+
 
 int Gameplay::display(sf::RenderWindow& window) {
     //set resolution in case of res change
@@ -48,7 +48,10 @@ int Gameplay::display(sf::RenderWindow& window) {
     if (readFromFile("resolution").compare("1920x1080") == 0) {
         fhd = true;
     }
-    scaleUI();
+
+    //lives
+
+    int lives = stoi(readFromFile("lives"));
 
     //set clock
     sf::Clock clock;
@@ -82,9 +85,11 @@ int Gameplay::display(sf::RenderWindow& window) {
 
  
     // ****************** graphic initializations ***********************
-    //background
-    float win_x = (float)window.getSize().x;
-    float win_y = (float)window.getSize().y;
+    // money UI
+    money_txt = sf::Text(readFromFile("money"), font);
+    money_txt.setFillColor(sf::Color::White);
+
+    scaleUI();
 
     //player bullets
     sf::Texture bullet1_t;
@@ -162,7 +167,14 @@ int Gameplay::display(sf::RenderWindow& window) {
         std::array<bool, 2> death = updateCollisions(enemyManager, player);
         if (death[0] == true) { //player death
             writeToFile(std::to_string(money), "money");
-            return GO_END;
+            if (lives - 1 == 0) {
+                writeToFile(std::to_string(10), "lives");
+                return GO_GAMEOVER;
+            }
+            else {
+                writeToFile(std::to_string(lives - 1), "lives");
+                return GO_END;
+            }
         }
         if (death[1] == true) { //enemy death
             sfx_enemy_death.play();
@@ -206,6 +218,7 @@ int Gameplay::display(sf::RenderWindow& window) {
         healthbar.setTextureRect(sf::IntRect(676, 968, 246 * player.getHealth() / 100, 24));
         window.draw(healthbar);
         window.draw(money_txt);
+        window.draw(moneyc);
         window.display();
 
     }
@@ -234,6 +247,11 @@ std::array<bool, 4> Gameplay::checkPlayerBounds(sf::FloatRect pos, sf::Vector2u 
 
 
 std::array<bool, 2> Gameplay::updateCollisions(EnemyManager& em, Player& player) {
+    float scale = 1;
+    if (fhd) {
+        scale = 1.5f;
+    }
+
     std::array<bool, 2> death = { false, false };
 
     std::vector<Enemy> enemies = em.getEnemies();
@@ -260,6 +278,10 @@ std::array<bool, 2> Gameplay::updateCollisions(EnemyManager& em, Player& player)
                 if (health <= 0) {
                     money += em.getEnemy(i).getValue();
                     money_txt.setString(std::to_string(money));
+                    money_txt.setPosition(((1280 * scale) - money_txt.getLocalBounds().width) / 1.017f,
+                        ((720 * scale) - money_txt.getLocalBounds().height) / 50);
+                    moneyc.setPosition(money_txt.getGlobalBounds().left - (45 * scale),
+                        ((720 * scale) - money_txt.getLocalBounds().height) / 55);
                     em.remove(i);
                     death[1] = true;
                 }
@@ -277,28 +299,28 @@ std::array<bool, 2> Gameplay::updateCollisions(EnemyManager& em, Player& player)
 
 void Gameplay::scaleUI() {
     float scale;
+    background = sf::Sprite();
     if (!fhd) {
         scale = 1;
-        background = sf::Sprite();
         background.setTexture(background_t);
     }
     else if (fhd) {
         scale = 1.5;
-        background = sf::Sprite();
         background.setTexture(backgroundFHD_t);
     }
-    atk1.setScale(0.4f * scale, 0.4f * scale);
-    atk2.setScale(0.32f * scale, 0.32f * scale);
-    health.setScale(0.65f * scale, 0.65f * scale);
+    atk1.setScale(0.41f * scale, 0.41f * scale);
+    atk2.setScale(0.335f * scale, 0.335f * scale);
+    health.setScale(0.65f * scale, 0.65f * scale); 
     healthbar.setScale(0.65f * scale, 0.65f * scale);
+    moneyc.setScale(0.4f * scale, 0.4f * scale);
+    money_txt.setCharacterSize((unsigned)(23 * scale));
 
     atk1.setPosition(905 * scale, 645 * scale);
     atk2.setPosition(970 * scale, 645 * scale);
     health.setPosition(1050 * scale, 635 * scale);
     healthbar.setPosition(1080 * scale, 662 * scale);
-}
-
-
-void Gameplay::updateUI() {
-    //shoot cooldown, health bar
+    money_txt.setPosition(((1280 *  scale) - money_txt.getLocalBounds().width) / 1.017f,
+                          ((720 * scale) - money_txt.getLocalBounds().height) / 50);
+    moneyc.setPosition(money_txt.getGlobalBounds().left - (45 * scale),
+                      ((720 * scale) - money_txt.getLocalBounds().height) / 55);
 }

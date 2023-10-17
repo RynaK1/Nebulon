@@ -18,6 +18,7 @@ private:
 	sf::Texture atk2_t;
 	sf::Texture health_t;
 	sf::Texture healthbar_t;
+	sf::Texture moneyc_t;
 	EnemyManager enemyManager;
 	Player player;
 	sf::Sprite background;
@@ -25,6 +26,7 @@ private:
 	sf::Sprite atk2;
 	sf::Sprite health;
 	sf::Sprite healthbar;
+	sf::Sprite moneyc;
 	bool fhd;
 	int money;
 public:
@@ -33,5 +35,4 @@ public:
 	std::array<bool, 4> checkPlayerBounds(sf::FloatRect pos, sf::Vector2u win_size);
 	std::array<bool, 2> updateCollisions(EnemyManager& em, Player& player);
 	void scaleUI();
-	void updateUI();
 };

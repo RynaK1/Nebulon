@@ -66,8 +66,23 @@ int Menu::displayMain(sf::RenderWindow& window) {
         win_y = 1080;
     }
 
+    //lives
+    int lives = stoi(readFromFile("lives"));
+
     // ****************** graphic initializations ***********************
     //texts and buttons
+    sf::Text lives_txt(std::to_string(lives), font);
+    if (lives == 1) {
+        lives_txt.setString(std::to_string(lives) + " drone left");
+    }
+    else {
+        lives_txt.setString(std::to_string(lives) + " drones left");
+    }
+    lives_txt.setCharacterSize(20);
+    lives_txt.setFillColor(sf::Color::White);
+    lives_txt.setPosition(((win_x - lives_txt.getLocalBounds().width) / 1.23f) + lives_txt.getLocalBounds().width + 25,
+        (win_y - lives_txt.getLocalBounds().height) / 45);
+
     sf::Text title_txt("Nebulon", font);
     title_txt.setCharacterSize(60);
     title_txt.setStyle(sf::Text::Bold);
@@ -173,6 +188,7 @@ int Menu::displayMain(sf::RenderWindow& window) {
         window.draw(highscores_txt);
         window.draw(title_txt);
         window.draw(quit_txt);
+        window.draw(lives_txt);
         window.display();
     }
 
