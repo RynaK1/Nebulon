@@ -50,7 +50,6 @@ int Gameplay::display(sf::RenderWindow& window) {
     }
 
     //lives
-
     int lives = stoi(readFromFile("lives"));
 
     //set clock

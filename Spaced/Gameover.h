@@ -5,7 +5,8 @@
 #include "Externs.h"
 
 class Gameover {
-public:
 private:
+public:
+	Gameover();
 	int display(sf::RenderWindow& window);
 };

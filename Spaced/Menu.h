@@ -10,7 +10,6 @@
 #include "Externs.h"
 #include "Entity.h"
 
-
 class Menu {
 private:
 	sf::Font font;

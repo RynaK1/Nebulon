@@ -5,6 +5,7 @@
 
 #include "Menu.h"
 #include "Gameplay.h"
+#include "Gameover.h"
 #include "End.h"
 
 using namespace std;
@@ -22,6 +23,7 @@ int main() {
 
     Menu menu;
     Gameplay gameplay;
+    Gameover gameover;
     End end;
 
     int go = GO_MAIN_MENU; //which screen to go to
@@ -47,6 +49,7 @@ int main() {
             break;
         case GO_GAMEOVER:
             cout << "Going to gameover" << std::endl;
+            go = gameover.display(window);
             break;
         case QUIT:
             window.close();
