@@ -29,11 +29,3 @@ public:
 	void push_back(Equation eq);
 	sf::Vector2f update(float time);
 };
-
-// 10 lives system
-//    - game over after 10 lives
-// tutorial page
-// highscore page
-// money and(or) point system
-// game upgrades
-// levels

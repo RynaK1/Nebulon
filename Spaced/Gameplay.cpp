@@ -15,6 +15,8 @@ Gameplay::Gameplay() {
     money = stoi(readFromFile("money"));
 
     fhd = false;
+    bossDeath = false;
+    stage_num = 1;
 
     if (!background_t.loadFromFile("../Resources/Textures/BackgroundGame.png") ||
         !backgroundFHD_t.loadFromFile("../Resources/Textures/BackgroundGame_FHD.png")) {
@@ -99,70 +101,47 @@ int Gameplay::display(sf::RenderWindow& window) {
     }
 
     //enemies
-    sf::Texture enemy0_t;
-    sf::Texture enemy1_t;
-    sf::Texture enemyBoss_t;
-    if (!enemy0_t.loadFromFile("../Resources/Textures/ship_sprite5.png", sf::IntRect(695, 515, 284, 118)) ||
-        !enemy1_t.loadFromFile("../Resources/Textures/ship_sprite5.png", sf::IntRect(707, 238, 256, 244)) ||
-        !enemyBoss_t.loadFromFile("../Resources/Textures/ship_sprite5.png", sf::IntRect(56, 56, 285, 188))) {
+    sf::Texture textures[5];
+    if (!textures[0].loadFromFile("../Resources/Textures/ship_sprite5.png", sf::IntRect(695, 515, 284, 118)) ||
+        !textures[1].loadFromFile("../Resources/Textures/ship_sprite5.png", sf::IntRect(707, 238, 256, 244)) ||
+        !textures[2].loadFromFile("../Resources/Textures/ship_sprite5.png", sf::IntRect(56, 56, 285, 188))) {
         std::cerr << "ship_sprite5.png file missing" << std::endl;
     }
 
-    enemyManager = EnemyManager(fhd);
+    EnemyManager enemyManager(fhd);
+    stage = Stage(fhd, textures);
     player = Player(player_t, fhd);
 
     while (window.isOpen()) {
 
         sf::Event evnt;
         while (window.pollEvent(evnt)) {
-
-            switch (evnt.type) {
-            case sf::Event::Closed:
+            if(evnt.type == sf::Event::Closed) {
                 window.close();
-                return QUIT;
-                break;
-            // TESTING FOR ENEMY SPAWN <===================================================
-            case sf::Event::KeyPressed:
-                float MAX = 9999;
-                float MIN = -1000;
-                if (sf::Keyboard::isKeyPressed(sf::Keyboard::P)) {
-                    //          pt, xt, yt, m_xt, m_yt, x_max, speed, reverse, fhd
-                    Equation eq0(3, -150, -350, 0.25f, 0.005f, MIN, 70, true, fhd);
-                    Movement mvmt0(764.5f, fhd);
-                    mvmt0.push_back(eq0);
-                    enemyManager.spawn(mvmt0, enemy0_t, 0, time);
-                }
-                if (sf::Keyboard::isKeyPressed(sf::Keyboard::O)) {
-                    Equation eq1(2, -25, -650, 0.05f, 1.5f, MAX, 60, false, fhd);
-                    Movement mvmt1(84, fhd);
-                    mvmt1.push_back(eq1);
-                    enemyManager.spawn(mvmt1, enemy1_t, 1, time);
-                }
-                if (sf::Keyboard::isKeyPressed(sf::Keyboard::I)) {
-                    Equation eq2(0, 0, -200, 0, 0, 1200, 60, false, fhd);
-                    Equation eq3(0, 0, -200, 0, 0, 80, 60, true, fhd);
-                    Equation eq4(0, 0, -200, 0, 0, MAX, 60, false, fhd);
-                    Movement mvmt2(-60, fhd);
-                    mvmt2.push_back(eq2);
-                    mvmt2.push_back(eq3);
-                    mvmt2.push_back(eq2);
-                    mvmt2.push_back(eq3);
-                    mvmt2.push_back(eq4);
-
-                    enemyManager.spawn(mvmt2, enemyBoss_t, 10, time);
-                }
+                return QUIT;       
             }
+        }   
 
-        }        
-        
         // player movement and boundary
         sf::FloatRect pos = player.getSprite().getGlobalBounds();
         std::array<bool, 4> bounds = checkPlayerBounds(pos, window.getSize());
         player.move(time, bounds);
 
+        // spawns appropriate stage enemies at appropriate timing
+        if (bossDeath == true) {
+            stage_num += 1;
+            bossDeath = false;
+        }
+        std::vector<Enemy> spwn = stage.spawn(stage_num);
+        size_t spwn_size = spwn.size();
+        for (size_t i = 0; i < spwn_size; i++) {
+            enemyManager.spawn(spwn[i]);
+        }
+
         // update entities
         player.updateBullets(time);
         enemyManager.update(time);
+
         std::array<bool, 2> death = updateCollisions(enemyManager, player);
         if (death[0] == true) { //player death
             writeToFile(std::to_string(money), "money");
@@ -192,7 +171,6 @@ int Gameplay::display(sf::RenderWindow& window) {
             }
         }
 
-   
         // draw updated graphics
         window.clear();
         window.draw(background);
@@ -219,7 +197,6 @@ int Gameplay::display(sf::RenderWindow& window) {
         window.draw(money_txt);
         window.draw(moneyc);
         window.display();
-
     }
     return QUIT;
 }
@@ -281,6 +258,9 @@ std::array<bool, 2> Gameplay::updateCollisions(EnemyManager& em, Player& player)
                         ((720 * scale) - money_txt.getLocalBounds().height) / 50);
                     moneyc.setPosition(money_txt.getGlobalBounds().left - (45 * scale),
                         ((720 * scale) - money_txt.getLocalBounds().height) / 55);
+                    if (typeid(em.getEnemy(i)).name() == typeid(EnemyBoss).name()) {
+                        bossDeath = true;
+                    }
                     em.remove(i);
                     death[1] = true;
                 }

@@ -151,6 +151,7 @@
     <ClCompile Include="Menu.cpp" />
     <ClCompile Include="Movement.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Stage.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Entity.h" />
@@ -163,6 +164,7 @@
     <ClInclude Include="Menu.h" />
     <ClInclude Include="Movement.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="Stage.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

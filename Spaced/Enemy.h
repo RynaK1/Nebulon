@@ -19,19 +19,21 @@ public:
 };
 
 
-class EnemyT0 : public Enemy {
+class Enemy0 : public Enemy {
 private:
 public:
 	void attack();
-	EnemyT0(Movement mvmt, sf::Texture& texture, bool fhd);
+	Enemy0() {}
+	Enemy0(Movement mvmt, sf::Texture& texture, bool fhd);
 };
 
 
-class EnemyT1 : public Enemy {
+class Enemy1 : public Enemy {
 private:
 public:
 	void attack();
-	EnemyT1(Movement mvmt, sf::Texture& texture, bool fhd);
+	Enemy1() {}
+	Enemy1(Movement mvmt, sf::Texture& texture, bool fhd);
 };
 
 
@@ -39,6 +41,7 @@ class EnemyBoss : public Enemy {
 private:
 public:
 	void attack();
+	EnemyBoss() {}
 	EnemyBoss(Movement mvmt, sf::Texture& texture, bool fhd);
 };
 
@@ -55,7 +58,7 @@ public:
 	Enemy getEnemy(int i);
 	int getEnemies_size();
 	std::vector<Enemy> getEnemies();
-	void spawn(Movement mvmt, sf::Texture& texture, int type, float time);
+	void spawn(Enemy enemy);
 	void update(float time);
 	void remove(int index);
 };

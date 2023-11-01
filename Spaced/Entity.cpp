@@ -47,6 +47,12 @@ MovingEntity::MovingEntity(Movement mvmt, sf::Texture& texture, float scale, boo
 }
 
 
+void MovingEntity::setMvmt(Movement mvmt) {
+	this->mvmt = mvmt;
+}
+
+
+
 sf::Vector2f MovingEntity::update(float time) {
 	return mvmt.update(time);
 }

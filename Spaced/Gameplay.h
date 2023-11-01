@@ -3,9 +3,10 @@
 #include <SFML\Graphics.hpp>
 #include <SFML\Audio.hpp>
 #include <string>
+#include <typeinfo>
 
 #include "Player.h"
-#include "Enemy.h"
+#include "Stage.h"
 
 class Gameplay {
 private:
@@ -19,7 +20,7 @@ private:
 	sf::Texture health_t;
 	sf::Texture healthbar_t;
 	sf::Texture moneyc_t;
-	EnemyManager enemyManager;
+	Stage stage;
 	Player player;
 	sf::Sprite background;
 	sf::Sprite atk1;
@@ -28,7 +29,9 @@ private:
 	sf::Sprite healthbar;
 	sf::Sprite moneyc;
 	bool fhd;
+	bool bossDeath;
 	int money;
+	int stage_num;
 public:
 	Gameplay();
 	int display(sf::RenderWindow &window);

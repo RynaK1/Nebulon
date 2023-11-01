@@ -5,6 +5,7 @@ void Enemy::setHealth(int health) {
 }
 
 
+
 int Enemy::getHealth() {
     return health;
 }
@@ -15,26 +16,26 @@ int Enemy::getValue() {
 }
 
 
-EnemyT0::EnemyT0(Movement mvmt, sf::Texture& texture, bool fhd) {
+Enemy0::Enemy0(Movement mvmt, sf::Texture& texture, bool fhd) {
     sprite.setTexture(texture);
     sprite.setScale(0.25f, 0.25f);
     if (fhd == true) {
         sprite.setScale(0.325f, 0.325f);
     }
     sprite.setOrigin(sprite.getGlobalBounds().width / 2, sprite.getGlobalBounds().height / 2);
-    this->mvmt = mvmt;
     value = 1;
     health = 10;
+    this->mvmt = mvmt;
 }
 
 
-void EnemyT0::attack() {
+void Enemy0::attack() {
 
 }
 
 
 
-EnemyT1::EnemyT1(Movement mvmt, sf::Texture& texture, bool fhd) {
+Enemy1::Enemy1(Movement mvmt, sf::Texture& texture, bool fhd) {
     sprite.setTexture(texture);
     sprite.setScale(0.18f, 0.18f);
     if (fhd == true) {
@@ -42,13 +43,13 @@ EnemyT1::EnemyT1(Movement mvmt, sf::Texture& texture, bool fhd) {
     }
     sprite.setOrigin(sprite.getGlobalBounds().width / 2, sprite.getGlobalBounds().height / 2);
     sprite.setRotation(180);
-    this->mvmt = mvmt;
     value = 1;
     health = 15;
+    this->mvmt = mvmt;
 }
 
 
-void EnemyT1::attack() {
+void Enemy1::attack() {
 
 }
 
@@ -61,9 +62,9 @@ EnemyBoss::EnemyBoss(Movement mvmt, sf::Texture& texture, bool fhd) {
         sprite.setScale(1.125f, 1.125f);
     }
     sprite.setOrigin(sprite.getGlobalBounds().width / 2, sprite.getGlobalBounds().height / 2);
-    this->mvmt = mvmt;
     value = 10;
     health = 100;
+    this->mvmt = mvmt;
 }
 
 void EnemyBoss::attack() {
@@ -98,24 +99,8 @@ std::vector<Enemy> EnemyManager::getEnemies() {
 }
 
 
-void EnemyManager::spawn(Movement mvmt, sf::Texture& texture, int type, float time) {
-    Enemy enemy;
-    switch (type) {
-    case 0:
-        enemy = EnemyT0(mvmt, texture, fhd);
-        break;
-    case 1:
-        enemy = EnemyT1(mvmt, texture, fhd);
-        break;
-    case 10:
-        enemy = EnemyBoss(mvmt, texture, fhd);
-        break;
-    }
-
-    sf::Vector2f result = mvmt.update(time);
-    enemy.setPosition(result.x, -result.y);
+void EnemyManager::spawn(Enemy enemy) {
     enemies.push_back(enemy);
-
     enemies_size += 1;
 }
 
@@ -127,6 +112,7 @@ void EnemyManager::update(float time) {
         window_bound = sf::IntRect(0, 0, 1920, 1080);
         scale = 1.5f;
     }
+
 
     for (int i = 0; i < enemies_size; i++) {
         sf::Vector2f result = enemies[i].update(time);

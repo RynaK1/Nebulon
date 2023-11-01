@@ -29,6 +29,7 @@ protected:
 public:
 	MovingEntity() {}
 	MovingEntity(Movement mvmt, sf::Texture& texture, float scale, bool fhd);
+	void setMvmt(Movement mvmt);
 	sf::Vector2f update(float time);
 };
 
