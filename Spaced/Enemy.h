@@ -9,11 +9,13 @@
 
 class Enemy : public MovingEntity {
 protected:
+	sf::Clock clock;
 	int health;
 	int value;
 public:
 	Enemy() : value(0), health(0) {};
 	void setHealth(int health);
+	void attack() {}
 	int getHealth();
 	int getValue();
 };

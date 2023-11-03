@@ -23,7 +23,7 @@ private:
 	float MIN;
 	float MAX;
 	EnemyMvmt enemyMvmt;
-	bool s1flags[3];
+	bool s1flags[10];
 	sf::Clock clock;   
 	sf::Texture* textures;
 public:

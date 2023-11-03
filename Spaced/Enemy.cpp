@@ -102,6 +102,7 @@ std::vector<Enemy> EnemyManager::getEnemies() {
 void EnemyManager::spawn(Enemy enemy) {
     enemies.push_back(enemy);
     enemies_size += 1;
+    std::cout << enemies_size << " " << enemies.size() << std::endl;
 }
 
 
@@ -112,7 +113,6 @@ void EnemyManager::update(float time) {
         window_bound = sf::IntRect(0, 0, 1920, 1080);
         scale = 1.5f;
     }
-
 
     for (int i = 0; i < enemies_size; i++) {
         sf::Vector2f result = enemies[i].update(time);
