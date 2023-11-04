@@ -27,18 +27,25 @@ public:
 
 
 
-class smallBullet : public Bullet {
+class SmallBullet : public Bullet {
 private:
 public:
-	smallBullet(sf::Texture& texture, bool fhd);
+	SmallBullet(sf::Texture& texture, bool fhd);
 };
 
 
 
-class largeBullet : public Bullet {
+class LargeBullet : public Bullet {
 private:
 public:
-	largeBullet(sf::Texture& texture, bool fhd);
+	LargeBullet(sf::Texture& texture, bool fhd);
+};
+
+
+class EnemyBullet : public Bullet {
+private:
+public:
+	EnemyBullet(sf::Texture& texture, bool fhd);
 };
 
 

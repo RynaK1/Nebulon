@@ -9,10 +9,9 @@
 //global variables
 const static int QUIT = -1;
 const static int GO_MAIN_MENU = 0;
-const static int GO_OPTIONS_MENU = 1;
-const static int GO_GAMEPLAY = 2;
-const static int GO_END = 3;
-const static int GO_GAMEOVER = 4;
+const static int GO_GAMEPLAY = 1;
+const static int GO_END = 2;
+const static int GO_GAMEOVER = 3;
 
 
 /*

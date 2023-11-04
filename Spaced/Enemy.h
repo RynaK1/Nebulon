@@ -6,16 +6,18 @@
 
 #include "Entity.h"
 #include "Movement.h"
+#include "BulletManager.h"
 
 class Enemy : public MovingEntity {
 protected:
 	sf::Clock clock;
 	int health;
 	int value;
+	bool flag;
 public:
-	Enemy() : value(0), health(0) {};
+	Enemy() : value(0), health(0), flag(false) {};
 	void setHealth(int health);
-	void attack() {}
+	virtual void attack(sf::Texture texture) {}
 	int getHealth();
 	int getValue();
 };
@@ -23,8 +25,9 @@ public:
 
 class Enemy0 : public Enemy {
 private:
+	BulletManager bulletManager;
 public:
-	void attack();
+	void attack(sf::Texture texture);
 	Enemy0() {}
 	Enemy0(Movement mvmt, sf::Texture& texture, bool fhd);
 };
@@ -33,7 +36,7 @@ public:
 class Enemy1 : public Enemy {
 private:
 public:
-	void attack();
+	void attack(sf::Texture texture);
 	Enemy1() {}
 	Enemy1(Movement mvmt, sf::Texture& texture, bool fhd);
 };
@@ -42,7 +45,7 @@ public:
 class EnemyBoss : public Enemy {
 private:
 public:
-	void attack();
+	void attack(sf::Texture texture);
 	EnemyBoss() {}
 	EnemyBoss(Movement mvmt, sf::Texture& texture, bool fhd);
 };
@@ -61,6 +64,6 @@ public:
 	int getEnemies_size();
 	std::vector<Enemy> getEnemies();
 	void spawn(Enemy enemy);
-	void update(float time);
+	void update(float time, sf::Texture& textures);
 	void remove(int index);
 };

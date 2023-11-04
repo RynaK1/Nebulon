@@ -21,36 +21,36 @@ int main() {
         window.setPosition(sf::Vector2i(-8, -31)); //position correction for HD
     }
 
-    Menu menu;
-    Gameplay gameplay;
-    Gameover gameover;
-    End end;
 
     int go = GO_MAIN_MENU; //which screen to go to
 
     while (window.isOpen()) {
 
         switch (go) {
-        case GO_MAIN_MENU:
+        case GO_MAIN_MENU: {
+            Menu menu;
             cout << "Going to main menu" << endl;
             go = menu.displayMain(window);
             break;
-        case GO_OPTIONS_MENU:
-            cout << "Going to options menu" << endl;
-            go = menu.displayOptions(window);
-            break;
-        case GO_GAMEPLAY:
+        }
+        case GO_GAMEPLAY: {
+            Gameplay gameplay;
             cout << "Going to gameplay" << endl;
             go = gameplay.display(window);
             break;
-        case GO_END:
+        }
+        case GO_END: {
+            End end;
             cout << "Going to end" << endl;
             go = end.display(window);
             break;
-        case GO_GAMEOVER:
+        }
+        case GO_GAMEOVER: {
+            Gameover gameover;
             cout << "Going to gameover" << std::endl;
             go = gameover.display(window);
             break;
+        }
         case QUIT:
             window.close();
             break;

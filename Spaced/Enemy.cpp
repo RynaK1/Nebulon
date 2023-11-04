@@ -29,8 +29,17 @@ Enemy0::Enemy0(Movement mvmt, sf::Texture& texture, bool fhd) {
 }
 
 
-void Enemy0::attack() {
-
+void Enemy0::attack(sf::Texture texture) {
+    int time = (int)clock.getElapsedTime().asSeconds();
+    std::cout << "met" << std::endl;
+    if (time == 1 && flag == false) {
+        bulletManager.shoot(texture, sprite.getGlobalBounds(), 3);
+        flag = true;
+    }
+    else if (time == 3) {
+        clock.restart();
+        flag = false;
+    }
 }
 
 
@@ -49,7 +58,7 @@ Enemy1::Enemy1(Movement mvmt, sf::Texture& texture, bool fhd) {
 }
 
 
-void Enemy1::attack() {
+void Enemy1::attack(sf::Texture texture) {
 
 }
 
@@ -67,7 +76,7 @@ EnemyBoss::EnemyBoss(Movement mvmt, sf::Texture& texture, bool fhd) {
     this->mvmt = mvmt;
 }
 
-void EnemyBoss::attack() {
+void EnemyBoss::attack(sf::Texture texture) {
 
 }
 
@@ -102,11 +111,10 @@ std::vector<Enemy> EnemyManager::getEnemies() {
 void EnemyManager::spawn(Enemy enemy) {
     enemies.push_back(enemy);
     enemies_size += 1;
-    std::cout << enemies_size << " " << enemies.size() << std::endl;
 }
 
 
-void EnemyManager::update(float time) {
+void EnemyManager::update(float time, sf::Texture& texture) {
     sf::IntRect window_bound(0, 0, 1280, 720);
     float scale = 1;
     if (fhd == true) {
@@ -117,6 +125,7 @@ void EnemyManager::update(float time) {
     for (int i = 0; i < enemies_size; i++) {
         sf::Vector2f result = enemies[i].update(time);
         enemies[i].setPosition(result.x, -result.y);
+        enemies[i].attack(texture);
         // bound check
         if (!window_bound.intersects((sf::IntRect)enemies[i].getGlobalBounds())) {
             remove(i);

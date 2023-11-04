@@ -140,7 +140,7 @@ int Gameplay::display(sf::RenderWindow& window) {
 
         // update entities
         player.updateBullets(time);
-        enemyManager.update(time);
+        enemyManager.update(time, atk1_t);
 
         std::array<bool, 2> death = updateCollisions(enemyManager, player);
         if (death[0] == true) { //player death

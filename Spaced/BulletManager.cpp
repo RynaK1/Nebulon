@@ -14,16 +14,19 @@ std::vector<Bullet> BulletManager::getBullets() {
 }
 
 
-void BulletManager::shoot(sf::Texture& texture, sf::FloatRect player_pos, int type) {
+void BulletManager::shoot(sf::Texture& texture, sf::FloatRect pos, int type) {
     Bullet bullet;
     if (type == 1) {
-        bullet = smallBullet(texture, fhd);
+        bullet = SmallBullet(texture, fhd);
     }
     else if (type == 2) {
-        bullet = largeBullet(texture, fhd);
+        bullet = LargeBullet(texture, fhd);
+    }
+    else if (type == 3) {
+        bullet = EnemyBullet(texture, fhd);
     }
 
-    bullet.setPosition(player_pos.left + (player_pos.width / 2), player_pos.top - 3); // y-coord offset
+    bullet.setPosition(pos.left + (pos.width / 2), pos.top - 3); // y-coord offset
 
     bullets.push_back(bullet);
     num_bullets += 1;
@@ -45,7 +48,7 @@ void BulletManager::updateBullets(float time) {
             i -= 1;
         }
         else { 
-            bullets[i].move(0, -bullets[i].getSpeed() * time);
+            bullets[i].move(0, bullets[i].getSpeed() * time);
         }
     }
 }
@@ -106,14 +109,14 @@ void Bullet::move(float offsetX, float offsetY) {
 
 
 
-smallBullet::smallBullet(sf::Texture& texture, bool fhd) {
+SmallBullet::SmallBullet(sf::Texture& texture, bool fhd) {
     sprite.setTexture(texture);
     sprite.setScale(3, 3);
     sprite.setOrigin(1.5, 3);
 
     damage = 10;
     type = 1;
-    speed = 900;
+    speed = -900;
 
     if (fhd == true) {
         sprite.setScale(4.5, 4.5);
@@ -122,17 +125,42 @@ smallBullet::smallBullet(sf::Texture& texture, bool fhd) {
 }
 
 
-largeBullet::largeBullet(sf::Texture& texture, bool fhd) {
+LargeBullet::LargeBullet(sf::Texture& texture, bool fhd) {
     sprite.setTexture(texture);
     sprite.setScale(3, 3);
     sprite.setOrigin(2.5, 5.5);
 
     damage = 25;
     type = 2;
-    speed = 650;
+    speed = -650;
 
     if (fhd == true) {
         sprite.setScale(4.5, 4.5);
         speed = 975;
     }
 }
+
+
+EnemyBullet::EnemyBullet(sf::Texture& texture, bool fhd) {
+    sprite.setTexture(texture);
+    sprite.setRotation(180);
+    sprite.setScale(3, 3);
+    sprite.setOrigin(2.5, 5.5);
+
+    damage = 20;
+    type = 3;
+    speed = 600;
+
+    if (fhd == true) {
+        sprite.setScale(4.5, 4.5);
+        speed = 975;
+    }
+}
+
+/*
+
+MAKE A GENERALIZED FORM FOR BULLETMANAGER
+    - takes in respective entities position, not just player
+    - bullets that travel downwards
+
+*/
