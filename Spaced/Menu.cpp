@@ -1,6 +1,12 @@
 #include "Menu.h"
 
-Menu::Menu() {
+Menu::Menu(sf::RenderWindow* window) {
+    this->window = window;
+
+    int mem_flags_size = sizeof(mem_flags);
+    for (int i = 0; i < mem_flags_size; i++) {
+        mem_flags[i] = false;
+    }
     //text font
     if (!font.loadFromFile("../Resources/Textures/AlfaSlabOne-Regular.ttf")) {
         std::cerr << "Could not load font <MENU>" << std::endl;
@@ -41,94 +47,73 @@ Menu::Menu() {
     //resolution
     if (readFromFile("resolution").compare("1280x720") == 0) {
         fhd = false;
+        win_x = 1280;
+        win_y = 720;
         background.setTexture(background_t);
         transparent.setTexture(transparent_t);
     }
     else {
         fhd = true;
+        win_x = 1920;
+        win_y = 1080;
         background.setTexture(backgroundFHD_t);
         transparent.setTexture(transparentFHD_t);
     }
-
-    //moving ship sprites
-    movingEntityManager = MovingEntityManager(movingEntities_t, fhd);
 }
 
 
-int Menu::displayMain(sf::RenderWindow& window) {
+int Menu::displayMain() {
     loadUIMain(fhd);
-    while (window.isOpen()) {
+    while (window->isOpen()) {
         sf::Event evnt;
-        while (window.pollEvent(evnt)) {
+        while (window->pollEvent(evnt)) {
             if (evnt.type == sf::Event::Closed) {
-                window.close();
+                window->close();
             }
 
-            // highlight button if mouse is over button
-            sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-            if (buttonBounds(mousePos, UI_main["start_txt"])) {
-                UI_main["start_txt"].setFillColor(sf::Color::Red);
-            }
-            else if (buttonBounds(mousePos, UI_main["options_txt"])) {
-                UI_main["options_txt"].setFillColor(sf::Color::Red);
-            }
-            else if (buttonBounds(mousePos, UI_main["highscores_txt"])) {
-                UI_main["highscores_txt"].setFillColor(sf::Color::Red);
-            }
-            else if (buttonBounds(mousePos, UI_main["quit_txt"])) {
-                UI_main["quit_txt"].setFillColor(sf::Color::Red);
-            }
-            else {
-                UI_main["start_txt"].setFillColor(sf::Color::White);
-                UI_main["options_txt"].setFillColor(sf::Color::White);
-                UI_main["highscores_txt"].setFillColor(sf::Color::White);
-                UI_main["quit_txt"].setFillColor(sf::Color::White);
-            }
+            //highlight button if mouse is hovered over it
+            sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
+            highlightMain(mousePos);
 
-            // button actions
+            // button actions                                // FIRST CONDITION NEEDED? <=========
             if (evnt.type == sf::Event::MouseButtonPressed && evnt.mouseButton.button == sf::Mouse::Left) {
-                if (buttonBounds(mousePos, UI_main["start_txt"])) {
-                    sfx.play();
-                    music.stop();
-                    return GO_GAMEPLAY;
+                int go = buttonPressedMain(mousePos);
+                if (go == GO_OPTIONS_MENU) {
+                    displayOptions();
                 }
-                else if (buttonBounds(mousePos, UI_main["options_txt"])) {
-                    sfx.play();
-                    displayOptions(window);
+                else if (go == NULL) {
+                    continue;
                 }
-                else if (buttonBounds(mousePos, UI_main["quit_txt"])) {
-                    sfx.play();
-                    return QUIT;
+                else {
+                    return go;
                 }
             }
         }
-        movingEntityManager.update(time);
-        movingEntityManager.spawn(movingEntities_t);
-        time = clock.restart().asSeconds();
+        updateMovingEntities();
 
-        window.clear();
-        window.draw(background);
-
-        //drawing ships behind buildings
-        std::vector<MovingEntity> movingEntities1 = movingEntityManager.getMovingEntities1();
-        int movingEntities1_size = movingEntityManager.getMovingEntities1_size();
-        for (int i = 0; i < movingEntities1_size; i++) {
-            window.draw(movingEntities1[i].getSprite());
+        window->clear();
+        window->draw(background);
+        //drawing ships in front and behind buildings
+        //behind
+        std::vector<MovingEntity> movingEntities_back = mem_back.getMovingEntities();
+        int mem_back_size = mem_back.getMovingEntities_size();
+        for (int i = 0; i < mem_back_size; i++) {
+            window->draw(movingEntities_back[i].getSprite());
         }
-        window.draw(transparent);
-        //drawing ships in front of buildings
-        std::vector<MovingEntity> movingEntities2 = movingEntityManager.getMovingEntities2();
-        int movingEntities2_size = movingEntityManager.getMovingEntities2_size();
+        window->draw(transparent);
+        //front
+        std::vector<MovingEntity> movingEntities_front = mem_front.getMovingEntities();
+        int movingEntities2_size = mem_front.getMovingEntities_size();
         for (int i = 0; i < movingEntities2_size; i++) {
-            window.draw(movingEntities2[i].getSprite());
+            window->draw(movingEntities_front[i].getSprite());
         }
-        window.draw(UI_main["start_txt"]);
-        window.draw(UI_main["options_txt"]);
-        window.draw(UI_main["highscores_txt"]);
-        window.draw(UI_main["title_txt"]);
-        window.draw(UI_main["quit_txt"]);
-        window.draw(UI_main["lives_txt"]);
-        window.display();
+        window->draw(UI_main["start_txt"]);
+        window->draw(UI_main["options_txt"]);
+        window->draw(UI_main["highscores_txt"]);
+        window->draw(UI_main["title_txt"]);
+        window->draw(UI_main["quit_txt"]);
+        window->draw(UI_main["lives_txt"]);
+        window->display();
     }
 
     std::cerr << "Error: displayMainMenu end of function return" << std::endl;
@@ -137,55 +122,19 @@ int Menu::displayMain(sf::RenderWindow& window) {
 
 
 
-int Menu::displayOptions(sf::RenderWindow& window) {
-    //resolution
-    int win_x = 1280;
-    int win_y = 720;
-    if (fhd) {
-        win_x = 1920;
-        win_y = 1080;
-    }
+int Menu::displayOptions() {
     loadUIOptions(fhd);
-    while (window.isOpen()) {
+    while (window->isOpen()) {
         sf::Event evnt;
-        while (window.pollEvent(evnt)) {
+        while (window->pollEvent(evnt)) {
             if (evnt.type == sf::Event::Closed) {
-                window.close();
+                window->close();
                 break;
             }
 
-            //highlight button if mouse is over button  
-            sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-            if (buttonBounds(mousePos, UI_options2["mvol_knob"])) {
-                UI_options2["mvol_knob"].setFillColor(sf::Color::Red);
-            }
-            else if (buttonBounds(mousePos, UI_options2["svol_knob"])) {
-                UI_options2["svol_knob"].setFillColor(sf::Color::Red);
-            }
-            else if (buttonBounds(mousePos, UI_options2["muvol_knob"])) {
-                UI_options2["muvol_knob"].setFillColor(sf::Color::Red);
-            }
-            else if (buttonBounds(mousePos, UI_options["bind_txt"])) {
-                UI_options["bind_txt"].setFillColor(sf::Color::Red);
-            }
-            else if (buttonBounds(mousePos, UI_options["back_txt"])) {
-                UI_options["back_txt"].setFillColor(sf::Color::Red);
-            }
-            else if (buttonBounds(mousePos, UI_options["low_txt"])) {
-                UI_options["low_txt"].setFillColor(sf::Color::Red);
-            }
-            else if (buttonBounds(mousePos, UI_options["high_txt"])) {
-                UI_options["high_txt"].setFillColor(sf::Color::Red);
-            }
-            else {
-                UI_options2["mvol_knob"].setFillColor(sf::Color::Magenta);
-                UI_options2["svol_knob"].setFillColor(sf::Color::Magenta);
-                UI_options2["muvol_knob"].setFillColor(sf::Color::Magenta);
-                UI_options["bind_txt"].setFillColor(sf::Color::White);
-                UI_options["back_txt"].setFillColor(sf::Color::White);
-                UI_options["low_txt"].setFillColor(sf::Color::White);
-                UI_options["high_txt"].setFillColor(sf::Color::White);
-            }
+            //highlight button if mouse is hovered over it
+            sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
+            highlightOptions(mousePos);
 
             //mouse tracker alternative for volume slider
             if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
@@ -218,74 +167,48 @@ int Menu::displayOptions(sf::RenderWindow& window) {
             }
 
             // button actions
-            if (evnt.type == sf::Event::MouseButtonPressed && evnt.mouseButton.button == sf::Mouse::Left) {   
-                if (buttonBounds(mousePos, UI_options["bind_txt"])) {
-                    sfx.play();
-                    //key binds
-                }
-                else if (buttonBounds(mousePos, UI_options["low_txt"])) {
-                    sfx.play();
-                    window.create(sf::VideoMode(1280, 720), "Nebulon", sf::Style::Close);
-                    resolutionReset(movingEntities_t, false);
-                    loadUIMain(fhd);
-                    loadUIOptions(fhd);
-                    win_x = 1280;
-                    win_y = 720;
-                }
-                else if (buttonBounds(mousePos, UI_options["high_txt"])) {
-                    sfx.play();
-                    window.create(sf::VideoMode(1920, 1080), "Nebulon", sf::Style::Close);
-                    window.setPosition(sf::Vector2i(-8, -31));
-                    resolutionReset(movingEntities_t, true);
-                    loadUIMain(fhd);
-                    loadUIOptions(fhd);
-                    win_x = 1920;
-                    win_y = 1080;
-                }
-                else if (buttonBounds(mousePos, UI_options["back_txt"])) {
-                    sfx.play();
-                    return GO_MAIN_MENU;
+            if (evnt.type == sf::Event::MouseButtonPressed && evnt.mouseButton.button == sf::Mouse::Left) {
+                if (buttonPressedOptions(mousePos) == GO_MAIN_MENU) {
+                    return NULL;
                 }
             }
-        }
-        movingEntityManager.update(time);
-        movingEntityManager.spawn(movingEntities_t);
-        time = clock.restart().asSeconds();
+        }       
+        updateMovingEntities();
 
-        window.clear();
-        window.draw(background);
-        //drawing ship sprites behind and in front of buildings
-        int movingEntities1_size = movingEntityManager.getMovingEntities1_size();
-        std::vector<MovingEntity> movingEntities1 = movingEntityManager.getMovingEntities1();
-        //front
-        for (int i = 0; i < movingEntities1_size; i++) {
-            window.draw(movingEntities1[i].getSprite());
-        }
-        window.draw(transparent); 
+        window->clear();
+        window->draw(background);
+        //drawing ships in front and behind buildings
+        int mem_back_size = mem_back.getMovingEntities_size();
+        std::vector<MovingEntity> movingEntities_back = mem_back.getMovingEntities();
         //behind
-        int movingEntities2_size = movingEntityManager.getMovingEntities2_size();
-        std::vector<MovingEntity> movingEntities2 = movingEntityManager.getMovingEntities2();
-        for (int i = 0; i < movingEntities2_size; i++) {
-            window.draw(movingEntities2[i].getSprite());
+        for (int i = 0; i < mem_back_size; i++) {
+            window->draw(movingEntities_back[i].getSprite());
         }
-        window.draw(UI_options["options_txt"]);
-        window.draw(UI_options["mvol_txt"]);
-        window.draw(UI_options2["mvol_bar"]);
-        window.draw(UI_options["mvol_num_txt"]);
-        window.draw(UI_options2["mvol_knob"]);
-        window.draw(UI_options["svol_txt"]);
-        window.draw(UI_options2["svol_bar"]);
-        window.draw(UI_options["svol_num_txt"]);
-        window.draw(UI_options2["svol_knob"]);
-        window.draw(UI_options["muvol_txt"]);
-        window.draw(UI_options2["muvol_bar"]);
-        window.draw(UI_options["muvol_num_txt"]);
-        window.draw(UI_options2["muvol_knob"]);
-        window.draw(UI_options["bind_txt"]);
-        window.draw(UI_options["low_txt"]);
-        window.draw(UI_options["high_txt"]);
-        window.draw(UI_options["back_txt"]);
-        window.display();
+        window->draw(transparent);
+        //front
+        int mem_front_size = mem_front.getMovingEntities_size();
+        std::vector<MovingEntity> movingEntities_front = mem_front.getMovingEntities();
+        for (int i = 0; i < mem_front_size; i++) {
+            window->draw(movingEntities_front[i].getSprite());
+        }
+        window->draw(UI_options["options_txt"]);
+        window->draw(UI_options["mvol_txt"]);
+        window->draw(UI_options2["mvol_bar"]);
+        window->draw(UI_options["mvol_num_txt"]);
+        window->draw(UI_options2["mvol_knob"]);
+        window->draw(UI_options["svol_txt"]);
+        window->draw(UI_options2["svol_bar"]);
+        window->draw(UI_options["svol_num_txt"]);
+        window->draw(UI_options2["svol_knob"]);
+        window->draw(UI_options["muvol_txt"]);
+        window->draw(UI_options2["muvol_bar"]);
+        window->draw(UI_options["muvol_num_txt"]);
+        window->draw(UI_options2["muvol_knob"]);
+        window->draw(UI_options["bind_txt"]);
+        window->draw(UI_options["low_txt"]);
+        window->draw(UI_options["high_txt"]);
+        window->draw(UI_options["back_txt"]);
+        window->display();
     }
 
     std::cerr << "Error: displayOptionsMenu end of function return" << std::endl;
@@ -294,8 +217,125 @@ int Menu::displayOptions(sf::RenderWindow& window) {
 
 
 
+void Menu::highlightMain(sf::Vector2i mousePos) {
+    if (buttonBounds(mousePos, UI_main["start_txt"])) {
+        UI_main["start_txt"].setFillColor(sf::Color::Red);
+    }
+    else if (buttonBounds(mousePos, UI_main["options_txt"])) {
+        UI_main["options_txt"].setFillColor(sf::Color::Red);
+    }
+    else if (buttonBounds(mousePos, UI_main["highscores_txt"])) {
+        UI_main["highscores_txt"].setFillColor(sf::Color::Red);
+    }
+    else if (buttonBounds(mousePos, UI_main["quit_txt"])) {
+        UI_main["quit_txt"].setFillColor(sf::Color::Red);
+    }
+    else {
+        UI_main["start_txt"].setFillColor(sf::Color::White);
+        UI_main["options_txt"].setFillColor(sf::Color::White);
+        UI_main["highscores_txt"].setFillColor(sf::Color::White);
+        UI_main["quit_txt"].setFillColor(sf::Color::White);
+    }
+}
+
+
+
+void Menu::highlightOptions(sf::Vector2i mousePos) {
+    if (buttonBounds(mousePos, UI_options2["mvol_knob"])) {
+        UI_options2["mvol_knob"].setFillColor(sf::Color::Red);
+    }
+    else if (buttonBounds(mousePos, UI_options2["svol_knob"])) {
+        UI_options2["svol_knob"].setFillColor(sf::Color::Red);
+    }
+    else if (buttonBounds(mousePos, UI_options2["muvol_knob"])) {
+        UI_options2["muvol_knob"].setFillColor(sf::Color::Red);
+    }
+    else if (buttonBounds(mousePos, UI_options["bind_txt"])) {
+        UI_options["bind_txt"].setFillColor(sf::Color::Red);
+    }
+    else if (buttonBounds(mousePos, UI_options["back_txt"])) {
+        UI_options["back_txt"].setFillColor(sf::Color::Red);
+    }
+    else if (buttonBounds(mousePos, UI_options["low_txt"])) {
+        UI_options["low_txt"].setFillColor(sf::Color::Red);
+    }
+    else if (buttonBounds(mousePos, UI_options["high_txt"])) {
+        UI_options["high_txt"].setFillColor(sf::Color::Red);
+    }
+    else {
+        UI_options2["mvol_knob"].setFillColor(sf::Color::Magenta);
+        UI_options2["svol_knob"].setFillColor(sf::Color::Magenta);
+        UI_options2["muvol_knob"].setFillColor(sf::Color::Magenta);
+        UI_options["bind_txt"].setFillColor(sf::Color::White);
+        UI_options["back_txt"].setFillColor(sf::Color::White);
+        UI_options["low_txt"].setFillColor(sf::Color::White);
+        UI_options["high_txt"].setFillColor(sf::Color::White);
+    }
+}
+
+
+
+int Menu::buttonPressedMain(sf::Vector2i mousePos) {
+    if (buttonBounds(mousePos, UI_main["start_txt"])) {
+        sfx.play();
+        music.stop();
+        return GO_GAMEPLAY;
+    }
+    else if (buttonBounds(mousePos, UI_main["options_txt"])) {
+        sfx.play();
+        return GO_OPTIONS_MENU;
+    }
+    else if (buttonBounds(mousePos, UI_main["quit_txt"])) {
+        sfx.play();
+        return QUIT;
+    }
+    return NULL;
+}
+
+
+
+int Menu::buttonPressedOptions(sf::Vector2i mousePos) {
+    if (buttonBounds(mousePos, UI_options["bind_txt"])) {
+        sfx.play();
+        //key binds
+    }
+    else if (buttonBounds(mousePos, UI_options["low_txt"])) {
+        sfx.play();
+        window->create(sf::VideoMode(1280, 720), "Nebulon", sf::Style::Close);
+        resolutionReset(movingEntities_t, false);
+        loadUIMain(fhd);
+        loadUIOptions(fhd);
+        win_x = 1280;
+        win_y = 720;
+    }
+    else if (buttonBounds(mousePos, UI_options["high_txt"])) {
+        sfx.play();
+        window->create(sf::VideoMode(1920, 1080), "Nebulon", sf::Style::Close);
+        window->setPosition(sf::Vector2i(-8, -31));
+        resolutionReset(movingEntities_t, true);
+        loadUIMain(fhd);
+        loadUIOptions(fhd);
+        win_x = 1920;
+        win_y = 1080;
+    }
+    else if (buttonBounds(mousePos, UI_options["back_txt"])) {
+        sfx.play();
+        return GO_MAIN_MENU;
+    }
+    return NULL;
+}
+
+
+
 void Menu::resolutionReset(sf::Texture* movingEntities_t, bool fhd) {
-    movingEntityManager = MovingEntityManager(movingEntities_t, fhd);
+    mem_back = MovingEntityManager(fhd);
+    mem_front = MovingEntityManager(fhd);
+    mem_clock.restart();   
+    int mem_flags_size = sizeof(mem_flags);
+    for (int i = 0; i < mem_flags_size; i++) {
+        mem_flags[i] = false;
+    }
+
     if (fhd) {
         writeToFile("1920x1080", "resolution");
         background = sf::Sprite();
@@ -303,6 +343,8 @@ void Menu::resolutionReset(sf::Texture* movingEntities_t, bool fhd) {
         transparent = sf::Sprite();
         transparent.setTexture(transparentFHD_t);
         this->fhd = fhd;
+        win_x = 1920;
+        win_y = 1080;
     }
     else {
         writeToFile("1280x720", "resolution");
@@ -311,20 +353,14 @@ void Menu::resolutionReset(sf::Texture* movingEntities_t, bool fhd) {
         transparent = sf::Sprite();
         transparent.setTexture(transparent_t);
         this->fhd = fhd;
+        win_x = 1280;
+        win_y = 720;
     }
 }
 
 
 
 void Menu::loadUIMain(bool fhd) {
-    //resolution
-    int win_x = 1280;
-    int win_y = 720;
-    if (fhd) {
-        win_x = 1920;
-        win_y = 1080;
-    }
-
     //texts
     int lives = stoi(readFromFile("lives"));
     sf::Text lives_txt(std::to_string(lives), font);
@@ -379,19 +415,14 @@ void Menu::loadUIMain(bool fhd) {
     quit_txt.setPosition(((win_x - quit_txt.getLocalBounds().width) / 2.0f),
         (win_y - quit_txt.getLocalBounds().height) / 1.32f);
     UI_main["quit_txt"] = quit_txt;
+
+    mem_back = MovingEntityManager(fhd);
+    mem_front = MovingEntityManager(fhd);
 }
 
 
 
 void Menu::loadUIOptions(bool fhd) {
-    //resolution
-    int win_x = 1280;
-    int win_y = 720;
-    if (fhd) {
-        win_x = 1920;
-        win_y = 1080;
-    }
-
     //texts
     sf::Text options_txt("Options", font);
     options_txt.setCharacterSize(45);
@@ -515,4 +546,75 @@ void Menu::loadUIOptions(bool fhd) {
     back_txt.setPosition(((win_x - back_txt.getLocalBounds().width) / 2),
         (win_y - back_txt.getLocalBounds().height) / 1.22f);
     UI_options["back_txt"] = back_txt;
+}
+
+
+
+void Menu::updateMovingEntities() {
+    float MAX = 3000;
+    float MIN = -1000;
+
+    float mem_time = mem_clock.getElapsedTime().asSeconds();
+
+    if ((int)mem_time == 0 && mem_flags[0] == false) {
+        //          pt, xt, yt, m_xt, m_yt, x_max, speed, reverse, fhd
+        Equation eq0(1, 0, -300, 1, 0.23f, MIN, 35, true, fhd);
+        Movement mvmt0(1280, fhd);
+        mvmt0.push_back(eq0);
+        MovingEntity me0(mvmt0, movingEntities_t[0], 0.07f, fhd); //top right, fast
+        mem_front.spawn(me0);
+
+        Equation eq1(0, 0, -300, 0, 0, MAX, 8, false, fhd);
+        Movement mvmt1(-135, fhd);
+        mvmt1.push_back(eq1);
+        MovingEntity me1(mvmt1, movingEntities_t[1], 0.3f, fhd); //mid left, lower
+        mem_back.spawn(me1);
+
+        Equation eq3(0, 0, -450, 0, 0, MIN, 5, true, fhd);
+        Movement mvmt3(1020, fhd);
+        mvmt3.push_back(eq3);
+        MovingEntity me3(mvmt3, movingEntities_t[3], 0.2f, fhd);
+        mem_back.spawn(me3); //bottom right, behind tower
+
+        Equation eq5(0, 0, -175, 0, 0, MIN, 15, true, fhd);
+        Movement mvmt5(1280, fhd);
+        mvmt5.push_back(eq5);
+        MovingEntity me5(mvmt5, movingEntities_t[5], 0.5f, fhd);
+        mem_front.spawn(me5); //top right, lower
+
+        Equation eq6(0, 0, -400, 0, 0, MAX, 3, false, fhd);
+        Movement mvmt6(200, fhd);
+        mvmt6.push_back(eq6);
+        MovingEntity me6(mvmt6, movingEntities_t[6], 0.10f, fhd);
+        mem_back.spawn(me6); //bottom left, behind tower
+
+        mem_flags[0] = true;
+    }
+    else if ((int)mem_time == 10 && mem_flags[1] == false) {
+        Equation eq2(0, 0, -260, 0, 0, MAX, 8, false, fhd);
+        Movement mvmt2(-102, fhd);
+        mvmt2.push_back(eq2);
+        MovingEntity me2(mvmt2, movingEntities_t[2], 0.22f, fhd);
+        mem_back.spawn(me2); //mid left, upper
+
+        Equation eq4(0, 0, -100, 0, 0, MIN, 15, true, fhd);
+        Movement mvmt4(1278, fhd);
+        mvmt4.push_back(eq4);
+        MovingEntity me4(mvmt4, movingEntities_t[4], 0.5f, fhd);
+        mem_front.spawn(me4); //top right, higher
+
+        mem_flags[1] = true;
+    }
+    else if (mem_time == 140) {
+        int mem_flags_size = sizeof(mem_flags);
+        for (int i = 0; i < mem_flags_size; i++) {
+            mem_flags[i] = false;
+        }
+        mem_clock.restart();
+    }
+
+    float frame_time = frame_clock.getElapsedTime().asSeconds();
+    frame_clock.restart();
+    mem_back.update(frame_time);
+    mem_front.update(frame_time);
 }

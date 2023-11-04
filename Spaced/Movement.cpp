@@ -51,7 +51,6 @@ sf::Vector2f Movement::update(float time) {
 
 	if ((eqs[eq_curr].negative == false && x >= eqs[eq_curr].x_max) ||
 		(eqs[eq_curr].negative == true && x <= eqs[eq_curr].x_max)) {
-		std::cout << "met5" << std::endl;
 		eq_curr += 1;
 	};
 

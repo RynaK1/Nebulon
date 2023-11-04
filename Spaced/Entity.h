@@ -37,21 +37,16 @@ public:
 class MovingEntityManager {
 private:
 	sf::Clock clock;
-	std::vector<MovingEntity> movingEntities1;
-	std::vector<MovingEntity> movingEntities2;
+	std::vector<MovingEntity> movingEntities;
 	bool fhd;
-	int movingEntities1_size;
-	int movingEntities2_size;
+	int movingEntities_size;
 	bool flags[3];
 public:
-	MovingEntityManager() : fhd(false), movingEntities1_size(0), movingEntities2_size(0), flags{false, false, false} {};
-	MovingEntityManager(sf::Texture* movingEntities_t, bool fhd);
-	int getMovingEntities1_size();
-	int getMovingEntities2_size();
-	std::vector<MovingEntity> getMovingEntities1();
-	std::vector<MovingEntity> getMovingEntities2();
+	MovingEntityManager() : fhd(false), movingEntities_size(0), flags{false, false, false} {};
+	MovingEntityManager(bool fhd);
+	int getMovingEntities_size();
+	std::vector<MovingEntity> getMovingEntities();
 	void update(float time);
-	void remove1(int i);
-	void remove2(int i);
-	void spawn(sf::Texture* movingEntities_t);
+	void remove(int i);
+	void spawn(MovingEntity me);
 };

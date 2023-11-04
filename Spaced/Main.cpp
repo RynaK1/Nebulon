@@ -28,9 +28,9 @@ int main() {
 
         switch (go) {
         case GO_MAIN_MENU: {
-            Menu menu;
+            Menu menu(&window);
             cout << "Going to main menu" << endl;
-            go = menu.displayMain(window);
+            go = menu.displayMain();
             break;
         }
         case GO_GAMEPLAY: {
