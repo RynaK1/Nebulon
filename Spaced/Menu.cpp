@@ -3,9 +3,9 @@
 Menu::Menu(sf::RenderWindow* window) {
     this->window = window;
 
-    int mem_flags_size = sizeof(mem_flags);
+    int mem_flags_size = sizeof(em_flags);
     for (int i = 0; i < mem_flags_size; i++) {
-        mem_flags[i] = false;
+        em_flags[i] = false;
     }
     //text font
     if (!font.loadFromFile("../Resources/Textures/AlfaSlabOne-Regular.ttf")) {
@@ -26,13 +26,13 @@ Menu::Menu(sf::RenderWindow* window) {
     music.play();
 
     //ship textures
-    if (!movingEntities_t[0].loadFromFile("../Resources/Textures/ship_sprite7.png", sf::IntRect(14, 14, 525, 294)) ||
-        !movingEntities_t[1].loadFromFile("../Resources/Textures/ship_sprite8.png", sf::IntRect(516, 770, 473, 164)) ||
-        !movingEntities_t[2].loadFromFile("../Resources/Textures/ship_sprite8.png", sf::IntRect(516, 578, 473, 173)) ||
-        !movingEntities_t[3].loadFromFile("../Resources/Textures/ship_sprite8.png", sf::IntRect(9, 163, 483, 163)) ||
-        !movingEntities_t[4].loadFromFile("../Resources/Textures/ship_sprite8.png", sf::IntRect(14, 675, 479, 137)) ||
-        !movingEntities_t[5].loadFromFile("../Resources/Textures/ship_sprite8.png", sf::IntRect(57, 537, 404, 112)) ||
-        !movingEntities_t[6].loadFromFile("../Resources/Textures/ship_sprite9.png", sf::IntRect(27, 1, 975, 396))) {
+    if (!entities_t[0].loadFromFile("../Resources/Textures/ship_sprite7.png", sf::IntRect(14, 14, 525, 294)) ||
+        !entities_t[1].loadFromFile("../Resources/Textures/ship_sprite8.png", sf::IntRect(516, 770, 473, 164)) ||
+        !entities_t[2].loadFromFile("../Resources/Textures/ship_sprite8.png", sf::IntRect(516, 578, 473, 173)) ||
+        !entities_t[3].loadFromFile("../Resources/Textures/ship_sprite8.png", sf::IntRect(9, 163, 483, 163)) ||
+        !entities_t[4].loadFromFile("../Resources/Textures/ship_sprite8.png", sf::IntRect(14, 675, 479, 137)) ||
+        !entities_t[5].loadFromFile("../Resources/Textures/ship_sprite8.png", sf::IntRect(57, 537, 404, 112)) ||
+        !entities_t[6].loadFromFile("../Resources/Textures/ship_sprite9.png", sf::IntRect(27, 1, 975, 396))) {
         std::cerr << "Could not load ship textures <MENU>" << std::endl;
     }
 
@@ -59,6 +59,9 @@ Menu::Menu(sf::RenderWindow* window) {
         background.setTexture(backgroundFHD_t);
         transparent.setTexture(transparentFHD_t);
     }
+
+    loadUIMain(fhd);
+    loadUIOptions(fhd);
 }
 
 
@@ -75,8 +78,8 @@ int Menu::displayMain() {
             sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
             highlightMain(mousePos);
 
-            // button actions                                // FIRST CONDITION NEEDED? <=========
-            if (evnt.type == sf::Event::MouseButtonPressed && evnt.mouseButton.button == sf::Mouse::Left) {
+            // button actions
+            if (evnt.mouseButton.button == sf::Mouse::Left) {
                 int go = buttonPressedMain(mousePos);
                 if (go == GO_OPTIONS_MENU) {
                     displayOptions();
@@ -89,21 +92,21 @@ int Menu::displayMain() {
                 }
             }
         }
-        updateMovingEntities();
+        updateEntities();
 
         window->clear();
         window->draw(background);
         //drawing ships in front and behind buildings
         //behind
-        std::vector<MovingEntity> movingEntities_back = mem_back.getMovingEntities();
-        int mem_back_size = mem_back.getMovingEntities_size();
+        std::vector<Entity> movingEntities_back = em_back.getEntities();
+        int mem_back_size = em_back.getSize();
         for (int i = 0; i < mem_back_size; i++) {
             window->draw(movingEntities_back[i].getSprite());
         }
         window->draw(transparent);
         //front
-        std::vector<MovingEntity> movingEntities_front = mem_front.getMovingEntities();
-        int movingEntities2_size = mem_front.getMovingEntities_size();
+        std::vector<Entity> movingEntities_front = em_front.getEntities();
+        int movingEntities2_size = em_front.getSize();
         for (int i = 0; i < movingEntities2_size; i++) {
             window->draw(movingEntities_front[i].getSprite());
         }
@@ -167,27 +170,27 @@ int Menu::displayOptions() {
             }
 
             // button actions
-            if (evnt.type == sf::Event::MouseButtonPressed && evnt.mouseButton.button == sf::Mouse::Left) {
+            if (evnt.mouseButton.button == sf::Mouse::Left) {
                 if (buttonPressedOptions(mousePos) == GO_MAIN_MENU) {
                     return NULL;
                 }
             }
         }       
-        updateMovingEntities();
+        updateEntities();
 
         window->clear();
         window->draw(background);
         //drawing ships in front and behind buildings
-        int mem_back_size = mem_back.getMovingEntities_size();
-        std::vector<MovingEntity> movingEntities_back = mem_back.getMovingEntities();
+        int mem_back_size = em_back.getSize();
+        std::vector<Entity> movingEntities_back = em_back.getEntities();
         //behind
         for (int i = 0; i < mem_back_size; i++) {
             window->draw(movingEntities_back[i].getSprite());
         }
         window->draw(transparent);
         //front
-        int mem_front_size = mem_front.getMovingEntities_size();
-        std::vector<MovingEntity> movingEntities_front = mem_front.getMovingEntities();
+        int mem_front_size = em_front.getSize();
+        std::vector<Entity> movingEntities_front = em_front.getEntities();
         for (int i = 0; i < mem_front_size; i++) {
             window->draw(movingEntities_front[i].getSprite());
         }
@@ -302,7 +305,7 @@ int Menu::buttonPressedOptions(sf::Vector2i mousePos) {
     else if (buttonBounds(mousePos, UI_options["low_txt"])) {
         sfx.play();
         window->create(sf::VideoMode(1280, 720), "Nebulon", sf::Style::Close);
-        resolutionReset(movingEntities_t, false);
+        resolutionReset(entities_t, false);
         loadUIMain(fhd);
         loadUIOptions(fhd);
         win_x = 1280;
@@ -312,7 +315,7 @@ int Menu::buttonPressedOptions(sf::Vector2i mousePos) {
         sfx.play();
         window->create(sf::VideoMode(1920, 1080), "Nebulon", sf::Style::Close);
         window->setPosition(sf::Vector2i(-8, -31));
-        resolutionReset(movingEntities_t, true);
+        resolutionReset(entities_t, true);
         loadUIMain(fhd);
         loadUIOptions(fhd);
         win_x = 1920;
@@ -328,12 +331,12 @@ int Menu::buttonPressedOptions(sf::Vector2i mousePos) {
 
 
 void Menu::resolutionReset(sf::Texture* movingEntities_t, bool fhd) {
-    mem_back = MovingEntityManager(fhd);
-    mem_front = MovingEntityManager(fhd);
-    mem_clock.restart();   
-    int mem_flags_size = sizeof(mem_flags);
+    em_back = EntityManager(fhd);
+    em_front = EntityManager(fhd);
+    em_clock.restart();   
+    int mem_flags_size = sizeof(em_flags);
     for (int i = 0; i < mem_flags_size; i++) {
-        mem_flags[i] = false;
+        em_flags[i] = false;
     }
 
     if (fhd) {
@@ -416,8 +419,8 @@ void Menu::loadUIMain(bool fhd) {
         (win_y - quit_txt.getLocalBounds().height) / 1.32f);
     UI_main["quit_txt"] = quit_txt;
 
-    mem_back = MovingEntityManager(fhd);
-    mem_front = MovingEntityManager(fhd);
+    em_back = EntityManager(fhd);
+    em_front = EntityManager(fhd);
 }
 
 
@@ -550,71 +553,89 @@ void Menu::loadUIOptions(bool fhd) {
 
 
 
-void Menu::updateMovingEntities() {
+void Menu::updateEntities() {
     float MAX = 3000;
     float MIN = -1000;
 
-    float mem_time = mem_clock.getElapsedTime().asSeconds();
+    float mem_time = em_clock.getElapsedTime().asSeconds();
 
-    if ((int)mem_time == 0 && mem_flags[0] == false) {
+    if ((int)mem_time == 0 && em_flags[0] == false) {
         //          pt, xt, yt, m_xt, m_yt, x_max, speed, reverse, fhd
         Equation eq0(1, 0, -300, 1, 0.23f, MIN, 35, true, fhd);
         Movement mvmt0(1280, fhd);
         mvmt0.push_back(eq0);
-        MovingEntity me0(mvmt0, movingEntities_t[0], 0.07f, fhd); //top right, fast
-        mem_front.spawn(me0);
+        Entity me0(mvmt0, entities_t[0]); //top right, fast
+        me0.setScale(0.07f, 0.07f);
+        em_front.spawn(me0);
 
         Equation eq1(0, 0, -300, 0, 0, MAX, 8, false, fhd);
         Movement mvmt1(-135, fhd);
         mvmt1.push_back(eq1);
-        MovingEntity me1(mvmt1, movingEntities_t[1], 0.3f, fhd); //mid left, lower
-        mem_back.spawn(me1);
+        Entity me1(mvmt1, entities_t[1]); //mid left, lower
+        me1.setScale(0.3f, 0.3f);
+        em_back.spawn(me1);
 
         Equation eq3(0, 0, -450, 0, 0, MIN, 5, true, fhd);
         Movement mvmt3(1020, fhd);
         mvmt3.push_back(eq3);
-        MovingEntity me3(mvmt3, movingEntities_t[3], 0.2f, fhd);
-        mem_back.spawn(me3); //bottom right, behind tower
+        Entity me3(mvmt3, entities_t[3]);
+        me3.setScale(0.2f, 0.2f);
+        em_back.spawn(me3); //bottom right, behind tower
 
         Equation eq5(0, 0, -175, 0, 0, MIN, 15, true, fhd);
         Movement mvmt5(1280, fhd);
         mvmt5.push_back(eq5);
-        MovingEntity me5(mvmt5, movingEntities_t[5], 0.5f, fhd);
-        mem_front.spawn(me5); //top right, lower
+        Entity me5(mvmt5, entities_t[5]);
+        me5.setScale(0.5f, 0.5f);
+        em_front.spawn(me5); //top right, lower
 
         Equation eq6(0, 0, -400, 0, 0, MAX, 3, false, fhd);
         Movement mvmt6(200, fhd);
         mvmt6.push_back(eq6);
-        MovingEntity me6(mvmt6, movingEntities_t[6], 0.10f, fhd);
-        mem_back.spawn(me6); //bottom left, behind tower
+        Entity me6(mvmt6, entities_t[6]);
+        me6.setScale(0.1f, 0.1f);
+        em_back.spawn(me6); //bottom left, behind tower
 
-        mem_flags[0] = true;
+        em_flags[0] = true;
     }
-    else if ((int)mem_time == 10 && mem_flags[1] == false) {
+    else if ((int)mem_time == 10 && em_flags[1] == false) {
         Equation eq2(0, 0, -260, 0, 0, MAX, 8, false, fhd);
         Movement mvmt2(-102, fhd);
         mvmt2.push_back(eq2);
-        MovingEntity me2(mvmt2, movingEntities_t[2], 0.22f, fhd);
-        mem_back.spawn(me2); //mid left, upper
+        Entity me2(mvmt2, entities_t[2]);
+        me2.setScale(0.22f, 0.22f);
+        em_back.spawn(me2); //mid left, upper
 
         Equation eq4(0, 0, -100, 0, 0, MIN, 15, true, fhd);
         Movement mvmt4(1278, fhd);
         mvmt4.push_back(eq4);
-        MovingEntity me4(mvmt4, movingEntities_t[4], 0.5f, fhd);
-        mem_front.spawn(me4); //top right, higher
+        Entity me4(mvmt4, entities_t[4]);
+        me4.setScale(0.5f, 0.5f);
+        em_front.spawn(me4); //top right, higher
 
-        mem_flags[1] = true;
+        em_flags[1] = true;
     }
-    else if (mem_time == 140) {
-        int mem_flags_size = sizeof(mem_flags);
+    else if ((int)mem_time == 70 && em_flags[2] == false) {
+        Equation eq7(1, 0, -400, 1, 0.1f, MIN, 35, true, fhd);
+        Movement mvmt7(1280, fhd);
+        mvmt7.push_back(eq7);
+        Entity me7(mvmt7, entities_t[0]); //mid left, fast
+        me7.setScale(0.07f, 0.07f);
+        em_front.setRotation(em_front.getSize() - 1, 20);
+        em_front.spawn(me7);
+        
+        em_flags[2] = true;
+    }
+    else if ((int)mem_time == 140) {
+        int mem_flags_size = sizeof(em_flags);
         for (int i = 0; i < mem_flags_size; i++) {
-            mem_flags[i] = false;
+            em_flags[i] = false;
         }
-        mem_clock.restart();
+        em_clock.restart();
     }
 
     float frame_time = frame_clock.getElapsedTime().asSeconds();
     frame_clock.restart();
-    mem_back.update(frame_time);
-    mem_front.update(frame_time);
+    em_back.update(frame_time);
+    em_front.update(frame_time);
 }

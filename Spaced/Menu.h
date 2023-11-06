@@ -22,14 +22,14 @@ private:
 	sf::Texture transparent_t;
 	sf::Texture backgroundFHD_t;
 	sf::Texture transparentFHD_t;
-	sf::Texture movingEntities_t[7];
+	sf::Texture entities_t[7];
 	sf::Sprite background;
 	sf::Sprite transparent;
 
-	sf::Clock mem_clock;
-	bool mem_flags[2];
-	MovingEntityManager mem_back;
-	MovingEntityManager mem_front;
+	sf::Clock em_clock;
+	bool em_flags[3];
+	EntityManager em_back;
+	EntityManager em_front;
 
 	std::map<std::string, sf::Text> UI_main;
 	std::map<std::string, sf::Text> UI_options;
@@ -41,12 +41,12 @@ public:
 	Menu(sf::RenderWindow* window);
 	int displayMain();
 	int displayOptions();
-	void resolutionReset(sf::Texture* movingEntities_t, bool fhd);
+	void resolutionReset(sf::Texture* entities_t, bool fhd);
 	void loadUIMain(bool fhd);
 	void loadUIOptions(bool fhd);
 	void highlightMain(sf::Vector2i mousePos);
 	void highlightOptions(sf::Vector2i mousePos);
 	int buttonPressedMain(sf::Vector2i mousePos);
 	int buttonPressedOptions(sf::Vector2i mousePos);
-	void updateMovingEntities();
+	void updateEntities();
 };

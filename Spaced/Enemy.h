@@ -8,7 +8,7 @@
 #include "Movement.h"
 #include "BulletManager.h"
 
-class Enemy : public MovingEntity {
+class Enemy : public Entity {
 protected:
 	sf::Clock clock;
 	int health;
@@ -16,10 +16,10 @@ protected:
 	bool flag;
 public:
 	Enemy() : value(0), health(0), flag(false) {};
-	void setHealth(int health);
-	virtual void attack(sf::Texture texture) {}
 	int getHealth();
 	int getValue();
+	void setHealth(int health);
+	virtual void attack(sf::Texture texture) {}
 };
 
 

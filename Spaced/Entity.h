@@ -11,42 +11,33 @@
 class Entity {
 protected:
 	sf::Sprite sprite;
+	Movement mvmt;
 public:
 	Entity() {}
-	Entity(sf::Texture& texture);
+	Entity(Movement mvmt, sf::Texture& texture);
+	void setMvmt(Movement mvmt);
 	void setRotation(float r);
 	void setPosition(float x, float y);
 	void setScale(float s1, float s2);
 	sf::Sprite getSprite();
-	sf::Vector2f getScale();
 	sf::FloatRect getGlobalBounds();
-};
-
-
-class MovingEntity : public Entity {
-protected:
-	Movement mvmt;
-public:
-	MovingEntity() {}
-	MovingEntity(Movement mvmt, sf::Texture& texture, float scale, bool fhd);
-	void setMvmt(Movement mvmt);
 	sf::Vector2f update(float time);
 };
 
 
-class MovingEntityManager {
+class EntityManager {
 private:
 	sf::Clock clock;
-	std::vector<MovingEntity> movingEntities;
+	std::vector<Entity> entities;
 	bool fhd;
-	int movingEntities_size;
-	bool flags[3];
+	int size;
 public:
-	MovingEntityManager() : fhd(false), movingEntities_size(0), flags{false, false, false} {};
-	MovingEntityManager(bool fhd);
-	int getMovingEntities_size();
-	std::vector<MovingEntity> getMovingEntities();
-	void update(float time);
+	EntityManager() : fhd(false), size(0) {};
+	EntityManager(bool fhd);
+	int getSize();
+	std::vector<Entity> getEntities();
+	void setRotation(int i, float num);
 	void remove(int i);
-	void spawn(MovingEntity me);
+	void spawn(Entity me);
+	void update(float time);
 };

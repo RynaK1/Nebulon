@@ -122,8 +122,6 @@ int Gameplay::display(sf::RenderWindow& window) {
             }
         }   
 
-        std::cout << time << std::endl;
-
         // player movement and boundary
         sf::FloatRect pos = player.getSprite().getGlobalBounds();
         std::array<bool, 4> bounds = checkPlayerBounds(pos, window.getSize());
