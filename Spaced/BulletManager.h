@@ -61,6 +61,6 @@ public:
 	BulletManager();
 	std::vector<Bullet> getBullets();
 	void shoot(sf::Texture& texture, sf::FloatRect pos, int type);
-	void updateBullets(float time);
-	void removeBullet(int index);
+	void update(float time);
+	void remove(int i);
 };

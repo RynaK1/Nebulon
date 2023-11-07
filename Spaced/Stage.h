@@ -29,6 +29,6 @@ private:
 public:
 	Stage() : fhd(false), MIN(-1000), MAX(10000), textures(nullptr), s1flags{0,0,0} {}
 	Stage(bool fhd, sf::Texture* textures);
-	std::vector<Enemy> spawn(int stage);
+	std::vector<Enemy*> spawn(int stage);
 	void del();
 };

@@ -5,6 +5,10 @@ void Enemy::setHealth(int health) {
 }
 
 
+std::vector<Bullet> Enemy::getBullets() {
+    return bulletManager.getBullets();
+}
+
 
 int Enemy::getHealth() {
     return health;
@@ -16,6 +20,12 @@ int Enemy::getValue() {
 }
 
 
+void Enemy::updateBullets(float time) {
+    bulletManager.update(time);
+}
+
+
+
 Enemy0::Enemy0(Movement mvmt, sf::Texture& texture, bool fhd) {
     sprite.setTexture(texture);
     sprite.setScale(0.25f, 0.25f);
@@ -23,20 +33,19 @@ Enemy0::Enemy0(Movement mvmt, sf::Texture& texture, bool fhd) {
         sprite.setScale(0.325f, 0.325f);
     }
     sprite.setOrigin(sprite.getGlobalBounds().width / 2, sprite.getGlobalBounds().height / 2);
-    value = 1;
     health = 10;
+    value = 0;
     this->mvmt = mvmt;
 }
 
 
-void Enemy0::attack(sf::Texture texture) {
-    int time = (int)clock.getElapsedTime().asSeconds();
-    std::cout << "met" << std::endl;
-    if (time == 1 && flag == false) {
+void Enemy0::attack(sf::Texture& texture) {
+    float time = clock.getElapsedTime().asSeconds();
+    if ((int)time == 1 && flag == false) {
         bulletManager.shoot(texture, sprite.getGlobalBounds(), 3);
         flag = true;
     }
-    else if (time == 3) {
+    else if ((int)time == 3) {
         clock.restart();
         flag = false;
     }
@@ -52,14 +61,9 @@ Enemy1::Enemy1(Movement mvmt, sf::Texture& texture, bool fhd) {
     }
     sprite.setOrigin(sprite.getGlobalBounds().width / 2, sprite.getGlobalBounds().height / 2);
     sprite.setRotation(180);
-    value = 1;
     health = 15;
+    value = 0;
     this->mvmt = mvmt;
-}
-
-
-void Enemy1::attack(sf::Texture texture) {
-
 }
 
 
@@ -71,12 +75,12 @@ EnemyBoss::EnemyBoss(Movement mvmt, sf::Texture& texture, bool fhd) {
         sprite.setScale(1.125f, 1.125f);
     }
     sprite.setOrigin(sprite.getGlobalBounds().width / 2, sprite.getGlobalBounds().height / 2);
-    value = 10;
     health = 100;
+    value = 10;
     this->mvmt = mvmt;
 }
 
-void EnemyBoss::attack(sf::Texture texture) {
+void EnemyBoss::attack(sf::Texture& texture) {
 
 }
 
@@ -89,11 +93,11 @@ EnemyManager::EnemyManager(bool fhd) {
 
 
 void EnemyManager::setEnemyHealth(int health, int index) {
-    enemies[index].setHealth(health);
+    enemies[index]->setHealth(health);
 }
 
 
-Enemy EnemyManager::getEnemy(int i) {
+Enemy* EnemyManager::getEnemy(int i) {
     return enemies[i];
 }
 
@@ -103,12 +107,12 @@ int EnemyManager::getEnemies_size() {
 }
 
 
-std::vector<Enemy> EnemyManager::getEnemies() {
+std::vector<Enemy*> EnemyManager::getEnemies() {
     return enemies;
 }
 
 
-void EnemyManager::spawn(Enemy enemy) {
+void EnemyManager::spawn(Enemy* enemy) {
     enemies.push_back(enemy);
     enemies_size += 1;
 }
@@ -123,11 +127,12 @@ void EnemyManager::update(float time, sf::Texture& texture) {
     }
 
     for (int i = 0; i < enemies_size; i++) {
-        sf::Vector2f result = enemies[i].update(time);
-        enemies[i].setPosition(result.x, -result.y);
-        enemies[i].attack(texture);
+        sf::Vector2f result = enemies[i]->update(time);
+        enemies[i]->setPosition(result.x, -result.y);
+        enemies[i]->attack(texture);
+        enemies[i]->updateBullets(time);
         // bound check
-        if (!window_bound.intersects((sf::IntRect)enemies[i].getGlobalBounds())) {
+        if (!window_bound.intersects((sf::IntRect)enemies[i]->getGlobalBounds())) {
             remove(i);
             i -= 1;
         }
@@ -135,7 +140,8 @@ void EnemyManager::update(float time, sf::Texture& texture) {
 }
 
 
-void EnemyManager::remove(int index) {
-    enemies.erase(enemies.begin() + index);
+void EnemyManager::remove(int i) {
+    delete enemies[i];
+    enemies.erase(enemies.begin() + i);
     enemies_size -= 1;
 }

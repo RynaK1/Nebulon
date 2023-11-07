@@ -35,7 +35,7 @@ void BulletManager::shoot(sf::Texture& texture, sf::FloatRect pos, int type) {
 }
 
 
-void BulletManager::updateBullets(float time) {
+void BulletManager::update(float time) {
     sf::FloatRect window_bound(0, 0, 1280, 720);
 
     if (fhd == true) {
@@ -44,7 +44,7 @@ void BulletManager::updateBullets(float time) {
 
     for (int i = 0; i < num_bullets; i++) {
         if (!window_bound.intersects(bullets[i].getGlobalBounds())) {
-            removeBullet(i);
+            remove(i);
             i -= 1;
         }
         else { 
@@ -54,8 +54,8 @@ void BulletManager::updateBullets(float time) {
 }
 
 
-void BulletManager::removeBullet(int index) {
-    bullets.erase(bullets.begin() + index);
+void BulletManager::remove(int i) {
+    bullets.erase(bullets.begin() + i);
     num_bullets -= 1;
 }
 
@@ -156,11 +156,3 @@ EnemyBullet::EnemyBullet(sf::Texture& texture, bool fhd) {
         speed = 975;
     }
 }
-
-/*
-
-MAKE A GENERALIZED FORM FOR BULLETMANAGER
-    - takes in respective entities position, not just player
-    - bullets that travel downwards
-
-*/

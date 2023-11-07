@@ -11,23 +11,25 @@
 class Enemy : public Entity {
 protected:
 	sf::Clock clock;
+	BulletManager bulletManager;
 	int health;
 	int value;
 	bool flag;
 public:
 	Enemy() : value(0), health(0), flag(false) {};
+	void setHealth(int health);
+	std::vector<Bullet> getBullets();
 	int getHealth();
 	int getValue();
-	void setHealth(int health);
-	virtual void attack(sf::Texture texture) {}
+	void updateBullets(float time);
+	virtual void attack(sf::Texture& texture) {}
 };
 
 
 class Enemy0 : public Enemy {
 private:
-	BulletManager bulletManager;
 public:
-	void attack(sf::Texture texture);
+	void attack(sf::Texture& texture);
 	Enemy0() {}
 	Enemy0(Movement mvmt, sf::Texture& texture, bool fhd);
 };
@@ -36,7 +38,6 @@ public:
 class Enemy1 : public Enemy {
 private:
 public:
-	void attack(sf::Texture texture);
 	Enemy1() {}
 	Enemy1(Movement mvmt, sf::Texture& texture, bool fhd);
 };
@@ -45,7 +46,7 @@ public:
 class EnemyBoss : public Enemy {
 private:
 public:
-	void attack(sf::Texture texture);
+	void attack(sf::Texture& texture);
 	EnemyBoss() {}
 	EnemyBoss(Movement mvmt, sf::Texture& texture, bool fhd);
 };
@@ -53,17 +54,17 @@ public:
 
 class EnemyManager {
 private:
-	std::vector<Enemy> enemies;
+	std::vector<Enemy*> enemies;
 	bool fhd;
 	int enemies_size;
 public:
 	EnemyManager() : fhd(0), enemies_size(0) {};
 	EnemyManager(bool fhd);
 	void setEnemyHealth(int health, int index);
-	Enemy getEnemy(int i);
+	Enemy* getEnemy(int i);
 	int getEnemies_size();
-	std::vector<Enemy> getEnemies();
-	void spawn(Enemy enemy);
+	std::vector<Enemy*> getEnemies();
+	void spawn(Enemy* enemy);
 	void update(float time, sf::Texture& textures);
-	void remove(int index);
+	void remove(int i);
 };

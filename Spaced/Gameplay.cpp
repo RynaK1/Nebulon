@@ -132,7 +132,7 @@ int Gameplay::display(sf::RenderWindow& window) {
             stage_num += 1;
             bossDeath = false;
         }
-        std::vector<Enemy> spwn = stage.spawn(stage_num);
+        std::vector<Enemy*> spwn = stage.spawn(stage_num);
         size_t spwn_size = spwn.size();
         for (size_t i = 0; i < spwn_size; i++) {
             enemyManager.spawn(spwn[i]);
@@ -140,7 +140,7 @@ int Gameplay::display(sf::RenderWindow& window) {
 
         // update entities
         player.updateBullets(time);
-        enemyManager.update(time, atk1_t);
+        enemyManager.update(time, bullet1_t);
 
         std::array<bool, 2> death = updateCollisions(enemyManager, player);
         if (death[0] == true) { //player death
@@ -174,15 +174,21 @@ int Gameplay::display(sf::RenderWindow& window) {
         // draw updated graphics
         window.clear();
         window.draw(background);
-        std::vector<Bullet> bullets = player.getBullets();
-        size_t bullets_size = bullets.size();
-        for (int i = 0; i < bullets_size; i++) {
-            window.draw(bullets[i].getSprite());
+        std::vector<Bullet> pbullets = player.getBullets();
+        size_t pbullets_size = pbullets.size();
+        for (int i = 0; i < pbullets_size; i++) {
+            window.draw(pbullets[i].getSprite());
         }
         int enemies_size = enemyManager.getEnemies_size();
-        std::vector<Enemy> enemies = enemyManager.getEnemies();
+        std::vector<Enemy*> enemies = enemyManager.getEnemies();
         for (int i = 0; i < enemies_size; i++) {
-            window.draw(enemies[i].getSprite());
+            window.draw(enemies[i]->getSprite());
+    
+            std::vector<Bullet> ebullets = enemies[i]->getBullets();
+            size_t ebullets_size = ebullets.size();
+            for (int j = 0; j < ebullets_size; j++) {
+                window.draw(ebullets[j].getSprite());
+            }
         }
         window.draw(player.getSprite());
 
@@ -230,11 +236,11 @@ std::array<bool, 2> Gameplay::updateCollisions(EnemyManager& em, Player& player)
 
     std::array<bool, 2> death = { false, false };
 
-    std::vector<Enemy> enemies = em.getEnemies();
+    std::vector<Enemy*> enemies = em.getEnemies();
     sf::Sprite player_s = player.getSprite();
     size_t enemies_size = enemies.size();
     for (int i = 0; i < enemies_size; i++) {
-        if (enemies[i].getGlobalBounds().intersects(player_s.getGlobalBounds()))
+        if (enemies[i]->getGlobalBounds().intersects(player_s.getGlobalBounds()))
         {
             int health = player.getHealth() - 10;
             if (health <= 0) {
@@ -249,10 +255,10 @@ std::array<bool, 2> Gameplay::updateCollisions(EnemyManager& em, Player& player)
     for (int i = 0; i < enemies.size(); i++) {
         std::vector<Bullet> bullets = player.getBullets();
         for (int j = 0; j < bullets.size(); j++) {
-            if (bullets[j].getGlobalBounds().intersects(enemies[i].getGlobalBounds())) {
-                int health = enemies[i].getHealth() - bullets[j].getDamage();
+            if (bullets[j].getGlobalBounds().intersects(enemies[i]->getGlobalBounds())) {
+                int health = enemies[i]->getHealth() - bullets[j].getDamage();
                 if (health <= 0) {
-                    money += em.getEnemy(i).getValue();
+                    money += em.getEnemy(i)->getValue();
                     money_txt.setString(std::to_string(money));
                     money_txt.setPosition(((1280 * scale) - money_txt.getLocalBounds().width) / 1.017f,
                         ((720 * scale) - money_txt.getLocalBounds().height) / 50);

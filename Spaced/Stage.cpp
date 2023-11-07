@@ -13,8 +13,8 @@ Stage::Stage(bool fhd, sf::Texture* textures) {
 }
 
 
-std::vector<Enemy> Stage::spawn(int stage) {
-	std::vector<Enemy> spwn;
+std::vector<Enemy*> Stage::spawn(int stage) {
+	std::vector<Enemy*> spwn;
 
 	int time = (int)clock.getElapsedTime().asSeconds();
 	/*
@@ -27,34 +27,34 @@ std::vector<Enemy> Stage::spawn(int stage) {
 	switch (stage) {
 	case 1: 
 		if (s1flags[0] == false && time == 1) {
-			Enemy0 e0_0(enemyMvmt.e0Mvmts[std::rand() % enemyMvmt.e0Mvmts.size()], textures[0], fhd);
+			Enemy0* e0_0 = new Enemy0(enemyMvmt.e0Mvmts[std::rand() % enemyMvmt.e0Mvmts.size()], textures[0], fhd);
 			spwn.push_back(e0_0);
 			s1flags[0] = true;
 		}
 		else if (s1flags[1] == false && time == 3) {
-			Enemy0 e0_1(enemyMvmt.e0Mvmts[std::rand() % enemyMvmt.e0Mvmts.size()], textures[0], fhd);
+			Enemy0* e0_1 = new Enemy0(enemyMvmt.e0Mvmts[std::rand() % enemyMvmt.e0Mvmts.size()], textures[0], fhd);
 			spwn.push_back(e0_1);
-			Enemy1 e1_0(enemyMvmt.e1Mvmts[0], textures[1], fhd);
+			Enemy1* e1_0 = new Enemy1(enemyMvmt.e1Mvmts[0], textures[1], fhd);
 			spwn.push_back(e1_0);
 			s1flags[1] = true;
 		}
 		else if (s1flags[2] == false && time == 4) {
-			Enemy1 e1_1(enemyMvmt.e1Mvmts[1], textures[1], fhd);
+			Enemy1* e1_1 = new Enemy1(enemyMvmt.e1Mvmts[1], textures[1], fhd);
 			spwn.push_back(e1_1);
 			s1flags[2] = true;
 		}
 		else if (s1flags[3] == false && time == 5) {
-			Enemy1 e1_2(enemyMvmt.e1Mvmts[2], textures[1], fhd);
+			Enemy1* e1_2 =  new Enemy1(enemyMvmt.e1Mvmts[2], textures[1], fhd);
 			spwn.push_back(e1_2);
 			s1flags[3] = true;
 		}
 		else if (s1flags[4] == false && time == 6) {
-			Enemy1 e1_3(enemyMvmt.e1Mvmts[3], textures[1], fhd);
+			Enemy1*  e1_3 = new Enemy1(enemyMvmt.e1Mvmts[3], textures[1], fhd);
 			spwn.push_back(e1_3);
 			s1flags[4] = true;
 		}
 		else if (s1flags[5] == false && time == 7) {
-			Enemy1 e1_4(enemyMvmt.e1Mvmts[4], textures[1], fhd);
+			Enemy1* e1_4 =  new Enemy1(enemyMvmt.e1Mvmts[4], textures[1], fhd);
 			spwn.push_back(e1_4);
 			s1flags[5] = true;
 		}

@@ -4,12 +4,12 @@ Player::Player(sf::Texture& texture, bool fhd) {
     this->fhd = fhd;
     sprite.setTexture(texture);
 
-    mvmt_speed = 600;
+    mvmt_speed = 400;
     sprite.setScale(0.2f, 0.2f);
     sprite.setPosition(640, 540);
 
     if (fhd) {
-        mvmt_speed = 900;
+        mvmt_speed = 600;
         sprite.setScale(0.3f, 0.3f);
         sprite.setPosition(960, 810);
         fhd = true;
@@ -99,12 +99,12 @@ bool Player::shoot(sf::Texture& texture, int type) {
 
 
 void Player::removeBullet(int index) {
-    bulletManager.removeBullet(index);
+    bulletManager.remove(index);
 }
 
 
 void Player::updateBullets(float time) {
-    bulletManager.updateBullets(time);
+    bulletManager.update(time);
 }
 
 
