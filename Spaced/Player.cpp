@@ -54,7 +54,7 @@ float Player::getCDPercent(int num) {
         result = 1;
     }
 
-    return result * 255;
+    return result;
 }
 
 

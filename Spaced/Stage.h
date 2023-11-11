@@ -3,6 +3,7 @@
 #include <SFML\Graphics.hpp>
 #include <iostream>
 #include <vector>
+#include <map>
 
 #include "Enemy.h"
 
@@ -24,11 +25,13 @@ private:
 	float MAX;
 	EnemyMvmt enemyMvmt;
 	bool s1flags[10];
-	sf::Clock clock;   
-	sf::Texture* textures;
+	bool boss_flag;
+	sf::Clock clock; 
+	sf::Clock boss_clock;
+	std::map<std::string, sf::Texture> textures;
 public:
-	Stage() : fhd(false), MIN(-1000), MAX(10000), textures(nullptr), s1flags{0,0,0} {}
-	Stage(bool fhd, sf::Texture* textures);
+	Stage() : fhd(false), MIN(-1000), MAX(10000), s1flags{0,0,0} {}
+	Stage(std::map<std::string, sf::Texture>* textures,  bool fhd);
 	std::vector<Enemy*> spawn(int stage);
 	void del();
 };

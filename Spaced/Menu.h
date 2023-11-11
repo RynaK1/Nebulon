@@ -12,17 +12,13 @@
 
 class Menu {
 private:
-	sf::Clock frame_clock;
 	sf::RenderWindow* window;
+	sf::Clock frame_clock;
 	sf::Music music;
 	sf::Sound sfx;
 	sf::SoundBuffer sfx_buffer;
 	sf::Font font;
-	sf::Texture background_t;
-	sf::Texture transparent_t;
-	sf::Texture backgroundFHD_t;
-	sf::Texture transparentFHD_t;
-	sf::Texture entities_t[7];
+	std::map<std::string, sf::Texture> textures;
 	sf::Sprite background;
 	sf::Sprite transparent;
 
@@ -41,7 +37,7 @@ public:
 	Menu(sf::RenderWindow* window);
 	int displayMain();
 	int displayOptions();
-	void resolutionReset(sf::Texture* entities_t, bool fhd);
+	void resolutionReset(bool fhd);
 	void loadUIMain(bool fhd);
 	void loadUIOptions(bool fhd);
 	void highlightMain(sf::Vector2i mousePos);

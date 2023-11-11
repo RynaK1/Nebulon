@@ -15,12 +15,14 @@ protected:
 	int health;
 	int value;
 	bool flag;
+	bool boss;
 public:
 	Enemy() : value(0), health(0), flag(false) {};
 	void setHealth(int health);
 	std::vector<Bullet> getBullets();
 	int getHealth();
 	int getValue();
+	bool isBoss();
 	void updateBullets(float time);
 	virtual void attack(sf::Texture& texture) {}
 };

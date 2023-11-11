@@ -34,9 +34,9 @@ int main() {
             break;
         }
         case GO_GAMEPLAY: {
-            Gameplay gameplay;
+            Gameplay gameplay(&window);
             cout << "Going to gameplay" << endl;
-            go = gameplay.display(window);
+            go = gameplay.display();
             break;
         }
         case GO_END: {

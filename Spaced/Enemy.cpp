@@ -25,6 +25,11 @@ void Enemy::updateBullets(float time) {
 }
 
 
+bool Enemy::isBoss() {
+    return boss;
+}
+
+
 
 Enemy0::Enemy0(Movement mvmt, sf::Texture& texture, bool fhd) {
     sprite.setTexture(texture);
@@ -36,6 +41,7 @@ Enemy0::Enemy0(Movement mvmt, sf::Texture& texture, bool fhd) {
     health = 10;
     value = 0;
     this->mvmt = mvmt;
+    boss = false;
 }
 
 
@@ -64,6 +70,7 @@ Enemy1::Enemy1(Movement mvmt, sf::Texture& texture, bool fhd) {
     health = 15;
     value = 0;
     this->mvmt = mvmt;
+    boss = false;
 }
 
 
@@ -75,9 +82,10 @@ EnemyBoss::EnemyBoss(Movement mvmt, sf::Texture& texture, bool fhd) {
         sprite.setScale(1.125f, 1.125f);
     }
     sprite.setOrigin(sprite.getGlobalBounds().width / 2, sprite.getGlobalBounds().height / 2);
-    health = 100;
+    health = 150;
     value = 10;
     this->mvmt = mvmt;
+    boss = true;
 }
 
 void EnemyBoss::attack(sf::Texture& texture) {

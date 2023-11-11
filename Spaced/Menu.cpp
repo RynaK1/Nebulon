@@ -9,16 +9,15 @@ Menu::Menu(sf::RenderWindow* window) {
     }
     //text font
     if (!font.loadFromFile("../Resources/Textures/AlfaSlabOne-Regular.ttf")) {
-        std::cerr << "Could not load font <MENU>" << std::endl;
+        std::cerr << "Font load error <MENU>" << std::endl;
     }
 
     //audio
-    if (!music.openFromFile("../Resources/Audio/theme_music.ogg")) {
-        std::cerr << "Could not load music <MENU>" << std::endl;
+    if (!music.openFromFile("../Resources/Audio/theme_music.ogg") ||
+        sfx_buffer.loadFromFile("../Resources/Audio/sfx_laser.ogg")) {
+        std::cerr << "Audio load error <MENU>" << std::endl;
     }
-    if (!sfx_buffer.loadFromFile("../Resources/Audio/sfx_laser.ogg")) {
-        std::cerr << "Could not load sfx <MENU>" << std::endl;
-    }
+
     sfx.setBuffer(sfx_buffer);
     sf::Vector2f sounds = calcVolTotal();
     music.setVolume(sounds.x);
@@ -26,22 +25,18 @@ Menu::Menu(sf::RenderWindow* window) {
     music.play();
 
     //ship textures
-    if (!entities_t[0].loadFromFile("../Resources/Textures/ship_sprite7.png", sf::IntRect(14, 14, 525, 294)) ||
-        !entities_t[1].loadFromFile("../Resources/Textures/ship_sprite8.png", sf::IntRect(516, 770, 473, 164)) ||
-        !entities_t[2].loadFromFile("../Resources/Textures/ship_sprite8.png", sf::IntRect(516, 578, 473, 173)) ||
-        !entities_t[3].loadFromFile("../Resources/Textures/ship_sprite8.png", sf::IntRect(9, 163, 483, 163)) ||
-        !entities_t[4].loadFromFile("../Resources/Textures/ship_sprite8.png", sf::IntRect(14, 675, 479, 137)) ||
-        !entities_t[5].loadFromFile("../Resources/Textures/ship_sprite8.png", sf::IntRect(57, 537, 404, 112)) ||
-        !entities_t[6].loadFromFile("../Resources/Textures/ship_sprite9.png", sf::IntRect(27, 1, 975, 396))) {
-        std::cerr << "Could not load ship textures <MENU>" << std::endl;
-    }
-
-    //background textures
-    if (!backgroundFHD_t.loadFromFile("../Resources/Textures/BackgroundMenu_FHD.png") ||
-        !background_t.loadFromFile("../Resources/Textures/BackgroundMenu.png") ||
-        !transparent_t.loadFromFile("../Resources/Textures/TransparentMenu.png") ||
-        !transparentFHD_t.loadFromFile("../Resources/Textures/TransparentMenu_FHD.png")) {
-        std::cerr << "Could not load background textures <MENU>" << std::endl;
+    if (!textures["backgroundFHD"].loadFromFile("../Resources/Textures/BackgroundMenu_FHD.png") ||
+        !textures["background"].loadFromFile("../Resources/Textures/BackgroundMenu.png") ||
+        !textures["transparent"].loadFromFile("../Resources/Textures/TransparentMenu.png") ||
+        !textures["transparentFHD"].loadFromFile("../Resources/Textures/TransparentMenu_FHD.png") ||
+        !textures["entity0"].loadFromFile("../Resources/Textures/ship_sprite7.png", sf::IntRect(14, 14, 525, 294)) ||
+        !textures["entity1"].loadFromFile("../Resources/Textures/ship_sprite8.png", sf::IntRect(516, 770, 473, 164)) ||
+        !textures["entity2"].loadFromFile("../Resources/Textures/ship_sprite8.png", sf::IntRect(516, 578, 473, 173)) ||
+        !textures["entity3"].loadFromFile("../Resources/Textures/ship_sprite8.png", sf::IntRect(9, 163, 483, 163)) ||
+        !textures["entity4"].loadFromFile("../Resources/Textures/ship_sprite8.png", sf::IntRect(14, 675, 479, 137)) ||
+        !textures["entity5"].loadFromFile("../Resources/Textures/ship_sprite8.png", sf::IntRect(57, 537, 404, 112)) ||
+        !textures["entity6"].loadFromFile("../Resources/Textures/ship_sprite9.png", sf::IntRect(27, 1, 975, 396))) {
+        std::cerr << "Textures load error <MENU>" << std::endl;
     }
 
     //resolution
@@ -49,15 +44,15 @@ Menu::Menu(sf::RenderWindow* window) {
         fhd = false;
         win_x = 1280;
         win_y = 720;
-        background.setTexture(background_t);
-        transparent.setTexture(transparent_t);
+        background.setTexture(textures["background"]);
+        transparent.setTexture(textures["transparent"]);
     }
     else {
         fhd = true;
         win_x = 1920;
         win_y = 1080;
-        background.setTexture(backgroundFHD_t);
-        transparent.setTexture(transparentFHD_t);
+        background.setTexture(textures["backgroundFHD"]);
+        transparent.setTexture(textures["transparentFHD"]);
     }
 
     loadUIMain(fhd);
@@ -305,7 +300,7 @@ int Menu::buttonPressedOptions(sf::Vector2i mousePos) {
     else if (buttonBounds(mousePos, UI_options["low_txt"])) {
         sfx.play();
         window->create(sf::VideoMode(1280, 720), "Nebulon", sf::Style::Close);
-        resolutionReset(entities_t, false);
+        resolutionReset(false);
         loadUIMain(fhd);
         loadUIOptions(fhd);
         win_x = 1280;
@@ -315,7 +310,7 @@ int Menu::buttonPressedOptions(sf::Vector2i mousePos) {
         sfx.play();
         window->create(sf::VideoMode(1920, 1080), "Nebulon", sf::Style::Close);
         window->setPosition(sf::Vector2i(-8, -31));
-        resolutionReset(entities_t, true);
+        resolutionReset(true);
         loadUIMain(fhd);
         loadUIOptions(fhd);
         win_x = 1920;
@@ -330,7 +325,7 @@ int Menu::buttonPressedOptions(sf::Vector2i mousePos) {
 
 
 
-void Menu::resolutionReset(sf::Texture* movingEntities_t, bool fhd) {
+void Menu::resolutionReset(bool fhd) {
     em_back = EntityManager(fhd);
     em_front = EntityManager(fhd);
     em_clock.restart();   
@@ -342,9 +337,9 @@ void Menu::resolutionReset(sf::Texture* movingEntities_t, bool fhd) {
     if (fhd) {
         writeToFile("1920x1080", "resolution");
         background = sf::Sprite();
-        background.setTexture(backgroundFHD_t);
+        background.setTexture(textures["backgroundFHD"]);
         transparent = sf::Sprite();
-        transparent.setTexture(transparentFHD_t);
+        transparent.setTexture(textures["transparentFHD"]);
         this->fhd = fhd;
         win_x = 1920;
         win_y = 1080;
@@ -352,9 +347,9 @@ void Menu::resolutionReset(sf::Texture* movingEntities_t, bool fhd) {
     else {
         writeToFile("1280x720", "resolution");
         background = sf::Sprite();
-        background.setTexture(background_t);
+        background.setTexture(textures["background"]);
         transparent = sf::Sprite();
-        transparent.setTexture(transparent_t);
+        transparent.setTexture(textures["transparent"]);
         this->fhd = fhd;
         win_x = 1280;
         win_y = 720;
@@ -564,35 +559,35 @@ void Menu::updateEntities() {
         Equation eq0(1, 0, -300, 1, 0.23f, MIN, 35, true, fhd);
         Movement mvmt0(1280, fhd);
         mvmt0.push_back(eq0);
-        Entity me0(mvmt0, entities_t[0]); //top right, fast
+        Entity me0(mvmt0, textures["entity0"]); //top right, fast
         me0.setScale(0.07f, 0.07f);
         em_front.spawn(me0);
 
         Equation eq1(0, 0, -300, 0, 0, MAX, 8, false, fhd);
         Movement mvmt1(-135, fhd);
         mvmt1.push_back(eq1);
-        Entity me1(mvmt1, entities_t[1]); //mid left, lower
+        Entity me1(mvmt1, textures["entity1"]); //mid left, lower
         me1.setScale(0.3f, 0.3f);
         em_back.spawn(me1);
 
         Equation eq3(0, 0, -450, 0, 0, MIN, 5, true, fhd);
         Movement mvmt3(1020, fhd);
         mvmt3.push_back(eq3);
-        Entity me3(mvmt3, entities_t[3]);
+        Entity me3(mvmt3, textures["entity3"]);
         me3.setScale(0.2f, 0.2f);
         em_back.spawn(me3); //bottom right, behind tower
 
         Equation eq5(0, 0, -175, 0, 0, MIN, 15, true, fhd);
         Movement mvmt5(1280, fhd);
         mvmt5.push_back(eq5);
-        Entity me5(mvmt5, entities_t[5]);
+        Entity me5(mvmt5, textures["entity5"]);
         me5.setScale(0.5f, 0.5f);
         em_front.spawn(me5); //top right, lower
 
         Equation eq6(0, 0, -400, 0, 0, MAX, 3, false, fhd);
         Movement mvmt6(200, fhd);
         mvmt6.push_back(eq6);
-        Entity me6(mvmt6, entities_t[6]);
+        Entity me6(mvmt6, textures["entity6"]);
         me6.setScale(0.1f, 0.1f);
         em_back.spawn(me6); //bottom left, behind tower
 
@@ -602,14 +597,14 @@ void Menu::updateEntities() {
         Equation eq2(0, 0, -260, 0, 0, MAX, 8, false, fhd);
         Movement mvmt2(-102, fhd);
         mvmt2.push_back(eq2);
-        Entity me2(mvmt2, entities_t[2]);
+        Entity me2(mvmt2, textures["entity2"]);
         me2.setScale(0.22f, 0.22f);
         em_back.spawn(me2); //mid left, upper
 
         Equation eq4(0, 0, -100, 0, 0, MIN, 15, true, fhd);
         Movement mvmt4(1278, fhd);
         mvmt4.push_back(eq4);
-        Entity me4(mvmt4, entities_t[4]);
+        Entity me4(mvmt4, textures["entity4"]);
         me4.setScale(0.5f, 0.5f);
         em_front.spawn(me4); //top right, higher
 
@@ -619,7 +614,7 @@ void Menu::updateEntities() {
         Equation eq7(1, 0, -400, 1, 0.1f, MIN, 35, true, fhd);
         Movement mvmt7(1280, fhd);
         mvmt7.push_back(eq7);
-        Entity me7(mvmt7, entities_t[0]); //mid left, fast
+        Entity me7(mvmt7, textures["entity0"]); //mid left, fast
         me7.setScale(0.07f, 0.07f);
         em_front.setRotation(em_front.getSize() - 1, 20);
         em_front.spawn(me7);
