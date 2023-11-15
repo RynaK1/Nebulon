@@ -17,7 +17,7 @@ protected:
 	bool flag;
 	bool boss;
 public:
-	Enemy() : value(0), health(0), flag(false) {};
+	Enemy() : value(0), health(0), flag(false), boss(false) {};
 	void setHealth(int health);
 	std::vector<Bullet> getBullets();
 	int getHealth();

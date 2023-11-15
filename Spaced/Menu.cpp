@@ -616,8 +616,8 @@ void Menu::updateEntities() {
         mvmt7.push_back(eq7);
         Entity me7(mvmt7, textures["entity0"]); //mid left, fast
         me7.setScale(0.07f, 0.07f);
-        em_front.setRotation(em_front.getSize() - 1, 20);
         em_front.spawn(me7);
+        em_front.setRotation(em_front.getSize() - 1, 10);
         
         em_flags[2] = true;
     }

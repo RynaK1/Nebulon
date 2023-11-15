@@ -73,6 +73,7 @@ int Gameplay::display() {
     frame_clock.restart();
     animation_clock.restart();
     animation_flag = true;
+    stage.load(stage_num);
     while (window->isOpen()) {
         float time = frame_clock.getElapsedTime().asSeconds();
         frame_clock.restart();
@@ -94,6 +95,8 @@ int Gameplay::display() {
         if (bossDeath == true) {
             stage_num += 1;
             stage_txt.setString("Stage " + std::to_string(stage_num));
+            stage.reset();
+            stage.load(stage_num);
             animation_clock.restart();
             animation_flag = true;
             bossDeath = false;
