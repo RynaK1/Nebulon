@@ -25,13 +25,13 @@ private:
 	float MIN;
 	float MAX;
 	EnemyMvmt enemyMvmt;
-	bool eflags[10];
+	bool eflags[15];
 	bool boss_flag;
 	sf::Clock clock; 
 	sf::Clock boss_clock;
 	std::map<std::string, sf::Texture> textures;
 public:
-	Stage() : fhd(false), MIN(-1000), MAX(10000), boss_flag(false), eflags{0,0,0,0,0,0,0,0,0,0} {}
+	Stage() : fhd(false), MIN(-1000), MAX(10000), boss_flag(false), eflags{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0} {}
 	Stage(std::map<std::string, sf::Texture>* textures,  bool fhd);
 	std::vector<Enemy*> spawn(int stage);
 	void reset();
