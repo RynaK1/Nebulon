@@ -19,6 +19,7 @@ public:
 	void setRotation(float r);
 	void setPosition(float x, float y);
 	void setScale(float s1, float s2);
+	sf::Vector2f getScale();
 	sf::Sprite getSprite();
 	sf::FloatRect getGlobalBounds();
 	sf::Vector2f update(float time);

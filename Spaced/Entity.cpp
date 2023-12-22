@@ -16,6 +16,11 @@ sf::Sprite Entity::getSprite() {
 }
 
 
+sf::Vector2f Entity::getScale() {
+	return sprite.getScale();
+}
+
+
 void Entity::setMvmt(Movement mvmt) {
 	this->mvmt = mvmt;
 }
@@ -64,6 +69,10 @@ void EntityManager::setRotation(int i, float num) {
 
 
 void EntityManager::spawn(Entity me) {
+	if (fhd) {
+		sf::Vector2f scales = me.getScale();
+		me.setScale(scales.x * 1.5f, scales.y * 1.5f);
+	}
 	entities.push_back(me);
 	size += 1;
 }

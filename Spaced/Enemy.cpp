@@ -5,8 +5,8 @@ void Enemy::setHealth(int health) {
 }
 
 
-std::vector<Bullet> Enemy::getBullets() {
-    return bulletManager.getBullets();
+BulletManager* Enemy::getBulletManager() {
+    return &bulletManager;
 }
 
 

@@ -163,7 +163,7 @@ int Gameplay::display() {
         for (int i = 0; i < enemies_size; i++) {
             window->draw(enemies[i]->getSprite());
     
-            std::vector<Bullet> ebullets = enemies[i]->getBullets();
+            std::vector<Bullet> ebullets = enemies[i]->getBulletManager()->getBullets();
             size_t ebullets_size = ebullets.size();
             for (int j = 0; j < ebullets_size; j++) {
                 window->draw(ebullets[j].getSprite());
@@ -214,12 +214,13 @@ std::array<bool, 2> Gameplay::updateCollisions(EnemyManager& em, Player& player)
 
     std::array<bool, 2> death = { false, false };
 
+    //player collision with enemies and enemy attacks
     std::vector<Enemy*> enemies = em.getEnemies();
     sf::Sprite player_s = player.getSprite();
     size_t enemies_size = enemies.size();
+    sf::FloatRect player_pos = player_s.getGlobalBounds();
     for (int i = 0; i < enemies_size; i++) {
-        if (enemies[i]->getGlobalBounds().intersects(player_s.getGlobalBounds()))
-        {
+        if (enemies[i]->getGlobalBounds().intersects(player_pos)) {
             int health = player.getHealth() - 10;
             if (health <= 0) {
                 death[0] = true;
@@ -228,8 +229,21 @@ std::array<bool, 2> Gameplay::updateCollisions(EnemyManager& em, Player& player)
                 player.playerDamaged(10);
             }
         }
+
+        std::vector<Bullet> enemy_bullets = enemies[i]->getBulletManager()->getBullets();
+        size_t enemy_bullets_size = enemy_bullets.size();
+        for (int j = 0; j < enemy_bullets_size; j++) {
+            if (enemy_bullets[j].getGlobalBounds().intersects(player_pos)) {
+                enemies[i]->getBulletManager()->remove(j);
+                player.playerDamaged(10);
+            }
+        }
     }
 
+    //player collision with enemy attacks
+
+
+    //enemy collisions with bullets
     for (int i = 0; i < enemies.size(); i++) {
         std::vector<Bullet> bullets = player.getBullets();
         for (int j = 0; j < bullets.size(); j++) {
