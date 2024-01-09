@@ -18,7 +18,6 @@ Entity::Entity(sf::Texture& texture, float pos_x, float speed) {
 	sprite.setTexture(texture);
 	this->pos_x = pos_x;
 	this->speed = speed;
-	eq_curr = 0;
 }
 
 
@@ -88,21 +87,21 @@ float Entity::getPos_x() {
 
 
 sf::Vector2f Entity::update(float time) {
-	if (eqs[eq_curr].negative == true) {
+	if (eqs[0].negative == true) {
 		pos_x -= speed * time;
 	}
 	else {
 		pos_x += speed * time;
 	}
 
-	if ((eqs[eq_curr].negative == false && pos_x >= eqs[eq_curr].x_max) ||
-		(eqs[eq_curr].negative == true && pos_x <= eqs[eq_curr].x_max)) {
-		eq_curr += 1;
-		speed *= eqs[eq_curr].speed_mult;
+	if ((eqs[0].negative == false && pos_x >= eqs[0].x_max) ||
+		(eqs[0].negative == true && pos_x <= eqs[0].x_max)) {
+		speed *= eqs[1].speed_mult;
+		eqs.erase(eqs.begin());
 	};
 
 	float pos_y;
-	pos_y = (pow((eqs[eq_curr].m_xt * pos_x) + eqs[eq_curr].xt, eqs[eq_curr].pt) * eqs[eq_curr].m_yt) + eqs[eq_curr].yt;
+	pos_y = (pow((eqs[0].m_xt * pos_x) + eqs[0].xt, eqs[0].pt) * eqs[0].m_yt) + eqs[0].yt;
 	return sf::Vector2f(pos_x, pos_y);
 }
 

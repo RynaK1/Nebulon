@@ -23,25 +23,24 @@ class Entity {
 protected:
 	sf::Sprite sprite;
 	std::vector<Equation> eqs;
-	short eq_curr;
 	float speed;
 	float pos_x;
 public:
-	Entity() : eq_curr(0), speed(0), pos_x(0) {}
+	Entity() : speed(0), pos_x(0) {}
 	Entity(sf::Texture& texture, float pos_x, float speed);
-	void setEqs(std::vector<Equation> eqs);
 	void setRotation(float r);
 	void setPos_x(float pos_x);
-	void setPosition(float x, float y);
-	void setScale(float s1, float s2);
 	void setSpeed(float speed);
-	sf::Vector2f getScale();
-	sf::Sprite getSprite();
-	sf::FloatRect getGlobalBounds();
-	sf::Vector2f getPosition();
+	void setScale(float s1, float s2);
+	void setPosition(float x, float y);
+	void setEqs(std::vector<Equation> eqs);
 	float getSpeed();
-	std::vector<Equation> getEqs();
 	float getPos_x();
+	sf::Sprite getSprite();
+	sf::Vector2f getScale();
+	sf::Vector2f getPosition();
+	std::vector<Equation> getEqs();
+	sf::FloatRect getGlobalBounds();
 	void push_back(Equation eq);
 	sf::Vector2f update(float time);
 };
@@ -49,10 +48,10 @@ public:
 
 class EntityManager {
 private:
-	sf::Clock clock;
-	std::vector<Entity> entities;
-	sf::IntRect boundary;
 	int size;
+	sf::Clock clock;
+	sf::IntRect boundary;
+	std::vector<Entity> entities;
 public:
 	EntityManager() : size(0) {};
 	EntityManager(bool fhd);

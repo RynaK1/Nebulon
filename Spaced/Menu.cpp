@@ -3,10 +3,12 @@
 Menu::Menu(sf::RenderWindow* window) {
     this->window = window;
 
-    int mem_flags_size = sizeof(em_flags);
-    for (int i = 0; i < mem_flags_size; i++) {
+    //entity manager flags for timed spawn
+    int em_flags_size = sizeof(em_flags);
+    for (int i = 0; i < em_flags_size; i++) {
         em_flags[i] = false;
     }
+
     //text font
     if (!font.loadFromFile("../Resources/Textures/AlfaSlabOne-Regular.ttf")) {
         std::cerr << "Font load error <MENU>" << std::endl;
@@ -17,7 +19,6 @@ Menu::Menu(sf::RenderWindow* window) {
         sfx_buffer.loadFromFile("../Resources/Audio/sfx_laser.ogg")) {
         std::cerr << "Audio load error <MENU>" << std::endl;
     }
-
     sfx.setBuffer(sfx_buffer);
     sf::Vector2f sounds = calcVolTotal();
     music.setVolume(sounds.x);
@@ -304,7 +305,7 @@ int Menu::buttonPressedOptions(sf::Vector2i mousePos) {
         resolutionReset(false);
         loadUIMain();
         loadUIOptions();
-        loadEntities();
+        changeEntityFHD();
         win_x = 1280;
         win_y = 720;
     }
@@ -315,7 +316,7 @@ int Menu::buttonPressedOptions(sf::Vector2i mousePos) {
         resolutionReset(true);
         loadUIMain();
         loadUIOptions();
-        loadEntities();
+        changeEntityFHD();
         win_x = 1920;
         win_y = 1080;
     }
@@ -599,64 +600,7 @@ void Menu::loadEntities() {
     entities.push_back(e5);
     entities.push_back(e6);
     entities.push_back(e7);
-
-    //fhd alterations
-    if (fhd && entities[0].getSpeed() == 35) {
-        sf::Vector2f scale;
-        sf::Vector2f position;
-
-        size_t entities_size = entities.size();
-        for (int i = 0; i < entities_size; i++) {
-            entities[i].setSpeed(entities[i].getSpeed() * 1.5f);
-            position = entities[i].getPosition();
-            entities[i].setPos_x(entities[i].getPos_x() * 1.5f);
-            scale = entities[i].getScale();
-            entities[i].setScale(scale.x * 1.5f, scale.y * 1.5f);
-
-            std::vector<Equation> eqs = entities[i].getEqs();
-            size_t eqs_size = eqs.size();
-            for (int j = 0; j < eqs_size; j++) {
-                if (eqs[j].pt == 2) {
-                    eqs[j].m_yt *= 1.5f;
-                }
-                else if (eqs[j].pt == 3) {
-                    eqs[j].m_yt *= 2.255f;
-                }
-                eqs[j].xt *= 1.5f;
-                eqs[j].yt *= 1.5f;
-            }
-            entities[i].setEqs(eqs);
-        }
-    }
-    else if (!fhd && entities[0].getSpeed() != 35) {
-        sf::Vector2f scale;
-        sf::Vector2f position;
-
-        size_t entities_size = entities.size();
-        for (int i = 0; i < entities_size; i++) {
-            entities[i].setSpeed(entities[i].getSpeed() / 1.5f);
-            position = entities[i].getPosition();
-            entities[i].setPosition(position.x / 1.5f, position.y);
-            scale = entities[i].getScale();
-            entities[i].setScale(scale.x / 1.5f, scale.y / 1.5f);
-
-            std::vector<Equation> eqs = entities[i].getEqs();
-            size_t eqs_size = eqs.size();
-            for (int j = 0; j < eqs_size; j++) {
-                if (eqs[j].pt == 2) {
-                    eqs[j].m_yt /= 1.5f;
-                }
-                else if (eqs[j].pt == 3) {
-                    eqs[j].m_yt /= 2.255f;
-                }
-                eqs[j].xt /= 1.5f;
-                eqs[j].yt /= 1.5f;
-            }
-            entities[i].setEqs(eqs);
-        }
-    }
 }
-
 
 
 void Menu::updateEntities() {
@@ -695,5 +639,64 @@ void Menu::updateEntities() {
 
 
 void Menu::changeEntityFHD() {
+    //FHD
+    if (fhd && entities[0].getSpeed() == 35) {
+        sf::Vector2f scale;
+        sf::Vector2f position;
 
+        //set speed, position, scale
+        size_t entities_size = entities.size();
+        for (int i = 0; i < entities_size; i++) {
+            entities[i].setSpeed(entities[i].getSpeed() * 1.5f);
+            position = entities[i].getPosition();
+            entities[i].setPos_x(entities[i].getPos_x() * 1.5f);
+            scale = entities[i].getScale();
+            entities[i].setScale(scale.x * 1.5f, scale.y * 1.5f);
+
+            //set equation
+            std::vector<Equation> eqs = entities[i].getEqs();
+            size_t eqs_size = eqs.size();
+            for (int j = 0; j < eqs_size; j++) {
+                if (eqs[j].pt == 2) {
+                    eqs[j].m_yt *= 1.5f;
+                }
+                else if (eqs[j].pt == 3) {
+                    eqs[j].m_yt *= 2.255f;
+                }
+                eqs[j].xt *= 1.5f;
+                eqs[j].yt *= 1.5f;
+            }
+            entities[i].setEqs(eqs);
+        }
+    }
+    //720p
+    else if (!fhd && entities[0].getSpeed() != 35) {
+        sf::Vector2f scale;
+        sf::Vector2f position;
+
+        //set speed, position, scale
+        size_t entities_size = entities.size();
+        for (int i = 0; i < entities_size; i++) {
+            entities[i].setSpeed(entities[i].getSpeed() / 1.5f);
+            position = entities[i].getPosition();
+            entities[i].setPosition(position.x / 1.5f, position.y);
+            scale = entities[i].getScale();
+            entities[i].setScale(scale.x / 1.5f, scale.y / 1.5f);
+
+            //set equation
+            std::vector<Equation> eqs = entities[i].getEqs();
+            size_t eqs_size = eqs.size();
+            for (int j = 0; j < eqs_size; j++) {
+                if (eqs[j].pt == 2) {
+                    eqs[j].m_yt /= 1.5f;
+                }
+                else if (eqs[j].pt == 3) {
+                    eqs[j].m_yt /= 2.255f;
+                }
+                eqs[j].xt /= 1.5f;
+                eqs[j].yt /= 1.5f;
+            }
+            entities[i].setEqs(eqs);
+        }
+    }
 }
