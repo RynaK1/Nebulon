@@ -1,5 +1,6 @@
 #pragma once
 
+/*
 #include <SFML\Graphics.hpp>
 #include <iostream>
 #include <cmath>
@@ -9,6 +10,7 @@
 #include "BulletManager.h"
 
 class Enemy : public Entity {
+
 protected:
 	sf::Clock clock;
 	BulletManager bulletManager;
@@ -70,3 +72,4 @@ public:
 	void update(float time, sf::Texture& textures);
 	void remove(int i);
 };
+*/

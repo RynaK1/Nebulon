@@ -1,5 +1,5 @@
 #include "Stage.h"
-
+/*
 Stage::Stage(std::map<std::string, sf::Texture>* textures, bool fhd) {
 	this->fhd = fhd;
 	this->textures = *textures;
@@ -22,7 +22,7 @@ std::vector<Enemy*> Stage::spawn(int stage) {
 		- Create if statement for appropriate timing
 		- Create enemy with appropriate or randomized movement and texture
 		- Push back created enemy to spwn
-	*/
+	/ <-=========================================================
 	if (boss_flag == false && boss_time == 1) {
 		EnemyBoss* eBoss_0 = new EnemyBoss(enemyMvmt.eBossMvmts[std::rand() % enemyMvmt.eBossMvmts.size()], textures["enemyBoss"], fhd);
 		spwn.push_back(eBoss_0);
@@ -708,7 +708,7 @@ Creating new movement pattern
 	- Create movement
 	- push to eMvmts with appropriate variable label
 		- create new eMvmts vector for new enemy type
-*/
+/ <-===================================================================
 
 EnemyMvmt::EnemyMvmt(float speed, bool fhd) {
 	MIN = -1000;
@@ -873,3 +873,4 @@ void Stage::reset() {
 void Stage::load(int stage) {
 	enemyMvmt = EnemyMvmt((float)(((stage - 1) % 10) * 0.1f), fhd);
 }
+*/

@@ -1,5 +1,5 @@
 #include "Enemy.h"
-
+/*
 void Enemy::setHealth(int health) {
     this->health = health;
 }
@@ -153,3 +153,4 @@ void EnemyManager::remove(int i) {
     enemies.erase(enemies.begin() + i);
     enemies_size -= 1;
 }
+*/

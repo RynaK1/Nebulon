@@ -33,16 +33,20 @@ private:
 	bool fhd;
 	int win_x;
 	int win_y;
+
+	std::vector<Entity> entities;
 public:
 	Menu(sf::RenderWindow* window);
 	int displayMain();
 	int displayOptions();
 	void resolutionReset(bool fhd);
-	void loadUIMain(bool fhd);
-	void loadUIOptions(bool fhd);
+	void loadUIMain();
+	void loadUIOptions();
+	void loadEntities();
 	void highlightMain(sf::Vector2i mousePos);
 	void highlightOptions(sf::Vector2i mousePos);
 	int buttonPressedMain(sf::Vector2i mousePos);
 	int buttonPressedOptions(sf::Vector2i mousePos);
 	void updateEntities();
+	void changeEntityFHD();
 };

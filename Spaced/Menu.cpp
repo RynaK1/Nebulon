@@ -55,13 +55,14 @@ Menu::Menu(sf::RenderWindow* window) {
         transparent.setTexture(textures["transparentFHD"]);
     }
 
-    loadUIMain(fhd);
-    loadUIOptions(fhd);
+    loadUIMain();
+    loadUIOptions();
+    loadEntities();
 }
 
 
 int Menu::displayMain() {
-    loadUIMain(fhd);
+    loadUIMain();
     while (window->isOpen()) {
         sf::Event evnt;
         while (window->pollEvent(evnt)) {
@@ -121,7 +122,7 @@ int Menu::displayMain() {
 
 
 int Menu::displayOptions() {
-    loadUIOptions(fhd);
+    loadUIOptions();
     while (window->isOpen()) {
         sf::Event evnt;
         while (window->pollEvent(evnt)) {
@@ -301,8 +302,9 @@ int Menu::buttonPressedOptions(sf::Vector2i mousePos) {
         sfx.play();
         window->create(sf::VideoMode(1280, 720), "Nebulon", sf::Style::Close);
         resolutionReset(false);
-        loadUIMain(fhd);
-        loadUIOptions(fhd);
+        loadUIMain();
+        loadUIOptions();
+        loadEntities();
         win_x = 1280;
         win_y = 720;
     }
@@ -311,8 +313,9 @@ int Menu::buttonPressedOptions(sf::Vector2i mousePos) {
         window->create(sf::VideoMode(1920, 1080), "Nebulon", sf::Style::Close);
         window->setPosition(sf::Vector2i(-8, -31));
         resolutionReset(true);
-        loadUIMain(fhd);
-        loadUIOptions(fhd);
+        loadUIMain();
+        loadUIOptions();
+        loadEntities();
         win_x = 1920;
         win_y = 1080;
     }
@@ -358,7 +361,7 @@ void Menu::resolutionReset(bool fhd) {
 
 
 
-void Menu::loadUIMain(bool fhd) {
+void Menu::loadUIMain() {
     //texts
     int lives = stoi(readFromFile("lives"));
     sf::Text lives_txt(std::to_string(lives), font);
@@ -420,7 +423,7 @@ void Menu::loadUIMain(bool fhd) {
 
 
 
-void Menu::loadUIOptions(bool fhd) {
+void Menu::loadUIOptions() {
     //texts
     sf::Text options_txt("Options", font);
     options_txt.setCharacterSize(45);
@@ -548,77 +551,132 @@ void Menu::loadUIOptions(bool fhd) {
 
 
 
-void Menu::updateEntities() {
+void Menu::loadEntities() {
+    entities.clear();
     float MAX = 3000;
     float MIN = -1000;
 
+    //Entity: texture, pos_x, speed
+    //Equation: pt, xt, yt, m_xt, m_yt, x_max, speed_mult, reverse
+    Entity e0(textures["entity0"], 1280, 35);
+    e0.push_back(Equation(1, 0, -300, 1, 0.23f, MIN, 1, true));
+    e0.setScale(0.07f, 0.07f);
+
+    Entity e1(textures["entity1"], -135, 8);
+    e1.push_back(Equation(0, 0, -300, 0, 0, MAX, 1, false));
+    e1.setScale(0.3f, 0.3f);
+
+    Entity e2(textures["entity2"], -102, 8);
+    e2.push_back(Equation(0, 0, -260, 0, 0, MAX, 1, false));
+    e2.setScale(0.22f, 0.22f);
+
+    Entity e3(textures["entity3"], 1020, 5);
+    e3.push_back(Equation(0, 0, -450, 0, 0, MIN, 1, true));
+    e3.setScale(0.2f, 0.2f);
+
+    Entity e4(textures["entity4"], 1278, 15);
+    e4.push_back(Equation(0, 0, -100, 0, 0, MIN, 1, true));
+    e4.setScale(0.5f, 0.5f);
+
+    Entity e5(textures["entity5"], 1280, 15);
+    e5.push_back(Equation(0, 0, -175, 0, 0, MIN, 1, true));
+    e5.setScale(0.5f, 0.5f);
+
+    Entity e6(textures["entity6"], 200, 3);
+    e6.push_back(Equation(0, 0, -400, 0, 0, MAX, 1, false));
+    e6.setScale(0.1f, 0.1f);
+
+    Entity e7(textures["entity0"], 1280, 35);
+    e7.push_back(Equation(1, 0, -400, 1, 0.1f, MIN, 1, true));
+    e7.setScale(0.07f, 0.07f);
+    e7.setRotation(10);
+
+    entities.push_back(e0);
+    entities.push_back(e1);
+    entities.push_back(e2);
+    entities.push_back(e3);
+    entities.push_back(e4);
+    entities.push_back(e5);
+    entities.push_back(e6);
+    entities.push_back(e7);
+
+    //fhd alterations
+    if (fhd && entities[0].getSpeed() == 35) {
+        sf::Vector2f scale;
+        sf::Vector2f position;
+
+        size_t entities_size = entities.size();
+        for (int i = 0; i < entities_size; i++) {
+            entities[i].setSpeed(entities[i].getSpeed() * 1.5f);
+            position = entities[i].getPosition();
+            entities[i].setPos_x(entities[i].getPos_x() * 1.5f);
+            scale = entities[i].getScale();
+            entities[i].setScale(scale.x * 1.5f, scale.y * 1.5f);
+
+            std::vector<Equation> eqs = entities[i].getEqs();
+            size_t eqs_size = eqs.size();
+            for (int j = 0; j < eqs_size; j++) {
+                if (eqs[j].pt == 2) {
+                    eqs[j].m_yt *= 1.5f;
+                }
+                else if (eqs[j].pt == 3) {
+                    eqs[j].m_yt *= 2.255f;
+                }
+                eqs[j].xt *= 1.5f;
+                eqs[j].yt *= 1.5f;
+            }
+            entities[i].setEqs(eqs);
+        }
+    }
+    else if (!fhd && entities[0].getSpeed() != 35) {
+        sf::Vector2f scale;
+        sf::Vector2f position;
+
+        size_t entities_size = entities.size();
+        for (int i = 0; i < entities_size; i++) {
+            entities[i].setSpeed(entities[i].getSpeed() / 1.5f);
+            position = entities[i].getPosition();
+            entities[i].setPosition(position.x / 1.5f, position.y);
+            scale = entities[i].getScale();
+            entities[i].setScale(scale.x / 1.5f, scale.y / 1.5f);
+
+            std::vector<Equation> eqs = entities[i].getEqs();
+            size_t eqs_size = eqs.size();
+            for (int j = 0; j < eqs_size; j++) {
+                if (eqs[j].pt == 2) {
+                    eqs[j].m_yt /= 1.5f;
+                }
+                else if (eqs[j].pt == 3) {
+                    eqs[j].m_yt /= 2.255f;
+                }
+                eqs[j].xt /= 1.5f;
+                eqs[j].yt /= 1.5f;
+            }
+            entities[i].setEqs(eqs);
+        }
+    }
+}
+
+
+
+void Menu::updateEntities() {
     float mem_time = em_clock.getElapsedTime().asSeconds();
 
     if ((int)mem_time == 0 && em_flags[0] == false) {
-        //          pt, xt, yt, m_xt, m_yt, x_max, speed, reverse, fhd
-        Equation eq0(1, 0, -300, 1, 0.23f, MIN, 35, true, fhd);
-        Movement mvmt0(1280, fhd);
-        mvmt0.push_back(eq0);
-        Entity me0(mvmt0, textures["entity0"]); //top right, fast
-        me0.setScale(0.07f, 0.07f);
-        em_front.spawn(me0);
-
-        Equation eq1(0, 0, -300, 0, 0, MAX, 8, false, fhd);
-        Movement mvmt1(-135, fhd);
-        mvmt1.push_back(eq1);
-        Entity me1(mvmt1, textures["entity1"]); //mid left, lower
-        me1.setScale(0.3f, 0.3f);
-        em_back.spawn(me1);
-
-        Equation eq3(0, 0, -450, 0, 0, MIN, 5, true, fhd);
-        Movement mvmt3(1020, fhd);
-        mvmt3.push_back(eq3);
-        Entity me3(mvmt3, textures["entity3"]);
-        me3.setScale(0.2f, 0.2f);
-        em_back.spawn(me3); //bottom right, behind tower
-
-        Equation eq5(0, 0, -175, 0, 0, MIN, 15, true, fhd);
-        Movement mvmt5(1280, fhd);
-        mvmt5.push_back(eq5);
-        Entity me5(mvmt5, textures["entity5"]);
-        me5.setScale(0.5f, 0.5f);
-        em_front.spawn(me5); //top right, lower
-
-        Equation eq6(0, 0, -400, 0, 0, MAX, 3, false, fhd);
-        Movement mvmt6(200, fhd);
-        mvmt6.push_back(eq6);
-        Entity me6(mvmt6, textures["entity6"]);
-        me6.setScale(0.1f, 0.1f);
-        em_back.spawn(me6); //bottom left, behind tower
-
+        em_front.spawn(entities[0]); //top right, fast
+        em_back.spawn(entities[1]);//mid left, lower
+        em_back.spawn(entities[3]); //bottom right, behind tower
+        em_front.spawn(entities[5]); //top right, lower
+        em_back.spawn(entities[6]); //bottom left, behind tower
         em_flags[0] = true;
     }
     else if ((int)mem_time == 10 && em_flags[1] == false) {
-        Equation eq2(0, 0, -260, 0, 0, MAX, 8, false, fhd);
-        Movement mvmt2(-102, fhd);
-        mvmt2.push_back(eq2);
-        Entity me2(mvmt2, textures["entity2"]);
-        me2.setScale(0.22f, 0.22f);
-        em_back.spawn(me2); //mid left, upper
-
-        Equation eq4(0, 0, -100, 0, 0, MIN, 15, true, fhd);
-        Movement mvmt4(1278, fhd);
-        mvmt4.push_back(eq4);
-        Entity me4(mvmt4, textures["entity4"]);
-        me4.setScale(0.5f, 0.5f);
-        em_front.spawn(me4); //top right, higher
-
+        em_back.spawn(entities[2]); //mid left, upper
+        em_front.spawn(entities[4]); //top right, higher
         em_flags[1] = true;
     }
     else if ((int)mem_time == 70 && em_flags[2] == false) {
-        Equation eq7(1, 0, -400, 1, 0.1f, MIN, 35, true, fhd);
-        Movement mvmt7(1280, fhd);
-        mvmt7.push_back(eq7);
-        Entity me7(mvmt7, textures["entity0"]); //mid left, fast
-        me7.setScale(0.07f, 0.07f);
-        em_front.spawn(me7);
-        em_front.setRotation(em_front.getSize() - 1, 10);
-        
+        em_front.spawn(entities[7]); //mid left, fast
         em_flags[2] = true;
     }
     else if ((int)mem_time == 140) {
@@ -633,4 +691,9 @@ void Menu::updateEntities() {
     frame_clock.restart();
     em_back.update(frame_time);
     em_front.update(frame_time);
+}
+
+
+void Menu::changeEntityFHD() {
+
 }

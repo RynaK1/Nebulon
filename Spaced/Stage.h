@@ -9,6 +9,7 @@
 #include "Enemy.h"
 
 struct EnemyMvmt {
+	/*
 	float MIN;
 	float MAX;
 	std::vector<Movement> e0Mvmts;
@@ -16,10 +17,12 @@ struct EnemyMvmt {
 	std::vector<Movement> eBossMvmts;
 	EnemyMvmt() : MIN(-1000), MAX(10000) {}
 	EnemyMvmt(float speed, bool fhd);
+	*/
 };
 
 
 class Stage {
+	/*
 private:
 	bool fhd;
 	float MIN;
@@ -36,5 +39,6 @@ public:
 	std::vector<Enemy*> spawn(int stage);
 	void reset();
 	void load(int stage);
-	void bossMovement();
+	void bossMovement()
+	*/
 };
