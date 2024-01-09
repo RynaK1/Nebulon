@@ -54,9 +54,6 @@
     <ClCompile Include="Menu.cpp">
       <Filter>Source Files\Screens</Filter>
     </ClCompile>
-    <ClCompile Include="Movement.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Gameover.cpp">
       <Filter>Source Files\Screens</Filter>
     </ClCompile>
@@ -90,9 +87,6 @@
       <Filter>Header Files\Gameplay_back</Filter>
     </ClInclude>
     <ClInclude Include="Entity.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Movement.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Gameover.h">

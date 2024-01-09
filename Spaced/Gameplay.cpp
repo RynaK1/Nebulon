@@ -1,5 +1,6 @@
 #include "Gameplay.h"
 
+/*
 Gameplay::Gameplay(sf::RenderWindow* window) {
     this->window = window;
 
@@ -315,3 +316,4 @@ void Gameplay::stageAnimation() {
         stage_txt.setFillColor(sf::Color(255, 255, 255, (uint8_t)((2 - time) * 510)));
     }
 }
+*/
