@@ -86,7 +86,6 @@ int Gameplay::display() {
                 return QUIT;       
             }
         }   
-
         // player movement and boundary
         sf::FloatRect pos = player.getSprite().getGlobalBounds();
         std::array<bool, 4> bounds = checkPlayerBounds(pos, window->getSize());
@@ -102,11 +101,8 @@ int Gameplay::display() {
             animation_flag = true;
             bossDeath = false;
         }
-        std::vector<Enemy*> spwn = stage.spawn(stage_num);
-        size_t spwn_size = spwn.size();
-        for (size_t i = 0; i < spwn_size; i++) {
-            enemyManager.spawn(spwn[i]);
-        }
+        
+        stage.spawn(stage_num);
 
         // update entities
         player.updateBullets(time);
@@ -160,11 +156,11 @@ int Gameplay::display() {
             window->draw(pbullets[i].getSprite());
         }
         int enemies_size = enemyManager.getEnemies_size();
-        std::vector<Enemy*> enemies = enemyManager.getEnemies();
+        std::vector<Enemy> enemies = enemyManager.getEnemies();
         for (int i = 0; i < enemies_size; i++) {
-            window->draw(enemies[i]->getSprite());
+            window->draw(enemies[i].getSprite());
     
-            std::vector<Bullet> ebullets = enemies[i]->getBulletManager()->getBullets();
+            std::vector<Bullet> ebullets = enemies[i].getBulletManager()->getBullets();
             size_t ebullets_size = ebullets.size();
             for (int j = 0; j < ebullets_size; j++) {
                 window->draw(ebullets[j].getSprite());
@@ -216,12 +212,12 @@ std::array<bool, 2> Gameplay::updateCollisions(EnemyManager& em, Player& player)
     std::array<bool, 2> death = { false, false };
 
     //player collision with enemies and enemy attacks
-    std::vector<Enemy*> enemies = em.getEnemies();
+    std::vector<Enemy> enemies = em.getEnemies();
     sf::Sprite player_s = player.getSprite();
     size_t enemies_size = enemies.size();
     sf::FloatRect player_pos = player_s.getGlobalBounds();
     for (int i = 0; i < enemies_size; i++) {
-        if (enemies[i]->getGlobalBounds().intersects(player_pos)) {
+        if (enemies[i].getGlobalBounds().intersects(player_pos)) {
             int health = player.getHealth() - 10;
             if (health <= 0) {
                 death[0] = true;
@@ -231,11 +227,11 @@ std::array<bool, 2> Gameplay::updateCollisions(EnemyManager& em, Player& player)
             }
         }
 
-        std::vector<Bullet> enemy_bullets = enemies[i]->getBulletManager()->getBullets();
+        std::vector<Bullet> enemy_bullets = enemies[i].getBulletManager()->getBullets();
         size_t enemy_bullets_size = enemy_bullets.size();
         for (int j = 0; j < enemy_bullets_size; j++) {
             if (enemy_bullets[j].getGlobalBounds().intersects(player_pos)) {
-                enemies[i]->getBulletManager()->remove(j);
+                enemies[i].getBulletManager()->remove(j);
                 player.playerDamaged(10);
             }
         }
@@ -248,16 +244,16 @@ std::array<bool, 2> Gameplay::updateCollisions(EnemyManager& em, Player& player)
     for (int i = 0; i < enemies.size(); i++) {
         std::vector<Bullet> bullets = player.getBullets();
         for (int j = 0; j < bullets.size(); j++) {
-            if (bullets[j].getGlobalBounds().intersects(enemies[i]->getGlobalBounds())) {
-                int health = enemies[i]->getHealth() - bullets[j].getDamage();
+            if (bullets[j].getGlobalBounds().intersects(enemies[i].getGlobalBounds())) {
+                int health = enemies[i].getHealth() - bullets[j].getDamage();
                 if (health <= 0) {
-                    money += em.getEnemy(i)->getValue();
+                    money += em.getEnemy(i).getValue();
                     money_txt.setString(std::to_string(money));
                     money_txt.setPosition(((1280 * scale) - money_txt.getLocalBounds().width) / 1.017f,
                         ((720 * scale) - money_txt.getLocalBounds().height) / 50);
                     money_UI.setPosition(money_txt.getGlobalBounds().left - (45 * scale),
                         ((720 * scale) - money_txt.getLocalBounds().height) / 55);
-                    if (em.getEnemy(i)->isBoss()) {
+                    if (em.getEnemy(i).isBoss()) {
                         bossDeath = true;
                     }
                     em.remove(i);

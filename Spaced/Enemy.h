@@ -1,16 +1,15 @@
 #pragma once
 
-/*
+
 #include <SFML\Graphics.hpp>
 #include <iostream>
 #include <cmath>
 
 #include "Entity.h"
-#include "Movement.h"
 #include "BulletManager.h"
 
+/*
 class Enemy : public Entity {
-
 protected:
 	sf::Clock clock;
 	BulletManager bulletManager;
@@ -32,44 +31,48 @@ public:
 
 class Enemy0 : public Enemy {
 private:
+	sf::Texture* attack_texture;
 public:
-	void attack(sf::Texture& texture);
-	Enemy0() {}
-	Enemy0(Movement mvmt, sf::Texture& texture, bool fhd);
+	void attack();
+	Enemy0() : attack_texture(nullptr) {}
+	Enemy0(sf::Texture& texture, sf::Texture& attack_texture);
 };
 
 
 class Enemy1 : public Enemy {
 private:
+	sf::Texture* attack_texture;
 public:
 	Enemy1() {}
-	Enemy1(Movement mvmt, sf::Texture& texture, bool fhd);
+	Enemy1(sf::Texture& texture, sf::Texture& attack_texture);
 };
 
 
 class EnemyBoss : public Enemy {
 private:
+	sf::Texture* attack_texture;
 public:
-	void attack(sf::Texture& texture);
+	void attack();
 	EnemyBoss() {}
-	EnemyBoss(Movement mvmt, sf::Texture& texture, bool fhd);
+	EnemyBoss(sf::Texture& texture, sf::Texture& attack_texture);
 };
 
 
+/*
 class EnemyManager {
 private:
-	std::vector<Enemy*> enemies;
-	bool fhd;
+	std::vector<Enemy> enemies;
+	sf::IntRect boundary;
 	int enemies_size;
 public:
-	EnemyManager() : fhd(0), enemies_size(0) {};
+	EnemyManager() : enemies_size(0) {};
 	EnemyManager(bool fhd);
 	void setEnemyHealth(int health, int index);
-	Enemy* getEnemy(int i);
+	Enemy getEnemy(int i);
 	int getEnemies_size();
-	std::vector<Enemy*> getEnemies();
-	void spawn(Enemy* enemy);
-	void update(float time, sf::Texture& textures);
+	std::vector<Enemy> getEnemies();
+	void push_back(Enemy enemy);
+	void update(float time);
 	void remove(int i);
 };
 */

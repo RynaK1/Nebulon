@@ -9,6 +9,7 @@
 
 #include "Externs.h"
 #include "Entity.h"
+#include "LiveEntities.h"
 
 class Menu {
 private:
@@ -23,9 +24,7 @@ private:
 	sf::Sprite transparent;
 
 	sf::Clock em_clock;
-	bool em_flags[3];
-	EntityManager em_back;
-	EntityManager em_front;
+	bool le_flags[3];
 
 	std::map<std::string, sf::Text> UI_main;
 	std::map<std::string, sf::Text> UI_options;
@@ -35,6 +34,8 @@ private:
 	int win_y;
 
 	std::vector<Entity> entities;
+	LiveEntities le_back;
+	LiveEntities le_front;
 public:
 	Menu(sf::RenderWindow* window);
 	int displayMain();

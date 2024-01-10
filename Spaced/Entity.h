@@ -5,6 +5,7 @@
 #include <array>
 #include <iostream>
 
+
 struct Equation {
 	float pt;
 	float xt;
@@ -12,9 +13,9 @@ struct Equation {
 	float m_xt;
 	float m_yt;
 	float x_max;
-	bool negative;
 	float speed_mult;
-	Equation() : pt(0), xt(0), yt(0), m_xt(0), m_yt(0), x_max(0), speed_mult(1), negative(false) {};
+	bool isNegative;
+	Equation() : pt(0), xt(0), yt(0), m_xt(0), m_yt(0), x_max(0), speed_mult(1), isNegative(false) {};
 	Equation(float pt, float xt, float yt, float m_xt, float m_yt, float x_max, float speed_mult, bool reverse);
 };
 
@@ -42,23 +43,5 @@ public:
 	std::vector<Equation> getEqs();
 	sf::FloatRect getGlobalBounds();
 	void push_back(Equation eq);
-	sf::Vector2f update(float time);
-};
-
-
-class EntityManager {
-private:
-	int size;
-	sf::Clock clock;
-	sf::IntRect boundary;
-	std::vector<Entity> entities;
-public:
-	EntityManager() : size(0) {};
-	EntityManager(bool fhd);
-	int getSize();
-	std::vector<Entity> getEntities();
-	void setRotation(int i, float num);
-	void remove(int i);
-	void spawn(Entity me);
 	void update(float time);
 };

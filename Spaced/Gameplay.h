@@ -1,6 +1,5 @@
 #pragma once
 
-/*
 #include <SFML\Graphics.hpp>
 #include <SFML\Audio.hpp>
 #include <string>
@@ -8,6 +7,7 @@
 #include "Player.h"
 #include "Stage.h"
 
+/*
 class Gameplay {
 private:
 	sf::RenderWindow* window;

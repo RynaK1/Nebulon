@@ -8,37 +8,37 @@
 
 #include "Enemy.h"
 
-struct EnemyMvmt {
-	/*
+/*
+struct EnemyEqs {
 	float MIN;
 	float MAX;
-	std::vector<Movement> e0Mvmts;
-	std::vector<Movement> e1Mvmts;
-	std::vector<Movement> eBossMvmts;
-	EnemyMvmt() : MIN(-1000), MAX(10000) {}
-	EnemyMvmt(float speed, bool fhd);
-	*/
+	std::vector<std::vector<Equation>> e0Eqs;
+	std::vector<std::vector<Equation>> e1Eqs;
+	std::vector<std::vector<Equation>> eBossEqs;
+	EnemyEqs() : MIN(-1000), MAX(10000) {}
+	EnemyEqs(float speed_up);
 };
 
 
 class Stage {
-	/*
 private:
 	bool fhd;
 	float MIN;
 	float MAX;
-	EnemyMvmt enemyMvmt;
+	EnemyEqs enemyEqs; 
 	bool eflags[15];
 	bool boss_flag;
 	sf::Clock clock; 
 	sf::Clock boss_clock;
+	EnemyManager spawned;
+	std::map < std::string, Enemy> enemies;
 	std::map<std::string, sf::Texture> textures;
 public:
 	Stage() : fhd(false), MIN(-1000), MAX(10000), boss_flag(false), eflags{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0} {}
 	Stage(std::map<std::string, sf::Texture>* textures,  bool fhd);
-	std::vector<Enemy*> spawn(int stage);
+	void update();
+	void spawn(int stage);
 	void reset();
 	void load(int stage);
-	void bossMovement()
-	*/
 };
+*/
