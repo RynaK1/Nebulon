@@ -79,7 +79,8 @@ int Menu::displayMain() {
             highlightMain(mousePos);
 
             // button actions
-            if (evnt.mouseButton.button == sf::Mouse::Left) {
+            if (evnt.type == sf::Event::MouseButtonReleased && evnt.mouseButton.button == sf::Mouse::Left) {
+                std::cout << "Met" << std::endl;
                 int go = buttonPressedMain(mousePos);
                 if (go == GO_OPTIONS_MENU) {
                     displayOptions();
@@ -167,7 +168,7 @@ int Menu::displayOptions() {
             }
 
             // button actions
-            if (evnt.mouseButton.button == sf::Mouse::Left) {
+            if (evnt.type == sf::Event::MouseButtonReleased && evnt.mouseButton.button == sf::Mouse::Left) {
                 if (buttonPressedOptions(mousePos) == GO_MAIN_MENU) {
                     return NULL;
                 }
