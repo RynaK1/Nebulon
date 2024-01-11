@@ -4,10 +4,11 @@
 #include <SFML\Audio.hpp>
 #include <string>
 #include <typeinfo>
-#include "Player.h"
+
+#include "Externs.h"
+#include "Entity.h"
 #include "Stage.h"
 
-/*
 class Gameplay {
 private:
 	sf::RenderWindow* window;
@@ -28,20 +29,20 @@ private:
 	sf::Sprite health_UI;
 	sf::Sprite healthbar_UI;
 	sf::Sprite money_UI;
-	Stage stage;
 	Player player;
-	EnemyManager enemyManager;
 	bool fhd;
 	bool bossDeath;
 	int money;
 	int stage_num;
 	bool animation_flag;
+	sf::FloatRect boundary;
 public:
 	Gameplay(sf::RenderWindow* window);
 	int display();
-	std::array<bool, 4> checkPlayerBounds(sf::FloatRect pos, sf::Vector2u win_size);
-	std::array<bool, 2> updateCollisions(EnemyManager& em, Player& player);
+	//std::array<bool, 2> updateCollisions(EnemyManager& em, Player& player);
 	void scaleUI();
+	void scaleEntities();
 	void stageAnimation();
 };
-*/
+
+// IMPLEMENT STAGE SYSTEM THEN COLLISION

@@ -35,6 +35,7 @@ public:
 	void setScale(float s1, float s2);
 	void setPosition(float x, float y);
 	void setEqs(std::vector<Equation> eqs);
+	void setTexture(sf::Texture& texture);
 	float getSpeed();
 	float getPos_x();
 	sf::Sprite getSprite();
@@ -44,4 +45,47 @@ public:
 	sf::FloatRect getGlobalBounds();
 	void push_back(Equation eq);
 	void update(float time);
+};
+
+
+
+class GameEntity : public Entity {
+protected:
+	int health;
+public:
+	GameEntity() : health(0) {};
+	GameEntity(sf::Texture& texture, float pos_x, float speed, int health);
+	void setHealth(int health);
+	int getHealth();
+};
+
+
+
+class Player : public GameEntity {
+protected:
+	sf::Clock attack1_clock;
+	sf::Clock attack2_clock;
+public:
+	Player() {};
+	Player(sf::Texture& texture, float pos_x, float speed, int health);
+	void move(float time);
+	void keepInBoundary(sf::FloatRect boundary);
+	bool attack(int type);
+};
+
+
+class Enemy : public GameEntity {
+protected:
+	sf::Clock attack_clock;
+public:
+	Enemy() {}
+	virtual bool attack() { return false; };
+};
+
+
+class Enemy0 : public Enemy {
+public:
+	Enemy0() {}
+	Enemy0(sf::Texture& texture, float pos_x);
+	bool attack();
 };

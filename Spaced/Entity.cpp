@@ -44,6 +44,10 @@ void Entity::setSpeed(float speed) {
 	this->speed = speed;
 }
 
+void Entity::setTexture(sf::Texture& texture) {
+	sprite.setTexture(texture);
+}
+
 sf::FloatRect Entity::getGlobalBounds() {
 	return sprite.getGlobalBounds();
 }
@@ -95,52 +99,108 @@ void Entity::push_back(Equation eq) {
 }
 
 
-/*
-EntityManager::EntityManager(bool fhd) {
-	boundary = sf::IntRect(0, 0, 1280, 720);
-	if (fhd) {
-		boundary = sf::IntRect(0, 0, 1920, 1080);
+
+GameEntity::GameEntity(sf::Texture& texture, float pos_x, float speed, int health) {
+	sprite.setTexture(texture);
+	this->pos_x = pos_x;
+	this->speed = speed;
+	this->health = health;
+}
+
+void GameEntity::setHealth(int health) {
+	this->health = health;
+}
+
+int GameEntity::getHealth() {
+	return health;
+}
+
+
+
+Player::Player(sf::Texture& texture, float pos_x, float speed, int health) {
+	sprite.setTexture(texture);
+	this->pos_x = pos_x;
+	this->speed = speed;
+	this->health = health;
+}
+
+void Player::move(float time) {
+	sf::Vector2f velocity;
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+		velocity.y -= speed * time;
 	}
-	size = 0;
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+		velocity.y += speed * time;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+		velocity.x -= speed * time;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+		velocity.x += speed * time;
+	}
+
+	if (velocity.x != 0 && velocity.y != 0) {
+		velocity.x /= (float)std::sqrt(2);
+		velocity.y /= (float)std::sqrt(2);
+	}
+	sf::Vector2f pos = sprite.getPosition();
+	sprite.setPosition(pos.x + velocity.x, pos.y + velocity.y);
 }
 
+void Player::keepInBoundary(sf::FloatRect boundary) {
+	sf::FloatRect bounds = sprite.getGlobalBounds();
+	sf::Vector2f adjust;
+	if (bounds.left < 0) {
+		adjust.x += -bounds.left;
+	}
+	else if (bounds.left + bounds.width > boundary.width) {
+		adjust.x -= bounds.left + bounds.width - boundary.width;
+	}
 
-int EntityManager::getSize() {
-	return size;
+	if (bounds.top < 0) {
+		adjust.y += -bounds.top;
+	}
+	else if (bounds.top + bounds.height > boundary.height) {
+		adjust.y -= bounds.top + bounds.height - boundary.height;
+	}
+	sf::Vector2f pos = sprite.getPosition();
+	sprite.setPosition(pos.x + adjust.x, pos.y + adjust.y);
 }
 
-
-std::vector<Entity> EntityManager::getEntities() {
-	return entities;
-}
-
-
-void EntityManager::setRotation(int i, float num) {
-	entities[i].setRotation(num);
-}
-
-
-void EntityManager::spawn(Entity me) {
-	entities.push_back(me);
-	size += 1;
-}
-
-
-void EntityManager::remove(int i) {
-	entities.erase(entities.begin() + i);
-	size -= 1;
-}
-
-
-void EntityManager::update(float time) {
-	for (int i = 0; i < size; i++) {
-		sf::Vector2f result = entities[i].update(time);
-		entities[i].setPosition(result.x, -result.y);
-		// bound check
-		if (!boundary.intersects((sf::IntRect)entities[i].getGlobalBounds())) {
-			remove(i);
-			i -= 1;
+bool Player::attack(int type) {
+	switch (type) {
+	case 0:
+		if (attack1_clock.getElapsedTime().asSeconds() >= 1) {
+			attack1_clock.restart();
+			return true;
 		}
+		break;
+	case 1:
+		if (attack1_clock.getElapsedTime().asSeconds() >= 2.5) {
+			attack2_clock.restart();
+			return true;
+		}
+		break;
 	}
+
+	return false;
 }
-*/
+
+
+
+Enemy0::Enemy0(sf::Texture& texture, float pos_x) {
+	sprite.setTexture(texture);
+	this->pos_x = pos_x;
+	speed = 10;
+	health = 25;
+}
+
+
+bool Enemy0::attack() {
+	if (attack_clock.getElapsedTime().asSeconds() > 3) {
+		attack_clock.restart();
+		return true;
+	}
+
+	return false;
+}

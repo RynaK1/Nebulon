@@ -1,6 +1,5 @@
 #include "Gameplay.h"
 
-/*
 Gameplay::Gameplay(sf::RenderWindow* window) {
     this->window = window;
 
@@ -57,16 +56,17 @@ Gameplay::Gameplay(sf::RenderWindow* window) {
     healthbar_UI.setTexture(textures["healthbar_UI"]);
     money_UI.setTexture(textures["money_UI"]);
 
+    player = Player(textures["player"], 500, 500, 100);
+
     //resolution
     fhd = false;
+    boundary = sf::FloatRect(0, 0, 1280, 720);
     if (readFromFile("resolution").compare("1920x1080") == 0) {
         fhd = true;
+        boundary = sf::FloatRect(0, 0, 1920, 1080);
     }
     scaleUI();
-
-    stage = Stage(&textures, fhd);
-    player = Player(textures["player"], fhd);
-    enemyManager = EnemyManager(fhd);
+    scaleEntities();
 }
 
 
@@ -74,7 +74,6 @@ int Gameplay::display() {
     frame_clock.restart();
     animation_clock.restart();
     animation_flag = true;
-    stage.load(stage_num);
     while (window->isOpen()) {
         float time = frame_clock.getElapsedTime().asSeconds();
         frame_clock.restart();
@@ -86,12 +85,12 @@ int Gameplay::display() {
                 return QUIT;       
             }
         }   
-        // player movement and boundary
-        sf::FloatRect pos = player.getSprite().getGlobalBounds();
-        std::array<bool, 4> bounds = checkPlayerBounds(pos, window->getSize());
-        player.move(time, bounds);
+        // player movement
+        player.move(time);
+        player.keepInBoundary(boundary);
 
         // spawns appropriate stage enemies at appropriate timing
+        /*
         if (bossDeath == true) {
             stage_num += 1;
             stage_txt.setString("Stage " + std::to_string(stage_num));
@@ -146,31 +145,12 @@ int Gameplay::display() {
         if (animation_flag && animation_clock.getElapsedTime().asSeconds() >= 2) {
             animation_flag = false;
         }
+        */
 
         // draw updated graphics
         window->clear();
         window->draw(background);
-        std::vector<Bullet> pbullets = player.getBullets();
-        size_t pbullets_size = pbullets.size();
-        for (int i = 0; i < pbullets_size; i++) {
-            window->draw(pbullets[i].getSprite());
-        }
-        int enemies_size = enemyManager.getEnemies_size();
-        std::vector<Enemy> enemies = enemyManager.getEnemies();
-        for (int i = 0; i < enemies_size; i++) {
-            window->draw(enemies[i].getSprite());
-    
-            std::vector<Bullet> ebullets = enemies[i].getBulletManager()->getBullets();
-            size_t ebullets_size = ebullets.size();
-            for (int j = 0; j < ebullets_size; j++) {
-                window->draw(ebullets[j].getSprite());
-            }
-        }
         window->draw(player.getSprite());
-        bullet1_UI.setColor(sf::Color(255, 255, 255, (uint8_t)(player.getCDPercent(1) * 255)));
-        window->draw(bullet1_UI);
-        bullet2_UI.setColor(sf::Color(255, 255, 255, (uint8_t)(player.getCDPercent(2) * 255)));
-        window->draw(bullet2_UI);
         window->draw(health_UI);
         healthbar_UI.setTextureRect(sf::IntRect(676, 968, 246 * player.getHealth() / 100, 24));
         window->draw(healthbar_UI);
@@ -183,26 +163,7 @@ int Gameplay::display() {
 }
 
 
-std::array<bool, 4> Gameplay::checkPlayerBounds(sf::FloatRect pos, sf::Vector2u win_size) {
-    std::array<bool, 4> bounds = { true, true, true, true };
-
-    if (pos.left <= 0) {
-        bounds[0] = false;
-    }
-    if (pos.left + pos.width >= win_size.x) {
-        bounds[1] = false;
-    }
-    if (pos.top <= 0) {
-        bounds[2] = false;
-    }
-    if (pos.top + pos.height >= win_size.y) {
-        bounds[3] = false;
-    }
-
-    return bounds;
-}
-
-
+/*
 std::array<bool, 2> Gameplay::updateCollisions(EnemyManager& em, Player& player) {
     float scale = 1;
     if (fhd) {
@@ -269,7 +230,7 @@ std::array<bool, 2> Gameplay::updateCollisions(EnemyManager& em, Player& player)
 
     return death;
 }
-
+*/
 
 void Gameplay::scaleUI() {
     float scale;
@@ -302,6 +263,15 @@ void Gameplay::scaleUI() {
         ((720 * scale) - stage_txt.getLocalBounds().height) / 3.5f);
 }
 
+void Gameplay::scaleEntities() {
+    if (fhd) {
+        player.setScale(0.375f, 0.375f);
+    }
+    else {
+        player.setScale(0.25f, 0.25f);
+    }
+}
+
 
 void Gameplay::stageAnimation() {
     float time = animation_clock.getElapsedTime().asSeconds();
@@ -312,4 +282,3 @@ void Gameplay::stageAnimation() {
         stage_txt.setFillColor(sf::Color(255, 255, 255, (uint8_t)((2 - time) * 510)));
     }
 }
-*/

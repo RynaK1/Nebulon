@@ -141,30 +141,24 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Entity.cpp" />
-    <ClCompile Include="BulletManager.cpp" />
     <ClCompile Include="End.cpp" />
-    <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Externs.cpp" />
     <ClCompile Include="Gameover.cpp" />
     <ClCompile Include="Gameplay.cpp" />
     <ClCompile Include="LiveEntities.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Menu.cpp" />
-    <ClCompile Include="Player.cpp" />
     <ClCompile Include="Stage.cpp" />
     <ClCompile Include="Upgrades.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Entity.h" />
-    <ClInclude Include="BulletManager.h" />
     <ClInclude Include="End.h" />
-    <ClInclude Include="Enemy.h" />
     <ClInclude Include="Externs.h" />
     <ClInclude Include="Gameover.h" />
     <ClInclude Include="Gameplay.h" />
     <ClInclude Include="LiveEntities.h" />
     <ClInclude Include="Menu.h" />
-    <ClInclude Include="Player.h" />
     <ClInclude Include="Stage.h" />
     <ClInclude Include="Upgrades.h" />
   </ItemGroup>

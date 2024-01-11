@@ -80,7 +80,6 @@ int Menu::displayMain() {
 
             // button actions
             if (evnt.type == sf::Event::MouseButtonReleased && evnt.mouseButton.button == sf::Mouse::Left) {
-                std::cout << "Met" << std::endl;
                 int go = buttonPressedMain(mousePos);
                 if (go == GO_OPTIONS_MENU) {
                     displayOptions();

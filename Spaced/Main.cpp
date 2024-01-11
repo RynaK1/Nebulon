@@ -34,12 +34,10 @@ int main() {
             break;
         }
         case GO_GAMEPLAY: {
-            /*
             Gameplay gameplay(&window);
             cout << "Going to gameplay" << endl;
             go = gameplay.display();
             break;
-            */
         }
         case GO_END: {
             End end;

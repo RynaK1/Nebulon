@@ -6,7 +6,7 @@
 #include <cmath>
 #include <map>
 
-#include "Enemy.h"
+#include "Entity.h"
 
 /*
 struct EnemyEqs {
@@ -30,7 +30,6 @@ private:
 	bool boss_flag;
 	sf::Clock clock; 
 	sf::Clock boss_clock;
-	EnemyManager spawned;
 	std::map < std::string, Enemy> enemies;
 	std::map<std::string, sf::Texture> textures;
 public:

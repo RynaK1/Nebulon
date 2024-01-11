@@ -19,3 +19,14 @@ public:
 	Entity getBackground(int element);
 	int getBackgroundSize();
 };
+
+
+
+
+
+
+
+
+
+
+//COMPLETE FOR GAMEPLAY
