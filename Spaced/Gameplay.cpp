@@ -1,27 +1,27 @@
 #include "Gameplay.h"
 
+/*
 Gameplay::Gameplay(sf::RenderWindow* window) {
     this->window = window;
 
     money = stoi(readFromFile("money"));
-    bossDeath = false;
-    animation_flag = false;
-    stage_num = 1;
 
     // audio
+    sf::SoundBuffer sfx_bullet_bfr;
+    sf::SoundBuffer sfx_death_bfr;
     if (!music.openFromFile("../Resources/Audio/gameplay_music.ogg") ||
         !sfx_bullet_bfr.loadFromFile("../Resources/Audio/sfx_laser.ogg") ||
-        !sfx_enemy_death_bfr.loadFromFile("../Resources/Audio/sfx_enemy_hurt.ogg")) {
+        !sfx_death_bfr.loadFromFile("../Resources/Audio/sfx_enemy_hurt.ogg")) {
         std::cerr << "sfx file missing  <Gameplay>" << std::endl;
     }
 
     sf::Vector2f sounds = calcVolTotal();
     music.setVolume(sounds.x);
     music.play();
-    sfx_bullet.setBuffer(sfx_bullet_bfr);
-    sfx_bullet.setVolume(sounds.y);
-    sfx_enemy_death.setBuffer(sfx_enemy_death_bfr);
-    sfx_enemy_death.setVolume(sounds.y);
+    sound["bullet"].setBuffer(sfx_bullet_bfr);
+    sound["bullet"].setVolume(sounds.y);
+    sound["death"].setBuffer(sfx_death_bfr);
+    sound["death"].setVolume(sounds.y);
 
     //text font
     if (!font.loadFromFile("../Resources/Textures/AlfaSlabOne-Regular.ttf")) {
@@ -29,9 +29,9 @@ Gameplay::Gameplay(sf::RenderWindow* window) {
     }
 
     //texts
-    stage_txt = sf::Text("Stage " + std::to_string(stage_num), font);
-    money_txt = sf::Text(readFromFile("money"), font);
-    money_txt.setFillColor(sf::Color::White);
+    texts["stage"] = sf::Text("Stage " + std::to_string(stage_num), font);
+    texts["money"] = sf::Text(readFromFile("money"), font);
+    texts["money"].setFillColor(sf::Color::White);
 
     //textures
     if (!textures["background"].loadFromFile("../Resources/Textures/BackgroundGame.png") ||
@@ -50,21 +50,25 @@ Gameplay::Gameplay(sf::RenderWindow* window) {
         std::cerr << "Texture load failure <Gameplay>" << std::endl;
     }
 
-    bullet1_UI.setTexture(textures["bullet1_UI"]);
-    bullet2_UI.setTexture(textures["bullet2_UI"]);
-    health_UI.setTexture(textures["health_UI"]);
-    healthbar_UI.setTexture(textures["healthbar_UI"]);
-    money_UI.setTexture(textures["money_UI"]);
-
-    player = Player(textures["player"], 500, 500, 100);
+    UIsprites["background"].setTexture(textures["background"]);
+    UIsprites["bullet1"].setTexture(textures["bullet1_UI"]);
+    UIsprites["bullet2"].setTexture(textures["bullet2_UI"]);
+    UIsprites["health"].setTexture(textures["health_UI"]);
+    UIsprites["healthbar"].setTexture(textures["healthbar_UI"]);
+    UIsprites["money"].setTexture(textures["money_UI"]);
 
     //resolution
-    fhd = false;
-    boundary = sf::FloatRect(0, 0, 1280, 720);
     if (readFromFile("resolution").compare("1920x1080") == 0) {
         fhd = true;
         boundary = sf::FloatRect(0, 0, 1920, 1080);
     }
+    else {
+        fhd = false;
+        boundary = sf::FloatRect(0, 0, 1280, 720);
+    }
+
+    player = Player(textures["player"], 500, 500, 100);
+
     scaleUI();
     scaleEntities();
 }
@@ -88,75 +92,21 @@ int Gameplay::display() {
         // player movement
         player.move(time);
         player.keepInBoundary(boundary);
-
-        // spawns appropriate stage enemies at appropriate timing
-        /*
-        if (bossDeath == true) {
-            stage_num += 1;
-            stage_txt.setString("Stage " + std::to_string(stage_num));
-            stage.reset();
-            stage.load(stage_num);
-            animation_clock.restart();
-            animation_flag = true;
-            bossDeath = false;
-        }
         
-        stage.spawn(stage_num);
 
-        // update entities
-        player.updateBullets(time);
-        enemyManager.update(time, textures["bullet1"]);
-
-        std::array<bool, 2> death = updateCollisions(enemyManager, player);
-        if (death[0] == true) { //player death
-            writeToFile(std::to_string(money), "money");
-            int lives = stoi(readFromFile("lives"));
-            if (lives - 1 == 0) {
-                writeToFile(std::to_string(10), "lives");
-                return GO_GAMEOVER;
-            }
-            else {
-                writeToFile(std::to_string(lives - 1), "lives");
-                return GO_END;
-            }
-        }
-        if (death[1] == true) { //enemy death
-            sfx_enemy_death.play();
-        }
 
         time = frame_clock.restart().asSeconds();
 
-        // player shoot
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
-            if (player.shoot(textures["bullet1"], 1)) {
-                sfx_bullet.play();
-            }
-        }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::X)) {
-            if (player.shoot(textures["bullet2"], 2)) {
-                sfx_bullet.play();
-            }
-        }
-
-        // next stage animation
-        if (animation_flag) {
-            stageAnimation();
-        }
-        if (animation_flag && animation_clock.getElapsedTime().asSeconds() >= 2) {
-            animation_flag = false;
-        }
-        */
-
         // draw updated graphics
         window->clear();
-        window->draw(background);
+        window->draw(UIsprites["background"]);
         window->draw(player.getSprite());
-        window->draw(health_UI);
-        healthbar_UI.setTextureRect(sf::IntRect(676, 968, 246 * player.getHealth() / 100, 24));
-        window->draw(healthbar_UI);
-        window->draw(money_txt);
-        window->draw(money_UI);
-        window->draw(stage_txt);
+        window->draw(UIsprites["health_UI"]);
+        UIsprites["healthbar_UI"].setTextureRect(sf::IntRect(676, 968, 246 * player.getHealth() / 100, 24));
+        window->draw(UIsprites["healthbar_UI"]);
+        window->draw(texts["money"]);
+        window->draw(UIsprites["money_UI"]);
+        window->draw(texts["stage"]);
         window->display();
     }
     return QUIT;
@@ -230,37 +180,37 @@ std::array<bool, 2> Gameplay::updateCollisions(EnemyManager& em, Player& player)
 
     return death;
 }
-*/
+
 
 void Gameplay::scaleUI() {
     float scale;
-    background = sf::Sprite();
+    UIsprites["background"] = sf::Sprite();
     if (!fhd) {
         scale = 1;
-        background.setTexture(textures["background"]);
+        UIsprites["background"].setTexture(textures["background"]);
     }
     else if (fhd) {
         scale = 1.5;
-        background.setTexture(textures["backgroundFHD"]);
+        UIsprites["background"].setTexture(textures["backgroundFHD"]);
     }
-    bullet1_UI.setScale(0.41f * scale, 0.41f * scale);
-    bullet2_UI.setScale(0.335f * scale, 0.335f * scale);
-    health_UI.setScale(0.65f * scale, 0.65f * scale); 
-    healthbar_UI.setScale(0.65f * scale, 0.65f * scale);
-    money_UI.setScale(0.4f * scale, 0.4f * scale);
-    money_txt.setCharacterSize((unsigned)(23 * scale));
-    stage_txt.setCharacterSize((unsigned)(40 * scale));
+    UIsprites["bullet1_UI"].setScale(0.41f * scale, 0.41f * scale);
+    UIsprites["bullet2_UI"].setScale(0.335f * scale, 0.335f * scale);
+    UIsprites["health_UI"].setScale(0.65f * scale, 0.65f * scale);
+    UIsprites["healthbar_UI"].setScale(0.65f * scale, 0.65f * scale);
+    UIsprites["money_UI"].setScale(0.4f * scale, 0.4f * scale);
+    texts["money"].setCharacterSize((unsigned)(23 * scale));
+    texts["stage"].setCharacterSize((unsigned)(40 * scale));
 
-    bullet1_UI.setPosition(905 * scale, 645 * scale);
-    bullet2_UI.setPosition(970 * scale, 645 * scale);
-    health_UI.setPosition(1050 * scale, 635 * scale);
-    healthbar_UI.setPosition(1080 * scale, 662 * scale);
-    money_txt.setPosition(((1280 *  scale) - money_txt.getLocalBounds().width) / 1.017f,
-                          ((720 * scale) - money_txt.getLocalBounds().height) / 50);
-    money_UI.setPosition(money_txt.getGlobalBounds().left - (45 * scale),
-                      ((720 * scale) - money_txt.getLocalBounds().height) / 55);
-    stage_txt.setPosition(((1280 * scale) - stage_txt.getLocalBounds().width) / 2,
-        ((720 * scale) - stage_txt.getLocalBounds().height) / 3.5f);
+    UIsprites["bullet1_UI"].setPosition(905 * scale, 645 * scale);
+    UIsprites["bullet2_UI"].setPosition(970 * scale, 645 * scale);
+    UIsprites["health_UI"].setPosition(1050 * scale, 635 * scale);
+    UIsprites["healthbar_UI"].setPosition(1080 * scale, 662 * scale);
+    texts["money"].setPosition(((1280 * scale) - texts["money"].getLocalBounds().width) / 1.017f,
+                          ((720 * scale) - texts["money"].getLocalBounds().height) / 50);
+    UIsprites["money_UI"].setPosition(texts["money"].getGlobalBounds().left - (45 * scale),
+                      ((720 * scale) - texts["money"].getLocalBounds().height) / 55);
+    texts["stage"].setPosition(((1280 * scale) - texts["stage"].getLocalBounds().width) / 2,
+        ((720 * scale) - texts["stage"].getLocalBounds().height) / 3.5f);
 }
 
 void Gameplay::scaleEntities() {
@@ -276,9 +226,10 @@ void Gameplay::scaleEntities() {
 void Gameplay::stageAnimation() {
     float time = animation_clock.getElapsedTime().asSeconds();
     if (time <= 0.5f) {
-        stage_txt.setFillColor(sf::Color(255, 255, 255, (uint8_t)(time * 510)));
+        texts["stage"].setFillColor(sf::Color(255, 255, 255, (uint8_t)(time * 510)));
     }
     else if (time >= 1.5 && time <= 2) {
-        stage_txt.setFillColor(sf::Color(255, 255, 255, (uint8_t)((2 - time) * 510)));
+        texts["stage"].setFillColor(sf::Color(255, 255, 255, (uint8_t)((2 - time) * 510)));
     }
 }
+*/

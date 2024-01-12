@@ -56,14 +56,11 @@ Menu::Menu(sf::RenderWindow* window) {
         background.setTexture(textures["backgroundFHD"]);
         transparent.setTexture(textures["transparentFHD"]);
     }
-    
-    le_back = LiveEntities(fhd);
-    le_front = LiveEntities(fhd);
+
+    resolutionReset(fhd);
     loadUIMain();
     loadUIOptions();
-    loadEntities();
 }
-
 
 int Menu::displayMain() {
     loadUIMain();
@@ -92,21 +89,22 @@ int Menu::displayMain() {
                 }
             }
         }
-        updateEntities();
+        spawnEntities();
+        updateEntityPosition();
 
         window->clear();
         window->draw(background);
         //drawing ships in front and behind buildings
         //behind
-        int le_back_size = le_back.getBackgroundSize();
-        for (int i = 0; i < le_back_size; i++) {
-            window->draw(le_back.getBackground(i).getSprite());
+        size_t entities_back_size = entities_back.size();
+        for (int i = 0; i < entities_back_size; i++) {
+            window->draw(entities_back[i].getSprite());
         }
         window->draw(transparent);
         //front
-        int le_front_size = le_front.getBackgroundSize();
-        for (int i = 0; i < le_front_size; i++) {
-            window->draw(le_front.getBackground(i).getSprite());
+        size_t entities_front_size = entities_front.size();
+        for (int i = 0; i < entities_front_size; i++) {
+            window->draw(entities_front[i].getSprite());
         }
         window->draw(UI_main["start_txt"]);
         window->draw(UI_main["options_txt"]);
@@ -120,7 +118,6 @@ int Menu::displayMain() {
     std::cerr << "Error: displayMainMenu end of function return" << std::endl;
     return QUIT;
 }
-
 
 int Menu::displayOptions() {
     loadUIOptions();
@@ -173,20 +170,21 @@ int Menu::displayOptions() {
                 }
             }
         }       
-        updateEntities();
+        spawnEntities();
+        updateEntityPosition();
 
         window->clear();
         window->draw(background);
         //drawing ships in front and behind buildings
-        int le_back_size = le_back.getBackgroundSize();
-        for (int i = 0; i < le_back_size; i++) {
-            window->draw(le_back.getBackground(i).getSprite());
+        size_t entities_back_size = entities_back.size();
+        for (int i = 0; i < entities_back_size; i++) {
+            window->draw(entities_back[i].getSprite());
         }
         window->draw(transparent);
         //front
-        int le_front_size = le_front.getBackgroundSize();
-        for (int i = 0; i < le_front_size; i++) {
-            window->draw(le_front.getBackground(i).getSprite());
+        size_t entities_front_size = entities_front.size();
+        for (int i = 0; i < entities_front_size; i++) {
+            window->draw(entities_front[i].getSprite());
         }
         window->draw(UI_options["options_txt"]);
         window->draw(UI_options["mvol_txt"]);
@@ -212,7 +210,6 @@ int Menu::displayOptions() {
     return QUIT;
 }
 
-
 void Menu::highlightMain(sf::Vector2i mousePos) {
     if (buttonBounds(mousePos, UI_main["start_txt"])) {
         UI_main["start_txt"].setFillColor(sf::Color::Red);
@@ -233,7 +230,6 @@ void Menu::highlightMain(sf::Vector2i mousePos) {
         UI_main["quit_txt"].setFillColor(sf::Color::White);
     }
 }
-
 
 void Menu::highlightOptions(sf::Vector2i mousePos) {
     if (buttonBounds(mousePos, UI_options2["mvol_knob"])) {
@@ -268,7 +264,6 @@ void Menu::highlightOptions(sf::Vector2i mousePos) {
     }
 }
 
-
 int Menu::buttonPressedMain(sf::Vector2i mousePos) {
     if (buttonBounds(mousePos, UI_main["start_txt"])) {
         sfx.play();
@@ -286,7 +281,6 @@ int Menu::buttonPressedMain(sf::Vector2i mousePos) {
     return NULL;
 }
 
-
 int Menu::buttonPressedOptions(sf::Vector2i mousePos) {
     if (buttonBounds(mousePos, UI_options["bind_txt"])) {
         sfx.play();
@@ -298,9 +292,6 @@ int Menu::buttonPressedOptions(sf::Vector2i mousePos) {
         resolutionReset(false);
         loadUIMain();
         loadUIOptions();
-        changeEntityFHD();
-        win_x = 1280;
-        win_y = 720;
     }
     else if (buttonBounds(mousePos, UI_options["high_txt"])) {
         sfx.play();
@@ -309,9 +300,6 @@ int Menu::buttonPressedOptions(sf::Vector2i mousePos) {
         resolutionReset(true);
         loadUIMain();
         loadUIOptions();
-        changeEntityFHD();
-        win_x = 1920;
-        win_y = 1080;
     }
     else if (buttonBounds(mousePos, UI_options["back_txt"])) {
         sfx.play();
@@ -320,11 +308,7 @@ int Menu::buttonPressedOptions(sf::Vector2i mousePos) {
     return NULL;
 }
 
-
-void Menu::resolutionReset(bool fhd) {
-    le_back = LiveEntities(fhd);
-    le_front = LiveEntities(fhd);
-    em_clock.restart();   
+void Menu::resolutionReset(bool fhd) { 
     int mem_flags_size = sizeof(le_flags);
     for (int i = 0; i < mem_flags_size; i++) {
         le_flags[i] = false;
@@ -336,6 +320,7 @@ void Menu::resolutionReset(bool fhd) {
         background.setTexture(textures["backgroundFHD"]);
         transparent = sf::Sprite();
         transparent.setTexture(textures["transparentFHD"]);
+        changeEntityFHD(fhd);
         this->fhd = fhd;
         win_x = 1920;
         win_y = 1080;
@@ -346,12 +331,12 @@ void Menu::resolutionReset(bool fhd) {
         background.setTexture(textures["background"]);
         transparent = sf::Sprite();
         transparent.setTexture(textures["transparent"]);
+        changeEntityFHD(fhd);
         this->fhd = fhd;
         win_x = 1280;
         win_y = 720;
     }
 }
-
 
 void Menu::loadUIMain() {
     //texts
@@ -408,11 +393,7 @@ void Menu::loadUIMain() {
     quit_txt.setPosition(((win_x - quit_txt.getLocalBounds().width) / 2.0f),
         (win_y - quit_txt.getLocalBounds().height) / 1.32f);
     UI_main["quit_txt"] = quit_txt;
-
-    le_back = LiveEntities(fhd);
-    le_front = LiveEntities(fhd);
 }
-
 
 void Menu::loadUIOptions() {
     //texts
@@ -540,148 +521,136 @@ void Menu::loadUIOptions() {
     UI_options["back_txt"] = back_txt;
 }
 
-
-void Menu::loadEntities() {
-    entities.clear();
+void Menu::spawnEntities() {
     float MAX = 3000;
     float MIN = -1000;
+    int mem_time = (int)em_clock.getElapsedTime().asSeconds();
 
-    //Entity: texture, pos_x, speed
-    //Equation: pt, xt, yt, m_xt, m_yt, x_max, speed_mult, reverse
-    Entity e0(textures["entity0"], 1280, 35);
-    e0.push_back(Equation(1, 0, -300, 1, 0.23f, MIN, 1, true));
-    e0.setScale(0.07f, 0.07f);
+    float scale = 1;
+    if (fhd) {
+        scale = 1.5f;
+    }
 
-    Entity e1(textures["entity1"], -135, 8);
-    e1.push_back(Equation(0, 0, -300, 0, 0, MAX, 1, false));
-    e1.setScale(0.3f, 0.3f);
+    if (mem_time == 0 && le_flags[0] == false) {
+        Entity e0(textures["entity0"], 1280, 35); //top right, fast
+        e0.push_back(Equation(1, 0, -300, 1, 0.23f, MIN, 1, true));
+        e0.setScale(0.07f * scale, 0.07f * scale);
 
-    Entity e2(textures["entity2"], -102, 8);
-    e2.push_back(Equation(0, 0, -260, 0, 0, MAX, 1, false));
-    e2.setScale(0.22f, 0.22f);
+        Entity e1(textures["entity1"], -135, 8); //mid left, lower
+        e1.push_back(Equation(0, 0, -300, 0, 0, MAX, 1, false));
+        e1.setScale(0.3f, 0.3f);
 
-    Entity e3(textures["entity3"], 1020, 5);
-    e3.push_back(Equation(0, 0, -450, 0, 0, MIN, 1, true));
-    e3.setScale(0.2f, 0.2f);
+        Entity e3(textures["entity3"], 1020, 5); //bottom right, behind tower
+        e3.push_back(Equation(0, 0, -450, 0, 0, MIN, 1, true));
+        e3.setScale(0.2f, 0.2f);
 
-    Entity e4(textures["entity4"], 1278, 15);
-    e4.push_back(Equation(0, 0, -100, 0, 0, MIN, 1, true));
-    e4.setScale(0.5f, 0.5f);
+        Entity e5(textures["entity5"], 1280, 15); //top right, lower
+        e5.push_back(Equation(0, 0, -175, 0, 0, MIN, 1, true));
+        e5.setScale(0.5f, 0.5f);
 
-    Entity e5(textures["entity5"], 1280, 15);
-    e5.push_back(Equation(0, 0, -175, 0, 0, MIN, 1, true));
-    e5.setScale(0.5f, 0.5f);
+        Entity e6(textures["entity6"], 200, 3); //bottom left, behind tower
+        e6.push_back(Equation(0, 0, -400, 0, 0, MAX, 1, false));
+        e6.setScale(0.1f, 0.1f);
 
-    Entity e6(textures["entity6"], 200, 3);
-    e6.push_back(Equation(0, 0, -400, 0, 0, MAX, 1, false));
-    e6.setScale(0.1f, 0.1f);
+        if (fhd) {
+            e0.changeResolution(fhd);
+            e1.changeResolution(fhd);
+            e3.changeResolution(fhd);
+            e5.changeResolution(fhd);
+            e6.changeResolution(fhd);
+        }
 
-    Entity e7(textures["entity0"], 1280, 35);
-    e7.push_back(Equation(1, 0, -400, 1, 0.1f, MIN, 1, true));
-    e7.setScale(0.07f, 0.07f);
-    e7.setRotation(10);
+        entities_front.push_back(e0);
+        entities_back.push_back(e3);
+        entities_back.push_back(e1);
+        entities_front.push_back(e5);
+        entities_back.push_back(e6);
 
-    entities.push_back(e0);
-    entities.push_back(e1);
-    entities.push_back(e2);
-    entities.push_back(e3);
-    entities.push_back(e4);
-    entities.push_back(e5);
-    entities.push_back(e6);
-    entities.push_back(e7);
-}
-
-
-void Menu::updateEntities() {
-    float mem_time = em_clock.getElapsedTime().asSeconds();
-
-    if ((int)mem_time == 0 && le_flags[0] == false) {
-        le_front.spawn(0, entities[0]); //top right, fast
-        le_back.spawn(0, entities[1]);//mid left, lower
-        le_back.spawn(0, entities[3]); //bottom right, behind tower
-        le_front.spawn(0, entities[5]); //top right, lower
-        le_back.spawn(0, entities[6]); //bottom left, behind tower
         le_flags[0] = true;
     }
-    else if ((int)mem_time == 10 && le_flags[1] == false) {
-        le_back.spawn(0, entities[2]); //mid left, upper
-        le_front.spawn(0, entities[4]); //top right, higher
+    else if (mem_time == 10 && le_flags[1] == false) {
+        Entity e2(textures["entity2"], -102, 8); //mid left, upper
+        e2.push_back(Equation(0, 0, -260, 0, 0, MAX, 1, false));
+        e2.setScale(0.22f, 0.22f);
+
+        Entity e4(textures["entity4"], 1278, 15); //top right, higher
+        e4.push_back(Equation(0, 0, -100, 0, 0, MIN, 1, true));
+        e4.setScale(0.5f, 0.5f);
+
+        if (fhd) {
+            e2.changeResolution(fhd);
+            e4.changeResolution(fhd);
+        }
+
+        entities_back.push_back(e2);
+        entities_front.push_back(e4);
+
         le_flags[1] = true;
     }
-    else if ((int)mem_time == 70 && le_flags[2] == false) {
-        le_front.spawn(0, entities[7]); //mid left, fast
+    else if (mem_time == 3 && le_flags[2] == false) {
+        Entity e0(textures["entity0"], 1280, 35); //mid left, fast
+        e0.push_back(Equation(1, 0, -400, 1, 0.1f, MIN, 1, true));
+        e0.setScale(0.07f, 0.07f);
+        e0.setRotation(10);
+
+        if (fhd) {
+            e0.changeResolution(fhd);
+        }
+        entities_front.push_back(e0);
+
         le_flags[2] = true;
     }
-    else if ((int)mem_time == 140) {
+    else if (mem_time == 140) {
         int mem_flags_size = sizeof(le_flags);
         for (int i = 0; i < mem_flags_size; i++) {
             le_flags[i] = false;
         }
         em_clock.restart();
     }
-
-    float frame_time = frame_clock.getElapsedTime().asSeconds();
-    frame_clock.restart();
-    le_back.updatePosition(frame_time);
-    le_front.updatePosition(frame_time);
 }
 
+void Menu::updateEntityPosition() {
+    sf::FloatRect boundary(0, 0, (float)win_x, (float)win_y);
+    float frame_time = frame_clock.getElapsedTime().asSeconds();
+    frame_clock.restart();
 
-void Menu::changeEntityFHD() {
-    //FHD
-    if (fhd && entities[0].getSpeed() == 35) {
-        sf::Vector2f scale;
-        sf::Vector2f position;
-
-        //set speed, position, scale
-        size_t entities_size = entities.size();
-        for (int i = 0; i < entities_size; i++) {
-            entities[i].setSpeed(entities[i].getSpeed() * 1.5f);
-            entities[i].setPos_x(entities[i].getPos_x() * 1.5f);
-            entities[i].setScale(entities[i].getScale().x * 1.5f, entities[i].getScale().y * 1.5f);
-
-            //set equation
-            std::vector<Equation> eqs = entities[i].getEqs();
-            size_t eqs_size = eqs.size();
-            for (int j = 0; j < eqs_size; j++) {
-                if (eqs[j].pt == 2) {
-                    eqs[j].m_yt *= 1.5f;
-                }
-                else if (eqs[j].pt == 3) {
-                    eqs[j].m_yt *= 2.255f;
-                }
-                eqs[j].xt *= 1.5f;
-                eqs[j].yt *= 1.5f;
-            }
-            entities[i].setEqs(eqs);
+    for (int i = 0; i < entities_front.size(); i++) {
+        entities_front[i].update(frame_time);
+        //bounds check
+        sf::FloatRect pos = entities_front[i].getGlobalBounds();
+        if (!boundary.intersects(pos)) {
+            std::cout << "met" << std::endl;
+            entities_front.erase(entities_front.begin() + i);
         }
     }
-    //720p
-    else if (!fhd && entities[0].getSpeed() != 35) {
-        sf::Vector2f scale;
-        sf::Vector2f position;
 
-        //set speed, position, scale
-        size_t entities_size = entities.size();
-        for (int i = 0; i < entities_size; i++) {
-            entities[i].setSpeed(entities[i].getSpeed() / 1.5f);
-            entities[i].setPos_x(entities[i].getPos_x() / 1.5f);
-            entities[i].setScale(entities[i].getScale().x / 1.5f, entities[i].getScale().y / 1.5f);
+    for (int i = 0; i < entities_back.size(); i++) {
+        entities_back[i].update(frame_time);
+        //bounds check
+        sf::FloatRect pos = entities_back[i].getGlobalBounds();
+        if (!boundary.intersects(pos)) {
+            entities_back.erase(entities_back.begin() + i);
+        }
+    }
+}
 
-            //set equation
-            std::vector<Equation> eqs = entities[i].getEqs();
-            size_t eqs_size = eqs.size();
-            for (int j = 0; j < eqs_size; j++) {
-                if (eqs[j].pt == 2) {
-                    eqs[j].m_yt /= 1.5f;
-                }
-                else if (eqs[j].pt == 3) {
-                    eqs[j].m_yt /= 2.255f;
-                }
-                eqs[j].xt /= 1.5f;
-                eqs[j].yt /= 1.5f;
-            }
-            entities[i].setEqs(eqs);
+void Menu::changeEntityFHD(bool fhd) {
+    size_t entities_front_size = entities_front.size();
+    size_t entities_back_size = entities_back.size();
+    if (fhd && !this->fhd) {
+        for (int i = 0; i < entities_front_size; i++) {
+            entities_front[i].changeResolution(fhd);
+        }
+        for (int i = 0; i < entities_back_size; i++) {
+            entities_back[i].changeResolution(fhd);
+        }
+    }
+    else if (!fhd && this->fhd) {
+        for (int i = 0; i < entities_front_size; i++) {
+            entities_front[i].changeResolution(fhd);
+        }
+        for (int i = 0; i < entities_back_size; i++) {
+            entities_back[i].changeResolution(fhd);
         }
     }
 }

@@ -10,19 +10,15 @@ Stage::Stage(std::map<std::string, sf::Texture>* textures, bool fhd) {
 		eflags[i] = false;
 	}
 	boss_flag = false;
-
-	enemies["e0"] = Enemy0(this->textures["enemy0"]);
-	enemies["e1"] = Enemy1(this->textures["enemy1"]);
-	enemies["eBoss"] = EnemyBoss(this->textures["enemyBoss"]);
 }
 
 
-void Stage::spawn(int stage) {
-	float time = std::round(10 * clock.getElapsedTime().asSeconds()) / 10.0f;
-	float boss_time = std::round(10 * boss_clock.getElapsedTime().asSeconds()) / 10.0f;
+void Stage::spawn(int stage, LiveEntities* live_entities) {
+	float time = std::round(10 * clock.getElapsedTime().asSeconds()) / 10; //round to tenths
+	float boss_time = std::round(10 * boss_clock.getElapsedTime().asSeconds()) / 10; //round to tenths
 	if (boss_flag == false && boss_time == 1) {
 		enemies["eBoss"].setEqs(enemyEqs.eBossEqs[std::rand() % enemyEqs.eBossEqs.size()]);
-		spawned.push_back(enemies["eBoss"]);
+		live_entities->spawn(enemies["eBoss"]);
 		boss_flag = true;
 	}
 	else if (boss_time == 231) {
@@ -696,28 +692,7 @@ void Stage::spawn(int stage) {
 		}
 		break;
 	}
-}
-
-
-void Stage::update() {
-	spawned.update();
-}
-
-
-void Stage::reset() {
-	clock.restart();
-	boss_clock.restart();
-	boss_flag = false;
-
-	size_t eflags_size = sizeof(eflags);
-	for (int i = 0; i < eflags_size; i++) {
-		eflags[i] = false;
-	}
-}
-
-
-void Stage::load(int stage) {
-	enemyEqs = EnemyEqs((float)stage * 1.08f);
+	
 }
 
 

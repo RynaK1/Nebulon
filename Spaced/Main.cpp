@@ -12,20 +12,17 @@ using namespace std;
 
 int main() {
     // window resolution
+    int go = GO_MAIN_MENU; //which screen to go to
     string res = readFromFile("resolution");
     int win_x = stoi(res.substr(0, res.find('x')));
     int win_y = stoi(res.substr(res.find('x') + 1));
 
     sf::RenderWindow window(sf::VideoMode(win_x, win_y), "Nebulon", sf::Style::Close);
-    if (win_x == 1920) {
+    if (res.compare("1920x1080") == 0) {
         window.setPosition(sf::Vector2i(-8, -31)); //position correction for HD
     }
 
-
-    int go = GO_MAIN_MENU; //which screen to go to
-
     while (window.isOpen()) {
-
         switch (go) {
         case GO_MAIN_MENU: {
             Menu menu(&window);
@@ -34,9 +31,11 @@ int main() {
             break;
         }
         case GO_GAMEPLAY: {
+            /*
             Gameplay gameplay(&window);
             cout << "Going to gameplay" << endl;
             go = gameplay.display();
+            */
             break;
         }
         case GO_END: {

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SFML\Graphics.hpp>
+#include <SFML\Audio.hpp>
 #include <vector>
 #include <array>
 #include <iostream>
@@ -25,19 +26,16 @@ protected:
 	sf::Sprite sprite;
 	std::vector<Equation> eqs;
 	float speed;
-	float pos_x;
 public:
-	Entity() : speed(0), pos_x(0) {}
-	Entity(sf::Texture& texture, float pos_x, float speed);
+	Entity() : speed(0) {}
+	Entity(sf::Texture& texture, float x, float speed);
 	void setRotation(float r);
-	void setPos_x(float pos_x);
 	void setSpeed(float speed);
 	void setScale(float s1, float s2);
 	void setPosition(float x, float y);
 	void setEqs(std::vector<Equation> eqs);
 	void setTexture(sf::Texture& texture);
 	float getSpeed();
-	float getPos_x();
 	sf::Sprite getSprite();
 	sf::Vector2f getScale();
 	sf::Vector2f getPosition();
@@ -45,6 +43,8 @@ public:
 	sf::FloatRect getGlobalBounds();
 	void push_back(Equation eq);
 	void update(float time);
+	float calcYPosition(float x);
+	void changeResolution(bool fhd);
 };
 
 
@@ -54,7 +54,7 @@ protected:
 	int health;
 public:
 	GameEntity() : health(0) {};
-	GameEntity(sf::Texture& texture, float pos_x, float speed, int health);
+	GameEntity(sf::Texture& texture, float x, float speed, int health);
 	void setHealth(int health);
 	int getHealth();
 };
@@ -63,14 +63,16 @@ public:
 
 class Player : public GameEntity {
 protected:
+	sf::Sound death_sfx;
 	sf::Clock attack1_clock;
 	sf::Clock attack2_clock;
 public:
 	Player() {};
-	Player(sf::Texture& texture, float pos_x, float speed, int health);
+	Player(sf::Texture& texture, float x, float speed, int health);
 	void move(float time);
 	void keepInBoundary(sf::FloatRect boundary);
 	bool attack(int type);
+	void death();
 };
 
 
@@ -86,6 +88,22 @@ public:
 class Enemy0 : public Enemy {
 public:
 	Enemy0() {}
-	Enemy0(sf::Texture& texture, float pos_x);
+	Enemy0(sf::Texture& texture);
+	bool attack();
+};
+
+
+class Enemy1 : public Enemy {
+public:
+	Enemy1() {}
+	Enemy1(sf::Texture& texture);
+	bool attack();
+};
+
+
+class EnemyBoss : public Enemy {
+public:
+	EnemyBoss() {}
+	EnemyBoss(sf::Texture& texture);
 	bool attack();
 };

@@ -9,7 +9,6 @@
 
 #include "Externs.h"
 #include "Entity.h"
-#include "LiveEntities.h"
 
 class Menu {
 private:
@@ -33,9 +32,8 @@ private:
 	int win_x;
 	int win_y;
 
-	std::vector<Entity> entities;
-	LiveEntities le_back;
-	LiveEntities le_front;
+	std::vector<Entity> entities_front;
+	std::vector<Entity> entities_back;
 public:
 	Menu(sf::RenderWindow* window);
 	int displayMain();
@@ -43,11 +41,11 @@ public:
 	void resolutionReset(bool fhd);
 	void loadUIMain();
 	void loadUIOptions();
-	void loadEntities();
 	void highlightMain(sf::Vector2i mousePos);
 	void highlightOptions(sf::Vector2i mousePos);
 	int buttonPressedMain(sf::Vector2i mousePos);
 	int buttonPressedOptions(sf::Vector2i mousePos);
-	void updateEntities();
-	void changeEntityFHD();
+	void spawnEntities();
+	void updateEntityPosition();
+	void changeEntityFHD(bool fhd);
 };

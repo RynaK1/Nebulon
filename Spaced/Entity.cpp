@@ -14,9 +14,9 @@ Equation::Equation(float pt, float xt, float yt, float m_xt, float m_yt, float x
 
 
 
-Entity::Entity(sf::Texture& texture, float pos_x, float speed) {
+Entity::Entity(sf::Texture& texture, float x, float speed) {
 	sprite.setTexture(texture);
-	this->pos_x = pos_x;
+	sprite.setPosition(x, 0);
 	this->speed = speed;
 }
 
@@ -26,10 +26,6 @@ void Entity::setEqs(std::vector<Equation> eqs) {
 
 void Entity::setRotation(float r) {
 	sprite.setRotation(r);
-}
-
-void Entity::setPos_x(float pos_x) {
-	this->pos_x = pos_x;
 }
 
 void Entity::setPosition(float x, float y) {
@@ -72,37 +68,71 @@ std::vector<Equation> Entity::getEqs() {
 	return eqs;
 }
 
-float Entity::getPos_x() {
-	return pos_x;
-}
-
 void Entity::update(float time) {
+	float x = sprite.getPosition().x;
 	if (eqs[0].isNegative) {
-		pos_x -= speed * time;
+		x -= speed * time;
 	}
 	else {
-		pos_x += speed * time;
+		x += speed * time;
 	}
 
-	if ((!eqs[0].isNegative && pos_x >= eqs[0].x_max) ||
-		(eqs[0].isNegative && pos_x <= eqs[0].x_max)) {
+	if ((!eqs[0].isNegative && x >= eqs[0].x_max) ||
+		(eqs[0].isNegative && x <= eqs[0].x_max)) {
 		speed *= eqs[1].speed_mult;
 		eqs.erase(eqs.begin());
 	};
 
 	//2nd parameter: y = mx + b
-	sprite.setPosition(pos_x, -((pow((eqs[0].m_xt * pos_x) + eqs[0].xt, eqs[0].pt) * eqs[0].m_yt) + eqs[0].yt));
+	sprite.setPosition(x, calcYPosition(x));
 }
 
 void Entity::push_back(Equation eq) {
 	eqs.push_back(eq);
 }
 
+float Entity::calcYPosition(float x) {
+	return -((pow((eqs[0].m_xt * x) + eqs[0].xt, eqs[0].pt) * eqs[0].m_yt) + eqs[0].yt);
+}
+
+void Entity::changeResolution(bool fhd) {
+	float val1;
+	float val2;
+	if (fhd) {
+		val1 = 1.5f;
+		val2 = 2.255f;
+	}
+	else {
+		val1 = 0.6667f;
+		val2 = 0.4433f;
+	}
+
+	//change member variables
+	speed = speed * val1;
+	sf::Vector2f pos = sprite.getPosition();
+	sprite.setPosition(pos.x * val1, calcYPosition(pos.x * val1));
+	sf::Vector2f scale = sprite.getScale();
+	sprite.setScale(scale.x * val1, scale.y * val1);
+
+	//change equations
+	size_t eqs_size = eqs.size();
+	for (int i = 0; i< eqs_size; i++) {
+		if (eqs[i].pt == 2) {
+			eqs[i].m_yt *= val1;
+		}
+		else if (eqs[i].pt == 3) {
+			eqs[i].m_yt *= val2;
+		}
+		eqs[i].xt *= val1;
+		eqs[i].yt *= val1;
+	}
+}
 
 
-GameEntity::GameEntity(sf::Texture& texture, float pos_x, float speed, int health) {
+
+GameEntity::GameEntity(sf::Texture& texture, float x, float speed, int health) {
 	sprite.setTexture(texture);
-	this->pos_x = pos_x;
+	sprite.setPosition(x, 0);
 	this->speed = speed;
 	this->health = health;
 }
@@ -117,9 +147,9 @@ int GameEntity::getHealth() {
 
 
 
-Player::Player(sf::Texture& texture, float pos_x, float speed, int health) {
+Player::Player(sf::Texture& texture, float x, float speed, int health) {
 	sprite.setTexture(texture);
-	this->pos_x = pos_x;
+	sprite.setPosition(x, 0);
 	this->speed = speed;
 	this->health = health;
 }
@@ -186,15 +216,17 @@ bool Player::attack(int type) {
 	return false;
 }
 
+void Player::death() {
+
+}
 
 
-Enemy0::Enemy0(sf::Texture& texture, float pos_x) {
+
+Enemy0::Enemy0(sf::Texture& texture) {
 	sprite.setTexture(texture);
-	this->pos_x = pos_x;
 	speed = 10;
 	health = 25;
 }
-
 
 bool Enemy0::attack() {
 	if (attack_clock.getElapsedTime().asSeconds() > 3) {
@@ -202,5 +234,41 @@ bool Enemy0::attack() {
 		return true;
 	}
 
+	return false;
+}
+
+
+
+Enemy1::Enemy1(sf::Texture& texture) {
+	sprite.setTexture(texture);
+	speed = 15;
+	health = 40;
+}
+
+bool Enemy1::attack() {
+	/*
+	if (attack_clock.getElapsedTime().asSeconds() > 3) {
+		attack_clock.restart();
+		return true;
+	}
+	*/
+	return false;
+}
+
+
+
+EnemyBoss::EnemyBoss(sf::Texture& texture) {
+	sprite.setTexture(texture);
+	speed = 10;
+	health = 100;
+}
+
+bool EnemyBoss::attack() {
+	/*
+	if (attack_clock.getElapsedTime().asSeconds() > 3) {
+		attack_clock.restart();
+		return true;
+	}
+	*/
 	return false;
 }

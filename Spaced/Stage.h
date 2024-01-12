@@ -35,9 +35,6 @@ private:
 public:
 	Stage() : fhd(false), MIN(-1000), MAX(10000), boss_flag(false), eflags{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0} {}
 	Stage(std::map<std::string, sf::Texture>* textures,  bool fhd);
-	void update();
-	void spawn(int stage);
-	void reset();
-	void load(int stage);
+	void spawn(int stage, LiveEntities* live_entities);
 };
 */
