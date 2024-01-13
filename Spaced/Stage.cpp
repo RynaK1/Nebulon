@@ -1,10 +1,10 @@
 #include "Stage.h"
 
-/*
-Stage::Stage(std::map<std::string, sf::Texture>* textures, bool fhd) {
-	this->fhd = fhd;
-	this->textures = *textures;
 
+Stage::Stage(std::map<std::string, sf::Texture>& textures) {
+	this->textures = textures;
+	stage_num = 1;
+	 
 	int s1flags_size = sizeof(eflags);
 	for (int i = 0; i < s1flags_size; i++) {
 		eflags[i] = false;
@@ -13,51 +13,69 @@ Stage::Stage(std::map<std::string, sf::Texture>* textures, bool fhd) {
 }
 
 
-void Stage::spawn(int stage, LiveEntities* live_entities) {
+void Stage::spawn(std::vector<GameEntity*>* entities) {
+	int rand; //RNG number
 	float time = std::round(10 * clock.getElapsedTime().asSeconds()) / 10; //round to tenths
 	float boss_time = std::round(10 * boss_clock.getElapsedTime().asSeconds()) / 10; //round to tenths
+	
 	if (boss_flag == false && boss_time == 1) {
-		enemies["eBoss"].setEqs(enemyEqs.eBossEqs[std::rand() % enemyEqs.eBossEqs.size()]);
-		live_entities->spawn(enemies["eBoss"]);
+		rand = std::rand() % enemyEqs.eBossEqs_size;
+		GameEntity* eBoss = new EnemyBoss(textures["enemyBoss"], enemyEqs.eBossEqs_startPos[rand]);
+		eBoss->setEqs(enemyEqs.eBossEqs[rand]);
+		entities->push_back(eBoss);
 		boss_flag = true;
 	}
 	else if (boss_time == 231) {
 		boss_flag = false;
 		boss_clock.restart();
 	}
-	switch (stage) {
-		/*
+
+	switch (stage_num) {
 	case 1: 
 		if (eflags[0] == false && time == 1) {
-			enemies["e0"].setEqs(enemyEqs.e0Eqs[std::rand() % enemyEqs.e0Eqs.size()]);
-			spawned.push_back(enemies["e0"]);
+			rand = std::rand() % enemyEqs.e0Eqs_size;
+			GameEntity* e0 = new Enemy0(textures["enemy0"], enemyEqs.e0Eqs_startPos[rand]);
+			e0->setEqs(enemyEqs.e0Eqs[rand]);
+			entities->push_back(e0);
+
 			eflags[0] = true;
 		}
 		else if (eflags[1] == false && time == 3) {
-			enemies["e0"].setEqs(enemyEqs.e0Eqs[std::rand() % enemyEqs.e0Eqs.size()]);
-			spawned.push_back(enemies["e0"]);
-			enemies["e1"].setEqs(enemyEqs.e1Eqs[0]);
-			spawned.push_back(enemies["e1"]);
+			rand = std::rand() % enemyEqs.e0Eqs_size;
+			GameEntity* e0 = new Enemy0(textures["enemy0"], enemyEqs.e0Eqs_startPos[rand]);
+			e0->setEqs(enemyEqs.e0Eqs[rand]);
+			entities->push_back(e0);
+
+			GameEntity* e1 = new Enemy1(textures["enemy1"], enemyEqs.e1Eqs_startPos[0]);
+			e1->setEqs(enemyEqs.e1Eqs[0]);
+			entities->push_back(e1);
+
 			eflags[1] = true;
 		}
 		else if (eflags[2] == false && time == 4.5f) {
-			enemies["e1"].setEqs(enemyEqs.e1Eqs[1]);
-			spawned.push_back(enemies["e1"]);
+			GameEntity* e1 = new Enemy1(textures["enemy1"], enemyEqs.e1Eqs_startPos[1]);
+			e1->setEqs(enemyEqs.e1Eqs[1]);
+			entities->push_back(e1);
+
 			eflags[2] = true;
 		}
 		else if (eflags[3] == false && time == 6) {
-			enemies["e1"].setEqs(enemyEqs.e1Eqs[2]);
-			spawned.push_back(enemies["e1"]);
+			GameEntity* e1 = new Enemy1(textures["enemy1"], enemyEqs.e1Eqs_startPos[2]);
+			e1->setEqs(enemyEqs.e1Eqs[2]);
+			entities->push_back(e1);
+
 			eflags[3] = true;
 		}
 		else if (eflags[4] == false && time == 7.5f) {
-			enemies["e1"].setEqs(enemyEqs.e1Eqs[3]);
-			spawned.push_back(enemies["e1"]);
+			GameEntity* e1 = new Enemy1(textures["enemy1"], enemyEqs.e1Eqs_startPos[3]);
+			e1->setEqs(enemyEqs.e1Eqs[3]);
+			entities->push_back(e1);
 			eflags[4] = true;
 		}
 		else if (eflags[5] == false && time == 9) {
-			enemies["e1"].setEqs(enemyEqs.e1Eqs[4]);
-			spawned.push_back(enemies["e1"]);
+			GameEntity* e1 = new Enemy1(textures["enemy1"], enemyEqs.e1Eqs_startPos[4]);
+			e1->setEqs(enemyEqs.e1Eqs[4]);
+			entities->push_back(e1);
 			eflags[5] = true;
 		}
 		else if (time == 10) {
@@ -68,6 +86,7 @@ void Stage::spawn(int stage, LiveEntities* live_entities) {
 			clock.restart();
 		}
 		break;
+	/*
 	case 2:
 		if (boss_flag == false && boss_time == 1) {
 			enemies["eBoss"].setEqs(enemyEqs.eBossEqs[std::rand() % enemyEqs.eBossEqs.size()]);
@@ -691,128 +710,157 @@ void Stage::spawn(int stage, LiveEntities* live_entities) {
 			clock.restart();
 		}
 		break;
+		*/
 	}
-	
 }
 
 
-EnemyEqs::EnemyEqs(float speed_up) {
+EnemyEqs::EnemyEqs() {
 	MIN = -1000;
 	MAX = 10000;
 
 	//pt, xt, yt, m_xt, m_yt, x_max, speed_mult, reverse,
 	std::vector<Equation> eqs;
-	eqs.push_back(Equation(2, -150, -250, 0.25f, 0.005f, MAX, 100 * speed_up, false));
+	eqs.push_back(Equation(2, -150, -250, 0.25f, 0.005f, MAX, 1, false));
 	e0Eqs.push_back(eqs);
+	e0Eqs_startPos.push_back(-5);
 
 	eqs.clear();
-	eqs.push_back(Equation(3, 67, -300, -0.07f, 0.001f, MAX, 100 * speed_up, false));
+	eqs.push_back(Equation(3, 67, -300, -0.07f, 0.001f, MAX, 1, false));
 	e0Eqs.push_back(eqs);
+	e0Eqs_startPos.push_back(-5);
 
 	eqs.clear();
-	eqs.push_back(Equation(3, -45, -100, 0.07f, 0.001f, MIN, 100 * speed_up, true)); //1285
+	eqs.push_back(Equation(3, -45, -100, 0.07f, 0.001f, MIN, 1, true));
 	e0Eqs.push_back(eqs);
+	e0Eqs_startPos.push_back(1285);
 
 	eqs.clear();
-	eqs.push_back(Equation(0, 0, -100, 0, 0, MIN, 100 * speed_up, true)); //1285
+	eqs.push_back(Equation(0, 0, -100, 0, 0, MIN, 1, true));
 	e0Eqs.push_back(eqs);
+	e0Eqs_startPos.push_back(1285);
 
-
+	e0Eqs_size = e0Eqs.size();
 	
 	//E1: x^2 wave (0-6)
 	eqs.clear();
-	eqs.push_back(Equation(2, -60, -700, 0.25f, 1, MAX, 60 * speed_up, false)); //134
-	e0Eqs.push_back(eqs);
+	eqs.push_back(Equation(2, -60, -700, 0.25f, 1, MAX, 60 * 1, false));
+	e1Eqs.push_back(eqs);
+	e1Eqs_startPos.push_back(135);
 
 	eqs.clear();
-	eqs.push_back(Equation(2, -110, -700, 0.25f, 1, MAX, 60 * speed_up, false)); //334
-	e0Eqs.push_back(eqs);
+	eqs.push_back(Equation(2, -110, -700, 0.25f, 1, MAX, 60 * 1, false));
+	e1Eqs.push_back(eqs);
+	e1Eqs_startPos.push_back(335);
 
 	eqs.clear();
-	eqs.push_back(Equation(2, -160, -700, 0.25f, 1, MAX, 60 * speed_up, false)); //534
-	e0Eqs.push_back(eqs);
+	eqs.push_back(Equation(2, -160, -700, 0.25f, 1, MAX, 60 * 1, false));
+	e1Eqs.push_back(eqs);
+	e1Eqs_startPos.push_back(535);
 
 	eqs.clear();
-	eqs.push_back(Equation(2, -210, -700, 0.25f, 1, MAX, 60 * speed_up, false)); //734
-	e0Eqs.push_back(eqs);
+	eqs.push_back(Equation(2, -210, -700, 0.25f, 1, MAX, 60 * 1, false));
+	e1Eqs.push_back(eqs);
+	e1Eqs_startPos.push_back(735);
 
 	eqs.clear();
-	eqs.push_back(Equation(2, -260, -700, 0.25f, 1, MAX, 60 * speed_up, false)); //934
-	e0Eqs.push_back(eqs);
+	eqs.push_back(Equation(2, -260, -700, 0.25f, 1, MAX, 60 * 1, false));
+	e1Eqs.push_back(eqs);
+	e1Eqs_startPos.push_back(935);
 
 	eqs.clear();
-	eqs.push_back(Equation(2, -10, -700, 0.25f, 1, MAX, 60 * speed_up, false)); //-2
-	e0Eqs.push_back(eqs);
+	eqs.push_back(Equation(2, -310, -700, 0.25f, 1, MAX, 60 * 1, false));
+	e1Eqs.push_back(eqs);
+	e1Eqs_startPos.push_back(1135);
 
 	eqs.clear();
-	eqs.push_back(Equation(2, -310, -700, 0.25f, 1, MAX, 60 * speed_up, false)); //1134
-	e0Eqs.push_back(eqs);
+	eqs.push_back(Equation(2, -10, -700, 0.25f, 1, MAX, 60 * 1, false));
+	e1Eqs.push_back(eqs);
+	e1Eqs_startPos.push_back(-2);
+
 
 	//E1: vertical line (7-19)
 	eqs.clear();
-	eqs.push_back(Equation(1, -100, 0, 1, 99, MIN, 7 * speed_up, true)); //100
-	e0Eqs.push_back(eqs);
+	eqs.push_back(Equation(1, -100, 0, 1, 99, MIN, 1, true));
+	e1Eqs.push_back(eqs);
+	e1Eqs_startPos.push_back(100);
 
 	eqs.clear();
-	eqs.push_back(Equation(1, -200, 0, 1, 99, MIN, 7 * speed_up, true)); //200
-	e0Eqs.push_back(eqs);
+	eqs.push_back(Equation(1, -200, 0, 1, 99, MIN, 1, true));
+	e1Eqs.push_back(eqs);
+	e1Eqs_startPos.push_back(200);
 
 	eqs.clear();
-	eqs.push_back(Equation(1, -300, 0, 1, 99, MIN, 7 * speed_up, true)); //300
-	e0Eqs.push_back(eqs);
+	eqs.push_back(Equation(1, -300, 0, 1, 99, MIN, 1, true));
+	e1Eqs.push_back(eqs);
+	e1Eqs_startPos.push_back(300);
 
 	eqs.clear();
-	eqs.push_back(Equation(1, -400, 0, 1, 99, MIN, 7 * speed_up, true)); //400
-	e0Eqs.push_back(eqs);
+	eqs.push_back(Equation(1, -400, 0, 1, 99, MIN, 1, true));
+	e1Eqs.push_back(eqs);
+	e1Eqs_startPos.push_back(400);
 
 	eqs.clear();
-	eqs.push_back(Equation(1, -500, 0, 1, 99, MIN, 7 * speed_up, true)); //500
-	e0Eqs.push_back(eqs);
+	eqs.push_back(Equation(1, -500, 0, 1, 99, MIN, 1, true));
+	e1Eqs.push_back(eqs);
+	e1Eqs_startPos.push_back(500);
 
 	eqs.clear();
-	eqs.push_back(Equation(1, -600, 0, 1, 99, MIN, 7 * speed_up, true)); //600
-	e0Eqs.push_back(eqs);
+	eqs.push_back(Equation(1, -600, 0, 1, 99, MIN, 1, true));
+	e1Eqs.push_back(eqs);
+	e1Eqs_startPos.push_back(600);
 
 	eqs.clear();
-	eqs.push_back(Equation(1, -700, 0, 1, 99, MIN, 7 * speed_up, true)); //700
-	e0Eqs.push_back(eqs);
+	eqs.push_back(Equation(1, -700, 0, 1, 99, MIN, 1, true));
+	e1Eqs.push_back(eqs);
+	e1Eqs_startPos.push_back(700);
 
 	eqs.clear();
-	eqs.push_back(Equation(1, -800, 0, 1, 99, MIN, 7 * speed_up, true)); //800
-	e0Eqs.push_back(eqs);
+	eqs.push_back(Equation(1, -800, 0, 1, 99, MIN, 1, true));
+	e1Eqs.push_back(eqs);
+	e1Eqs_startPos.push_back(800);
 
 	eqs.clear();
-	eqs.push_back(Equation(1, -900, 0, 1, 99, MIN, 7 * speed_up, true)); //900
-	e0Eqs.push_back(eqs);
+	eqs.push_back(Equation(1, -900, 0, 1, 99, MIN, 1, true));
+	e1Eqs.push_back(eqs);
+	e1Eqs_startPos.push_back(900);
 
 	eqs.clear();
-	eqs.push_back(Equation(1, -1000, 0, 1, 99, MIN, 7 * speed_up, true)); //1000
-	e0Eqs.push_back(eqs);
+	eqs.push_back(Equation(1, -1000, 0, 1, 99, MIN, 1, true));
+	e1Eqs.push_back(eqs);
+	e1Eqs_startPos.push_back(1000);
 
 	eqs.clear();
-	eqs.push_back(Equation(1, -1100, 0, 1, 99, MIN, 7 * speed_up, true)); //1100
-	e0Eqs.push_back(eqs);
+	eqs.push_back(Equation(1, -1100, 0, 1, 99, MIN, 1, true));
+	e1Eqs.push_back(eqs);
+	e1Eqs_startPos.push_back(1100);
 
 	eqs.clear();
-	eqs.push_back(Equation(1, -1200, 0, 1, 99, MIN, 7 * speed_up, true)); //1200
-	e0Eqs.push_back(eqs);
+	eqs.push_back(Equation(1, -1200, 0, 1, 99, MIN, 1, true));
+	e1Eqs.push_back(eqs);
+	e1Eqs_startPos.push_back(1200);
+
+	e1Eqs_size = e1Eqs.size();
 
 	//EBoss: right side
 	eqs.clear();
 	for (int i = 0; i < 9; i++) {
-		eqs.push_back(Equation(0, 0, -100, 0, 0, 70, 5 * speed_up, true)); //1340
-		eqs.push_back(Equation(0, 0, -100, 0, 0, 1160, 5 * speed_up, false));
+		eqs.push_back(Equation(0, 0, -125, 0, 0, 95, 1, true));
+		eqs.push_back(Equation(0, 0, -125, 0, 0, 1186, 1, false));
 	}
-	eqs.push_back(Equation(0, 0, -100, 0, 0, MIN, 5 * speed_up, true));
+	eqs.push_back(Equation(0, 0, -125, 0, 0, MIN, 1, true));
 	eBossEqs.push_back(eqs);
+	eBossEqs_startPos.push_back(1360);
 
 	//EBoss: left side
 	eqs.clear();
 	for (int i = 0; i < 9; i++) {
-		eqs.push_back(Equation(0, 0, -100, 0, 0, 1160, 5 * speed_up, false)); //-60
-		eqs.push_back(Equation(0, 0, -100, 0, 0, 70, 5 * speed_up, true));
+		eqs.push_back(Equation(0, 0, -125, 0, 0, 1185, 1, false));
+		eqs.push_back(Equation(0, 0, -125, 0, 0, 95, 1, true));
 	}
-	eqs.push_back(Equation(0, 0, -100, 0, 0, MAX, 80 * speed_up, false));
+	eqs.push_back(Equation(0, 0, -125, 0, 0, MAX, 1, false));
 	eBossEqs.push_back(eqs);
+	eBossEqs_startPos.push_back(-80);
+
+	eBossEqs_size = eBossEqs.size();
 }
-*/

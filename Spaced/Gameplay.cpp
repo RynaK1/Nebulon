@@ -1,10 +1,8 @@
 #include "Gameplay.h"
 
-/*
+
 Gameplay::Gameplay(sf::RenderWindow* window) {
     this->window = window;
-
-    money = stoi(readFromFile("money"));
 
     // audio
     sf::SoundBuffer sfx_bullet_bfr;
@@ -29,7 +27,7 @@ Gameplay::Gameplay(sf::RenderWindow* window) {
     }
 
     //texts
-    texts["stage"] = sf::Text("Stage " + std::to_string(stage_num), font);
+    texts["stage"] = sf::Text("Stage " + std::to_string(1), font);
     texts["money"] = sf::Text(readFromFile("money"), font);
     texts["money"].setFillColor(sf::Color::White);
 
@@ -67,7 +65,9 @@ Gameplay::Gameplay(sf::RenderWindow* window) {
         boundary = sf::FloatRect(0, 0, 1280, 720);
     }
 
-    player = Player(textures["player"], 500, 500, 100);
+    money = stoi(readFromFile("money"));
+    player = Player(textures["player"], 100);
+    stage = Stage(textures);
 
     scaleUI();
     scaleEntities();
@@ -76,8 +76,7 @@ Gameplay::Gameplay(sf::RenderWindow* window) {
 
 int Gameplay::display() {
     frame_clock.restart();
-    animation_clock.restart();
-    animation_flag = true;
+    //animation_clock.restart();
     while (window->isOpen()) {
         float time = frame_clock.getElapsedTime().asSeconds();
         frame_clock.restart();
@@ -89,17 +88,26 @@ int Gameplay::display() {
                 return QUIT;       
             }
         }   
-        // player movement
+        //player movement
         player.move(time);
         player.keepInBoundary(boundary);
-        
 
+        //enemy updates
+        stage.spawn(&entities);
+        updateEntityPosition(time);
 
         time = frame_clock.restart().asSeconds();
 
-        // draw updated graphics
+        //draw updated graphics
         window->clear();
         window->draw(UIsprites["background"]);
+
+        size_t entities_size = entities.size();
+        for (int i = 0; i < entities_size; i++) {
+            window->draw(entities[i]->getSprite());
+        }
+
+
         window->draw(player.getSprite());
         window->draw(UIsprites["health_UI"]);
         UIsprites["healthbar_UI"].setTextureRect(sf::IntRect(676, 968, 246 * player.getHealth() / 100, 24));
@@ -180,19 +188,19 @@ std::array<bool, 2> Gameplay::updateCollisions(EnemyManager& em, Player& player)
 
     return death;
 }
-
+*/
 
 void Gameplay::scaleUI() {
     float scale;
-    UIsprites["background"] = sf::Sprite();
-    if (!fhd) {
+    if (fhd) {
+        scale = 1.5f;
+        UIsprites["background"].setTexture(textures["backgroundFHD"]);
+    }
+    else {
         scale = 1;
         UIsprites["background"].setTexture(textures["background"]);
     }
-    else if (fhd) {
-        scale = 1.5;
-        UIsprites["background"].setTexture(textures["backgroundFHD"]);
-    }
+
     UIsprites["bullet1_UI"].setScale(0.41f * scale, 0.41f * scale);
     UIsprites["bullet2_UI"].setScale(0.335f * scale, 0.335f * scale);
     UIsprites["health_UI"].setScale(0.65f * scale, 0.65f * scale);
@@ -206,11 +214,11 @@ void Gameplay::scaleUI() {
     UIsprites["health_UI"].setPosition(1050 * scale, 635 * scale);
     UIsprites["healthbar_UI"].setPosition(1080 * scale, 662 * scale);
     texts["money"].setPosition(((1280 * scale) - texts["money"].getLocalBounds().width) / 1.017f,
-                          ((720 * scale) - texts["money"].getLocalBounds().height) / 50);
+                               ((720 * scale) - texts["money"].getLocalBounds().height) / 50);
     UIsprites["money_UI"].setPosition(texts["money"].getGlobalBounds().left - (45 * scale),
-                      ((720 * scale) - texts["money"].getLocalBounds().height) / 55);
+                                     ((720 * scale) - texts["money"].getLocalBounds().height) / 55);
     texts["stage"].setPosition(((1280 * scale) - texts["stage"].getLocalBounds().width) / 2,
-        ((720 * scale) - texts["stage"].getLocalBounds().height) / 3.5f);
+                               ((720 * scale) - texts["stage"].getLocalBounds().height) / 3.5f);
 }
 
 void Gameplay::scaleEntities() {
@@ -222,7 +230,19 @@ void Gameplay::scaleEntities() {
     }
 }
 
+void Gameplay::updateEntityPosition(float time) {
+    for (int i = 0; i < entities.size(); i++) {
+        entities[i]->update(time);
+        //bounds check
+        sf::FloatRect pos = entities[i]->getGlobalBounds();
+        if (!boundary.intersects(pos)) {
+            delete entities[i];
+            entities.erase(entities.begin() + i);
+        }
+    }
+}
 
+/*
 void Gameplay::stageAnimation() {
     float time = animation_clock.getElapsedTime().asSeconds();
     if (time <= 0.5f) {

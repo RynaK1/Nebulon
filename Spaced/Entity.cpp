@@ -147,10 +147,10 @@ int GameEntity::getHealth() {
 
 
 
-Player::Player(sf::Texture& texture, float x, float speed, int health) {
+Player::Player(sf::Texture& texture, int health) {
 	sprite.setTexture(texture);
-	sprite.setPosition(x, 0);
-	this->speed = speed;
+	sprite.setPosition(640, 600);
+	this->speed = 500;
 	this->health = health;
 }
 
@@ -222,9 +222,13 @@ void Player::death() {
 
 
 
-Enemy0::Enemy0(sf::Texture& texture) {
+Enemy0::Enemy0(sf::Texture& texture, float x) {
 	sprite.setTexture(texture);
-	speed = 10;
+	sprite.setScale(0.25f, 0.25f);
+	sf::FloatRect bounds = sprite.getLocalBounds();
+	sprite.setOrigin(bounds.width / 2, bounds.height / 2);
+	sprite.setPosition(x, 0);
+	speed = 125;
 	health = 25;
 }
 
@@ -239,9 +243,14 @@ bool Enemy0::attack() {
 
 
 
-Enemy1::Enemy1(sf::Texture& texture) {
+Enemy1::Enemy1(sf::Texture& texture, float x) {
 	sprite.setTexture(texture);
-	speed = 15;
+	sprite.setScale(0.2f, 0.2f);
+	sf::FloatRect bounds = sprite.getLocalBounds();
+	sprite.setOrigin(bounds.width / 2, bounds.height / 2);
+	sprite.setPosition(x, 0);
+	sprite.rotate(180);
+	speed = 125;
 	health = 40;
 }
 
@@ -257,9 +266,13 @@ bool Enemy1::attack() {
 
 
 
-EnemyBoss::EnemyBoss(sf::Texture& texture) {
+EnemyBoss::EnemyBoss(sf::Texture& texture, float x) {
 	sprite.setTexture(texture);
-	speed = 10;
+	sprite.setScale(0.7f, 0.7f);
+	sf::FloatRect bounds = sprite.getLocalBounds();
+	sprite.setOrigin(bounds.width / 2, bounds.height / 2);
+	sprite.setPosition(x, 0);
+	speed = 100;
 	health = 100;
 }
 

@@ -587,7 +587,7 @@ void Menu::spawnEntities() {
 
         le_flags[1] = true;
     }
-    else if (mem_time == 3 && le_flags[2] == false) {
+    else if (mem_time == 70 && le_flags[2] == false) {
         Entity e0(textures["entity0"], 1280, 35); //mid left, fast
         e0.push_back(Equation(1, 0, -400, 1, 0.1f, MIN, 1, true));
         e0.setScale(0.07f, 0.07f);
@@ -619,7 +619,6 @@ void Menu::updateEntityPosition() {
         //bounds check
         sf::FloatRect pos = entities_front[i].getGlobalBounds();
         if (!boundary.intersects(pos)) {
-            std::cout << "met" << std::endl;
             entities_front.erase(entities_front.begin() + i);
         }
     }

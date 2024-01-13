@@ -68,7 +68,7 @@ protected:
 	sf::Clock attack2_clock;
 public:
 	Player() {};
-	Player(sf::Texture& texture, float x, float speed, int health);
+	Player(sf::Texture& texture, int health);
 	void move(float time);
 	void keepInBoundary(sf::FloatRect boundary);
 	bool attack(int type);
@@ -76,34 +76,31 @@ public:
 };
 
 
-class Enemy : public GameEntity {
+class Enemy0 : public GameEntity {
 protected:
 	sf::Clock attack_clock;
 public:
-	Enemy() {}
-	virtual bool attack() { return false; };
-};
-
-
-class Enemy0 : public Enemy {
-public:
 	Enemy0() {}
-	Enemy0(sf::Texture& texture);
+	Enemy0(sf::Texture& texture, float x);
 	bool attack();
 };
 
 
-class Enemy1 : public Enemy {
+class Enemy1 : public GameEntity {
+protected:
+	sf::Clock attack_clock;
 public:
 	Enemy1() {}
-	Enemy1(sf::Texture& texture);
+	Enemy1(sf::Texture& texture, float x);
 	bool attack();
 };
 
 
-class EnemyBoss : public Enemy {
+class EnemyBoss : public GameEntity {
+protected:
+	sf::Clock attack_clock;
 public:
 	EnemyBoss() {}
-	EnemyBoss(sf::Texture& texture);
+	EnemyBoss(sf::Texture& texture, float x);
 	bool attack();
 };

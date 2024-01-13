@@ -8,33 +8,36 @@
 
 #include "Entity.h"
 
-/*
+
 struct EnemyEqs {
 	float MIN;
 	float MAX;
 	std::vector<std::vector<Equation>> e0Eqs;
 	std::vector<std::vector<Equation>> e1Eqs;
 	std::vector<std::vector<Equation>> eBossEqs;
-	EnemyEqs() : MIN(-1000), MAX(10000) {}
-	EnemyEqs(float speed_up);
+	std::vector<float> e0Eqs_startPos;
+	std::vector<float> e1Eqs_startPos;
+	std::vector<float> eBossEqs_startPos;
+	size_t e0Eqs_size;
+	size_t e1Eqs_size;
+	size_t eBossEqs_size;
+	EnemyEqs();
 };
 
 
 class Stage {
 private:
-	bool fhd;
 	float MIN;
 	float MAX;
+	int stage_num;
 	EnemyEqs enemyEqs; 
 	bool eflags[15];
 	bool boss_flag;
 	sf::Clock clock; 
 	sf::Clock boss_clock;
-	std::map < std::string, Enemy> enemies;
 	std::map<std::string, sf::Texture> textures;
 public:
-	Stage() : fhd(false), MIN(-1000), MAX(10000), boss_flag(false), eflags{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0} {}
-	Stage(std::map<std::string, sf::Texture>* textures,  bool fhd);
-	void spawn(int stage, LiveEntities* live_entities);
+	Stage() : MIN(-1000), MAX(10000), boss_flag(false), stage_num(0), eflags{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0} {}
+	Stage(std::map<std::string, sf::Texture>& textures);
+	void spawn(std::vector<GameEntity*>* entities);
 };
-*/
