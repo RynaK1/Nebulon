@@ -27,17 +27,19 @@ struct EnemyEqs {
 
 class Stage {
 private:
+	EnemyFactory enemyFactory;
+	std::map<std::string, sf::Texture> textures;
+	sf::Clock boss_clock;
+	sf::Clock clock;
+	EnemyEqs enemyEqs;
 	float MIN;
 	float MAX;
 	int stage_num;
-	EnemyEqs enemyEqs; 
-	bool eflags[15];
-	bool boss_flag;
-	sf::Clock clock; 
-	sf::Clock boss_clock;
-	std::map<std::string, sf::Texture> textures;
+	bool enemy_spawned[15];
+	bool boss_spawned;
 public:
-	Stage() : MIN(-1000), MAX(10000), boss_flag(false), stage_num(0), eflags{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0} {}
+	Stage() : MIN(-1000), MAX(10000), boss_spawned(false), stage_num(0), enemy_spawned{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0} {}
 	Stage(std::map<std::string, sf::Texture>& textures);
-	void spawn(std::vector<GameEntity*>* entities);
+	int getStage_num();
+	void spawn(std::vector<Enemy*>* enemies);
 };

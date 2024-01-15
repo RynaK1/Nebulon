@@ -2,86 +2,90 @@
 
 
 Stage::Stage(std::map<std::string, sf::Texture>& textures) {
+	enemyFactory = EnemyFactory(textures);
 	this->textures = textures;
 	stage_num = 1;
 	 
-	int s1flags_size = sizeof(eflags);
+	int s1flags_size = sizeof(enemy_spawned);
 	for (int i = 0; i < s1flags_size; i++) {
-		eflags[i] = false;
+		enemy_spawned[i] = false;
 	}
-	boss_flag = false;
+	boss_spawned = false;
 }
 
+int Stage::getStage_num() {
+	return stage_num;
+}
 
-void Stage::spawn(std::vector<GameEntity*>* entities) {
+void Stage::spawn(std::vector<Enemy*>* enemies) {
 	int rand; //RNG number
 	float time = std::round(10 * clock.getElapsedTime().asSeconds()) / 10; //round to tenths
 	float boss_time = std::round(10 * boss_clock.getElapsedTime().asSeconds()) / 10; //round to tenths
 	
-	if (boss_flag == false && boss_time == 1) {
+	if (boss_spawned == false && boss_time == 1) {
 		rand = std::rand() % enemyEqs.eBossEqs_size;
-		GameEntity* eBoss = new EnemyBoss(textures["enemyBoss"], enemyEqs.eBossEqs_startPos[rand]);
-		eBoss->setEqs(enemyEqs.eBossEqs[rand]);
-		entities->push_back(eBoss);
-		boss_flag = true;
+		Enemy* e100 = enemyFactory.create(100, enemyEqs.eBossEqs_startPos[rand]);
+		e100->setEqs(enemyEqs.eBossEqs[rand]);
+		enemies->push_back(e100);
+		boss_spawned = true;
 	}
 	else if (boss_time == 231) {
-		boss_flag = false;
+		boss_spawned = false;
 		boss_clock.restart();
 	}
 
 	switch (stage_num) {
 	case 1: 
-		if (eflags[0] == false && time == 1) {
+		if (enemy_spawned[0] == false && time == 1) {
 			rand = std::rand() % enemyEqs.e0Eqs_size;
-			GameEntity* e0 = new Enemy0(textures["enemy0"], enemyEqs.e0Eqs_startPos[rand]);
+			Enemy* e0 = enemyFactory.create(0, enemyEqs.e0Eqs_startPos[rand]);
 			e0->setEqs(enemyEqs.e0Eqs[rand]);
-			entities->push_back(e0);
-
-			eflags[0] = true;
+			enemies->push_back(e0);
+			enemy_spawned[0] = true;
+			std::cout << rand << std::endl;
 		}
-		else if (eflags[1] == false && time == 3) {
+		else if (enemy_spawned[1] == false && time == 3) {
 			rand = std::rand() % enemyEqs.e0Eqs_size;
-			GameEntity* e0 = new Enemy0(textures["enemy0"], enemyEqs.e0Eqs_startPos[rand]);
+			Enemy* e0 = enemyFactory.create(0, enemyEqs.e0Eqs_startPos[rand]);
 			e0->setEqs(enemyEqs.e0Eqs[rand]);
-			entities->push_back(e0);
+			enemies->push_back(e0);
 
-			GameEntity* e1 = new Enemy1(textures["enemy1"], enemyEqs.e1Eqs_startPos[0]);
+			Enemy* e1 = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[0]);
 			e1->setEqs(enemyEqs.e1Eqs[0]);
-			entities->push_back(e1);
+			enemies->push_back(e1);
 
-			eflags[1] = true;
+			enemy_spawned[1] = true;
 		}
-		else if (eflags[2] == false && time == 4.5f) {
-			GameEntity* e1 = new Enemy1(textures["enemy1"], enemyEqs.e1Eqs_startPos[1]);
+		else if (enemy_spawned[2] == false && time == 4.5f) {
+			Enemy* e1 = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[1]);
 			e1->setEqs(enemyEqs.e1Eqs[1]);
-			entities->push_back(e1);
+			enemies->push_back(e1);
 
-			eflags[2] = true;
+			enemy_spawned[2] = true;
 		}
-		else if (eflags[3] == false && time == 6) {
-			GameEntity* e1 = new Enemy1(textures["enemy1"], enemyEqs.e1Eqs_startPos[2]);
+		else if (enemy_spawned[3] == false && time == 6) {
+			Enemy* e1 = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[2]);
 			e1->setEqs(enemyEqs.e1Eqs[2]);
-			entities->push_back(e1);
+			enemies->push_back(e1);
 
-			eflags[3] = true;
+			enemy_spawned[3] = true;
 		}
-		else if (eflags[4] == false && time == 7.5f) {
-			GameEntity* e1 = new Enemy1(textures["enemy1"], enemyEqs.e1Eqs_startPos[3]);
+		else if (enemy_spawned[4] == false && time == 7.5f) {
+			Enemy* e1 = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[3]);
 			e1->setEqs(enemyEqs.e1Eqs[3]);
-			entities->push_back(e1);
-			eflags[4] = true;
+			enemies->push_back(e1);
+			enemy_spawned[4] = true;
 		}
-		else if (eflags[5] == false && time == 9) {
-			GameEntity* e1 = new Enemy1(textures["enemy1"], enemyEqs.e1Eqs_startPos[4]);
+		else if (enemy_spawned[5] == false && time == 9) {
+			Enemy* e1 = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[4]);
 			e1->setEqs(enemyEqs.e1Eqs[4]);
-			entities->push_back(e1);
-			eflags[5] = true;
+			enemies->push_back(e1);
+			enemy_spawned[5] = true;
 		}
 		else if (time == 10) {
-			int eflags_size = sizeof(eflags);
+			int eflags_size = sizeof(enemy_spawned);
 			for (int i = 0; i < eflags_size; i++) {
-				eflags[i] = false;
+				enemy_spawned[i] = false;
 			}
 			clock.restart();
 		}
@@ -713,7 +717,6 @@ void Stage::spawn(std::vector<GameEntity*>* entities) {
 		*/
 	}
 }
-
 
 EnemyEqs::EnemyEqs() {
 	MIN = -1000;

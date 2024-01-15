@@ -14,10 +14,14 @@ Equation::Equation(float pt, float xt, float yt, float m_xt, float m_yt, float x
 
 
 
-Entity::Entity(sf::Texture& texture, float x, float speed) {
+Entity::Entity(sf::Texture& texture, float start_pos, float speed) {
 	sprite.setTexture(texture);
-	sprite.setPosition(x, 0);
+	sprite.setPosition(start_pos, 0);
 	this->speed = speed;
+}
+
+void Entity::setOrigin(float x, float y) {
+	sprite.setOrigin(x, y);
 }
 
 void Entity::setEqs(std::vector<Equation> eqs) {
@@ -130,13 +134,6 @@ void Entity::changeResolution(bool fhd) {
 
 
 
-GameEntity::GameEntity(sf::Texture& texture, float x, float speed, int health) {
-	sprite.setTexture(texture);
-	sprite.setPosition(x, 0);
-	this->speed = speed;
-	this->health = health;
-}
-
 void GameEntity::setHealth(int health) {
 	this->health = health;
 }
@@ -222,66 +219,29 @@ void Player::death() {
 
 
 
-Enemy0::Enemy0(sf::Texture& texture, float x) {
-	sprite.setTexture(texture);
-	sprite.setScale(0.25f, 0.25f);
-	sf::FloatRect bounds = sprite.getLocalBounds();
-	sprite.setOrigin(bounds.width / 2, bounds.height / 2);
-	sprite.setPosition(x, 0);
-	speed = 125;
-	health = 25;
+EnemyFactory::EnemyFactory(std::map<std::string, sf::Texture>& textures) {
+	this->textures = textures;
 }
 
-bool Enemy0::attack() {
-	if (attack_clock.getElapsedTime().asSeconds() > 3) {
-		attack_clock.restart();
-		return true;
+Enemy* EnemyFactory::create(int type, float start_pos) {
+	Enemy* enemy = nullptr;
+	switch (type) {
+	case 0:
+		enemy = new Enemy(textures["enemy0"], start_pos, 125, 25, false);
+		enemy->setScale(0.25f, 0.25f);
+		break;
+	case 1:
+		enemy = new Enemy(textures["enemy1"], start_pos, 125, 40, false);
+		enemy->setScale(0.16f, 0.16f);
+		enemy->setRotation(180);
+		break;
+	case 100:
+		enemy = new Enemy(textures["enemy100"], start_pos, 100, 100, true);
+		enemy->setScale(0.7f, 0.7f);
+		break;
 	}
+	sf::FloatRect pos = enemy->getGlobalBounds();
+	enemy->setOrigin(pos.width / 2, pos.height / 2);
 
-	return false;
-}
-
-
-
-Enemy1::Enemy1(sf::Texture& texture, float x) {
-	sprite.setTexture(texture);
-	sprite.setScale(0.2f, 0.2f);
-	sf::FloatRect bounds = sprite.getLocalBounds();
-	sprite.setOrigin(bounds.width / 2, bounds.height / 2);
-	sprite.setPosition(x, 0);
-	sprite.rotate(180);
-	speed = 125;
-	health = 40;
-}
-
-bool Enemy1::attack() {
-	/*
-	if (attack_clock.getElapsedTime().asSeconds() > 3) {
-		attack_clock.restart();
-		return true;
-	}
-	*/
-	return false;
-}
-
-
-
-EnemyBoss::EnemyBoss(sf::Texture& texture, float x) {
-	sprite.setTexture(texture);
-	sprite.setScale(0.7f, 0.7f);
-	sf::FloatRect bounds = sprite.getLocalBounds();
-	sprite.setOrigin(bounds.width / 2, bounds.height / 2);
-	sprite.setPosition(x, 0);
-	speed = 100;
-	health = 100;
-}
-
-bool EnemyBoss::attack() {
-	/*
-	if (attack_clock.getElapsedTime().asSeconds() > 3) {
-		attack_clock.restart();
-		return true;
-	}
-	*/
-	return false;
+	return enemy;
 }

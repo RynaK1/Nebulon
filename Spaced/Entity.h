@@ -28,7 +28,8 @@ protected:
 	float speed;
 public:
 	Entity() : speed(0) {}
-	Entity(sf::Texture& texture, float x, float speed);
+	Entity(sf::Texture& texture, float start_pos, float speed);
+	void setOrigin(float x, float y);
 	void setRotation(float r);
 	void setSpeed(float speed);
 	void setScale(float s1, float s2);
@@ -48,17 +49,18 @@ public:
 };
 
 
-
 class GameEntity : public Entity {
 protected:
 	int health;
 public:
 	GameEntity() : health(0) {};
-	GameEntity(sf::Texture& texture, float x, float speed, int health);
+	GameEntity(sf::Texture& texture, float start_pos, float speed, int health) :
+		Entity(texture, start_pos, speed) {
+		this->health = health;
+	}
 	void setHealth(int health);
 	int getHealth();
 };
-
 
 
 class Player : public GameEntity {
@@ -76,31 +78,24 @@ public:
 };
 
 
-class Enemy0 : public GameEntity {
+class Enemy : public GameEntity {
 protected:
+	bool isBoss;
 	sf::Clock attack_clock;
 public:
-	Enemy0() {}
-	Enemy0(sf::Texture& texture, float x);
-	bool attack();
+	Enemy() : isBoss(false) {}
+	Enemy(sf::Texture& texture, float start_pos, float speed, int health, bool isBoss) :
+		GameEntity(texture, start_pos, speed, health) {
+		this->isBoss = isBoss;
+	}
+	bool attack() { return false; }
 };
 
 
-class Enemy1 : public GameEntity {
-protected:
-	sf::Clock attack_clock;
+class EnemyFactory {
+	std::map<std::string, sf::Texture> textures;
 public:
-	Enemy1() {}
-	Enemy1(sf::Texture& texture, float x);
-	bool attack();
-};
-
-
-class EnemyBoss : public GameEntity {
-protected:
-	sf::Clock attack_clock;
-public:
-	EnemyBoss() {}
-	EnemyBoss(sf::Texture& texture, float x);
-	bool attack();
+	EnemyFactory() {}
+	EnemyFactory(std::map<std::string, sf::Texture>& textures);
+	Enemy* create(int type, float start_pos);
 };

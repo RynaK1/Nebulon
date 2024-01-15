@@ -14,7 +14,7 @@ class Gameplay {
 private:
 	sf::RenderWindow* window;
 	sf::Clock frame_clock;
-	//sf::Clock animation_clock;
+	sf::Clock animation_clock;
 	sf::Music music;
 	sf::Font font;
 
@@ -23,7 +23,9 @@ private:
 	std::map<std::string, sf::Sprite> UIsprites;
 	std::map<std::string, sf::Text> texts;
 
-	std::vector<GameEntity*> entities;
+	std::vector<Enemy*> enemies;
+	//std::vector<>
+	//std::vector<>
 
 	sf::FloatRect boundary;
 	Player player;
@@ -34,9 +36,9 @@ private:
 public:
 	Gameplay(sf::RenderWindow* window);
 	int display();
-	//std::array<bool, 2> updateCollisions(EnemyManager& em, Player& player);
+	void updateCollisions();
 	void scaleUI();
 	void scaleEntities();
 	void updateEntityPosition(float time);
-	//void stageAnimation();
+	void stageAnimation();
 };

@@ -44,7 +44,7 @@ Gameplay::Gameplay(sf::RenderWindow* window) {
         !textures["bullet2"].loadFromFile("../Resources/Textures/spaceSprites.png", sf::IntRect(0, 32, 5, 11)) ||
         !textures["enemy0"].loadFromFile("../Resources/Textures/ship_sprite5.png", sf::IntRect(695, 515, 284, 118)) ||
         !textures["enemy1"].loadFromFile("../Resources/Textures/ship_sprite5.png", sf::IntRect(707, 238, 256, 244)) ||
-        !textures["enemyBoss"].loadFromFile("../Resources/Textures/ship_sprite5.png", sf::IntRect(56, 56, 285, 188))) {
+        !textures["enemy100"].loadFromFile("../Resources/Textures/ship_sprite5.png", sf::IntRect(56, 56, 285, 188))) {
         std::cerr << "Texture load failure <Gameplay>" << std::endl;
     }
 
@@ -93,8 +93,16 @@ int Gameplay::display() {
         player.keepInBoundary(boundary);
 
         //enemy updates
-        stage.spawn(&entities);
+        stage.spawn(&enemies);
         updateEntityPosition(time);
+
+        //entity collision updates
+
+        //stage text animation
+        stageAnimation();
+
+        ///////////////////////// FIGURE OUT DIFFERENT WAY TO STORE ENTITIES TO CONTAIN ALL CLASSES
+
 
         time = frame_clock.restart().asSeconds();
 
@@ -102,9 +110,9 @@ int Gameplay::display() {
         window->clear();
         window->draw(UIsprites["background"]);
 
-        size_t entities_size = entities.size();
+        size_t entities_size = enemies.size();
         for (int i = 0; i < entities_size; i++) {
-            window->draw(entities[i]->getSprite());
+            window->draw(enemies[i]->getSprite());
         }
 
 
@@ -121,74 +129,9 @@ int Gameplay::display() {
 }
 
 
-/*
-std::array<bool, 2> Gameplay::updateCollisions(EnemyManager& em, Player& player) {
-    float scale = 1;
-    if (fhd) {
-        scale = 1.5f;
-    }
+void Gameplay::updateCollisions() {
 
-    std::array<bool, 2> death = { false, false };
-
-    //player collision with enemies and enemy attacks
-    std::vector<Enemy> enemies = em.getEnemies();
-    sf::Sprite player_s = player.getSprite();
-    size_t enemies_size = enemies.size();
-    sf::FloatRect player_pos = player_s.getGlobalBounds();
-    for (int i = 0; i < enemies_size; i++) {
-        if (enemies[i].getGlobalBounds().intersects(player_pos)) {
-            int health = player.getHealth() - 10;
-            if (health <= 0) {
-                death[0] = true;
-            }
-            else {
-                player.playerDamaged(10);
-            }
-        }
-
-        std::vector<Bullet> enemy_bullets = enemies[i].getBulletManager()->getBullets();
-        size_t enemy_bullets_size = enemy_bullets.size();
-        for (int j = 0; j < enemy_bullets_size; j++) {
-            if (enemy_bullets[j].getGlobalBounds().intersects(player_pos)) {
-                enemies[i].getBulletManager()->remove(j);
-                player.playerDamaged(10);
-            }
-        }
-    }
-
-    //player collision with enemy attacks
-
-
-    //enemy collisions with bullets
-    for (int i = 0; i < enemies.size(); i++) {
-        std::vector<Bullet> bullets = player.getBullets();
-        for (int j = 0; j < bullets.size(); j++) {
-            if (bullets[j].getGlobalBounds().intersects(enemies[i].getGlobalBounds())) {
-                int health = enemies[i].getHealth() - bullets[j].getDamage();
-                if (health <= 0) {
-                    money += em.getEnemy(i).getValue();
-                    money_txt.setString(std::to_string(money));
-                    money_txt.setPosition(((1280 * scale) - money_txt.getLocalBounds().width) / 1.017f,
-                        ((720 * scale) - money_txt.getLocalBounds().height) / 50);
-                    money_UI.setPosition(money_txt.getGlobalBounds().left - (45 * scale),
-                        ((720 * scale) - money_txt.getLocalBounds().height) / 55);
-                    if (em.getEnemy(i).isBoss()) {
-                        bossDeath = true;
-                    }
-                    em.remove(i);
-                    death[1] = true;
-                }
-                else {
-                    em.setEnemyHealth(health, i);
-                }
-                player.removeBullet(j);
-            }
-        }
-    }
-
-    return death;
 }
-*/
 
 void Gameplay::scaleUI() {
     float scale;
@@ -231,18 +174,17 @@ void Gameplay::scaleEntities() {
 }
 
 void Gameplay::updateEntityPosition(float time) {
-    for (int i = 0; i < entities.size(); i++) {
-        entities[i]->update(time);
+    for (int i = 0; i < enemies.size(); i++) {
+        enemies[i]->update(time);
         //bounds check
-        sf::FloatRect pos = entities[i]->getGlobalBounds();
+        sf::FloatRect pos = enemies[i]->getGlobalBounds();
         if (!boundary.intersects(pos)) {
-            delete entities[i];
-            entities.erase(entities.begin() + i);
+            delete enemies[i];
+            enemies.erase(enemies.begin() + i);
         }
     }
 }
 
-/*
 void Gameplay::stageAnimation() {
     float time = animation_clock.getElapsedTime().asSeconds();
     if (time <= 0.5f) {
@@ -252,4 +194,3 @@ void Gameplay::stageAnimation() {
         texts["stage"].setFillColor(sf::Color(255, 255, 255, (uint8_t)((2 - time) * 510)));
     }
 }
-*/
