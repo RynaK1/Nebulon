@@ -144,10 +144,10 @@ int GameEntity::getHealth() {
 
 
 
-Player::Player(sf::Texture& texture, int health) {
+Player::Player(sf::Texture& texture, sf::Vector2f start_pos, float speed, int health) {
 	sprite.setTexture(texture);
-	sprite.setPosition(640, 600);
-	this->speed = 500;
+	sprite.setPosition(start_pos.x, start_pos.y);
+	this->speed = speed;
 	this->health = health;
 }
 
@@ -194,23 +194,34 @@ void Player::keepInBoundary(sf::FloatRect boundary) {
 	sprite.setPosition(pos.x + adjust.x, pos.y + adjust.y);
 }
 
-bool Player::attack(int type) {
-	switch (type) {
-	case 0:
+void Player::attack(std::map<std::string, sf::Texture>& textures, std::vector<GameEntity*>* player_bullets) {
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
 		if (attack1_clock.getElapsedTime().asSeconds() >= 1) {
 			attack1_clock.restart();
-			return true;
+
+			sf::FloatRect pos = this->getGlobalBounds();
+			GameEntity* attack1 = new GameEntity(textures["bullet0"], pos.left + (pos.width / 2), 10, 1);
+			attack1->setScale(3, 3);
+			std::vector<Equation> attack1Eq;
+			attack1Eq.push_back(Equation(1, -(pos.left + (pos.width / 2)), -pos.top, 1, 99, 3000, 1, false));
+			attack1->setEqs(attack1Eq);
+			player_bullets->push_back(attack1);
 		}
-		break;
-	case 1:
-		if (attack1_clock.getElapsedTime().asSeconds() >= 2.5) {
-			attack2_clock.restart();
-			return true;
-		}
-		break;
 	}
 
-	return false;
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::X)) {
+		if (attack2_clock.getElapsedTime().asSeconds() >= 2.5) {
+			attack2_clock.restart();
+
+			sf::FloatRect pos = this->getGlobalBounds();
+			GameEntity* attack2 = new GameEntity(textures["bullet1"], pos.left + (pos.width / 2), 6, 1);
+			attack2->setScale(4, 4);
+			std::vector<Equation> attack2Eq;
+			attack2Eq.push_back(Equation(1, -(pos.left + (pos.width / 2)), -pos.top, 1, 99, 3000, 1, false));
+			attack2->setEqs(attack2Eq);
+			player_bullets->push_back(attack2);
+		}
+	}
 }
 
 void Player::death() {

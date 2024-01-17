@@ -63,17 +63,18 @@ public:
 };
 
 
+
 class Player : public GameEntity {
 protected:
-	sf::Sound death_sfx;
+	//BulletEqs bulletEqs;
 	sf::Clock attack1_clock;
 	sf::Clock attack2_clock;
 public:
 	Player() {};
-	Player(sf::Texture& texture, int health);
+	Player(sf::Texture& texture, sf::Vector2f start_pos, float speed, int health);
 	void move(float time);
 	void keepInBoundary(sf::FloatRect boundary);
-	bool attack(int type);
+	void attack(std::map<std::string, sf::Texture>& textures, std::vector<GameEntity*>* player_bullets);
 	void death();
 };
 

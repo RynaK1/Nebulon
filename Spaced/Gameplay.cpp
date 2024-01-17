@@ -35,13 +35,13 @@ Gameplay::Gameplay(sf::RenderWindow* window) {
     if (!textures["background"].loadFromFile("../Resources/Textures/BackgroundGame.png") ||
         !textures["backgroundFHD"].loadFromFile("../Resources/Textures/BackgroundGame_FHD.png") || 
         !textures["player"].loadFromFile("../Resources/Textures/ship_sprite4.png", sf::IntRect(768, 32, 227, 171)) ||
-        !textures["bullet1_UI"].loadFromFile("../Resources/Textures/Game_UI.png", sf::IntRect(125, 433, 141, 126)) ||
-        !textures["bullet2_UI"].loadFromFile("../Resources/Textures/Game_UI.png", sf::IntRect(199, 47, 172, 160)) ||
+        !textures["bullet0_UI"].loadFromFile("../Resources/Textures/Game_UI.png", sf::IntRect(125, 433, 141, 126)) ||
+        !textures["bullet1_UI"].loadFromFile("../Resources/Textures/Game_UI.png", sf::IntRect(199, 47, 172, 160)) ||
         !textures["health_UI"].loadFromFile("../Resources/Textures/Game_UI.png", sf::IntRect(625, 852, 330, 109)) ||
         !textures["healthbar_UI"].loadFromFile("../Resources/Textures/Game_UI.png", sf::IntRect(676, 968, 246, 24)) ||
         !textures["money_UI"].loadFromFile("../Resources/Textures/Game_UI2.png", sf::IntRect(505, 746, 81, 79)) ||
-        !textures["bullet1"].loadFromFile("../Resources/Textures/spaceSprites.png", sf::IntRect(7, 32, 3, 6)) ||
-        !textures["bullet2"].loadFromFile("../Resources/Textures/spaceSprites.png", sf::IntRect(0, 32, 5, 11)) ||
+        !textures["bullet0"].loadFromFile("../Resources/Textures/spaceSprites.png", sf::IntRect(7, 32, 3, 6)) ||
+        !textures["bullet1"].loadFromFile("../Resources/Textures/spaceSprites.png", sf::IntRect(0, 32, 5, 11)) ||
         !textures["enemy0"].loadFromFile("../Resources/Textures/ship_sprite5.png", sf::IntRect(695, 515, 284, 118)) ||
         !textures["enemy1"].loadFromFile("../Resources/Textures/ship_sprite5.png", sf::IntRect(707, 238, 256, 244)) ||
         !textures["enemy100"].loadFromFile("../Resources/Textures/ship_sprite5.png", sf::IntRect(56, 56, 285, 188))) {
@@ -49,24 +49,26 @@ Gameplay::Gameplay(sf::RenderWindow* window) {
     }
 
     UIsprites["background"].setTexture(textures["background"]);
-    UIsprites["bullet1"].setTexture(textures["bullet1_UI"]);
-    UIsprites["bullet2"].setTexture(textures["bullet2_UI"]);
-    UIsprites["health"].setTexture(textures["health_UI"]);
-    UIsprites["healthbar"].setTexture(textures["healthbar_UI"]);
-    UIsprites["money"].setTexture(textures["money_UI"]);
+    UIsprites["bullet0_UI"].setTexture(textures["bullet0_UI"]);
+    UIsprites["bullet1UI"].setTexture(textures["bullet1_UI"]);
+    UIsprites["health_UI"].setTexture(textures["health_UI"]);
+    UIsprites["healthbar_UI"].setTexture(textures["healthbar_UI"]);
+    UIsprites["money_UI"].setTexture(textures["money_UI"]);
 
     //resolution
+
     if (readFromFile("resolution").compare("1920x1080") == 0) {
         fhd = true;
         boundary = sf::FloatRect(0, 0, 1920, 1080);
+        player = Player(textures["player"], sf::Vector2f(960, 750), 400, 100);
     }
     else {
         fhd = false;
         boundary = sf::FloatRect(0, 0, 1280, 720);
+        player = Player(textures["player"], sf::Vector2f(640, 500), 400, 100);
     }
 
     money = stoi(readFromFile("money"));
-    player = Player(textures["player"], 100);
     stage = Stage(textures);
 
     scaleUI();
@@ -91,6 +93,7 @@ int Gameplay::display() {
         //player movement
         player.move(time);
         player.keepInBoundary(boundary);
+        player.attack(textures, &player_bullets);
 
         //enemy updates
         stage.spawn(&enemies);
@@ -110,11 +113,15 @@ int Gameplay::display() {
         window->clear();
         window->draw(UIsprites["background"]);
 
-        size_t entities_size = enemies.size();
-        for (int i = 0; i < entities_size; i++) {
+        size_t enemies_size = enemies.size();
+        for (int i = 0; i < enemies_size; i++) {
             window->draw(enemies[i]->getSprite());
         }
 
+        size_t player_bullets_size = player_bullets.size();
+        for (int i = 0; i < player_bullets_size; i++) {
+            window->draw(player_bullets[i]->getSprite());
+        }
 
         window->draw(player.getSprite());
         window->draw(UIsprites["health_UI"]);
@@ -128,11 +135,6 @@ int Gameplay::display() {
     return QUIT;
 }
 
-
-void Gameplay::updateCollisions() {
-
-}
-
 void Gameplay::scaleUI() {
     float scale;
     if (fhd) {
@@ -144,16 +146,16 @@ void Gameplay::scaleUI() {
         UIsprites["background"].setTexture(textures["background"]);
     }
 
-    UIsprites["bullet1_UI"].setScale(0.41f * scale, 0.41f * scale);
-    UIsprites["bullet2_UI"].setScale(0.335f * scale, 0.335f * scale);
+    UIsprites["bullet0_UI"].setScale(0.41f * scale, 0.41f * scale);
+    UIsprites["bullet1_UI"].setScale(0.335f * scale, 0.335f * scale);
     UIsprites["health_UI"].setScale(0.65f * scale, 0.65f * scale);
     UIsprites["healthbar_UI"].setScale(0.65f * scale, 0.65f * scale);
     UIsprites["money_UI"].setScale(0.4f * scale, 0.4f * scale);
     texts["money"].setCharacterSize((unsigned)(23 * scale));
     texts["stage"].setCharacterSize((unsigned)(40 * scale));
 
-    UIsprites["bullet1_UI"].setPosition(905 * scale, 645 * scale);
-    UIsprites["bullet2_UI"].setPosition(970 * scale, 645 * scale);
+    UIsprites["bullet0_UI"].setPosition(905 * scale, 645 * scale);
+    UIsprites["bullet1_UI"].setPosition(970 * scale, 645 * scale);
     UIsprites["health_UI"].setPosition(1050 * scale, 635 * scale);
     UIsprites["healthbar_UI"].setPosition(1080 * scale, 662 * scale);
     texts["money"].setPosition(((1280 * scale) - texts["money"].getLocalBounds().width) / 1.017f,
@@ -183,6 +185,30 @@ void Gameplay::updateEntityPosition(float time) {
             enemies.erase(enemies.begin() + i);
         }
     }
+
+    for (int i = 0; i < enemy_bullets.size(); i++) {
+        enemy_bullets[i]->update(time);
+        //bounds check
+        sf::FloatRect pos = enemy_bullets[i]->getGlobalBounds();
+        if (!boundary.intersects(pos)) {
+            delete enemy_bullets[i];
+            enemy_bullets.erase(enemy_bullets.begin() + i);
+        }
+    }
+
+    for (int i = 0; i < player_bullets.size(); i++) {
+        player_bullets[i]->update(time);
+        //bounds check
+        sf::FloatRect pos = player_bullets[i]->getGlobalBounds();
+        if (!boundary.intersects(pos)) {
+            delete player_bullets[i];
+            player_bullets.erase(player_bullets.begin() + i);
+        }
+    }
+}
+
+void Gameplay::checkCollisions() {
+
 }
 
 void Gameplay::stageAnimation() {

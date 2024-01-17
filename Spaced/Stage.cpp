@@ -24,9 +24,10 @@ void Stage::spawn(std::vector<Enemy*>* enemies) {
 	
 	if (boss_spawned == false && boss_time == 1) {
 		rand = std::rand() % enemyEqs.eBossEqs_size;
-		Enemy* e100 = enemyFactory.create(100, enemyEqs.eBossEqs_startPos[rand]);
-		e100->setEqs(enemyEqs.eBossEqs[rand]);
-		enemies->push_back(e100);
+		Enemy* enemy = enemyFactory.create(100, enemyEqs.eBossEqs_startPos[rand]);
+		enemy->setEqs(enemyEqs.eBossEqs[rand]);
+		enemies->push_back(enemy);
+
 		boss_spawned = true;
 	}
 	else if (boss_time == 231) {
@@ -38,48 +39,47 @@ void Stage::spawn(std::vector<Enemy*>* enemies) {
 	case 1: 
 		if (enemy_spawned[0] == false && time == 1) {
 			rand = std::rand() % enemyEqs.e0Eqs_size;
-			Enemy* e0 = enemyFactory.create(0, enemyEqs.e0Eqs_startPos[rand]);
-			e0->setEqs(enemyEqs.e0Eqs[rand]);
-			enemies->push_back(e0);
+			Enemy* enemy = enemyFactory.create(0, enemyEqs.e0Eqs_startPos[rand]);
+			enemy->setEqs(enemyEqs.e0Eqs[rand]);
+			enemies->push_back(enemy);
 			enemy_spawned[0] = true;
-			std::cout << rand << std::endl;
 		}
 		else if (enemy_spawned[1] == false && time == 3) {
 			rand = std::rand() % enemyEqs.e0Eqs_size;
-			Enemy* e0 = enemyFactory.create(0, enemyEqs.e0Eqs_startPos[rand]);
-			e0->setEqs(enemyEqs.e0Eqs[rand]);
-			enemies->push_back(e0);
+			Enemy* enemy = enemyFactory.create(0, enemyEqs.e0Eqs_startPos[rand]);
+			enemy->setEqs(enemyEqs.e0Eqs[rand]);
+			enemies->push_back(enemy);
 
-			Enemy* e1 = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[0]);
-			e1->setEqs(enemyEqs.e1Eqs[0]);
-			enemies->push_back(e1);
+			enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[0]);
+			enemy->setEqs(enemyEqs.e1Eqs[0]);
+			enemies->push_back(enemy);
 
 			enemy_spawned[1] = true;
 		}
 		else if (enemy_spawned[2] == false && time == 4.5f) {
-			Enemy* e1 = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[1]);
-			e1->setEqs(enemyEqs.e1Eqs[1]);
-			enemies->push_back(e1);
+			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[1]);
+			enemy->setEqs(enemyEqs.e1Eqs[1]);
+			enemies->push_back(enemy);
 
 			enemy_spawned[2] = true;
 		}
 		else if (enemy_spawned[3] == false && time == 6) {
-			Enemy* e1 = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[2]);
-			e1->setEqs(enemyEqs.e1Eqs[2]);
-			enemies->push_back(e1);
+			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[2]);
+			enemy->setEqs(enemyEqs.e1Eqs[2]);
+			enemies->push_back(enemy);
 
 			enemy_spawned[3] = true;
 		}
 		else if (enemy_spawned[4] == false && time == 7.5f) {
-			Enemy* e1 = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[3]);
-			e1->setEqs(enemyEqs.e1Eqs[3]);
-			enemies->push_back(e1);
+			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[3]);
+			enemy->setEqs(enemyEqs.e1Eqs[3]);
+			enemies->push_back(enemy);
 			enemy_spawned[4] = true;
 		}
 		else if (enemy_spawned[5] == false && time == 9) {
-			Enemy* e1 = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[4]);
-			e1->setEqs(enemyEqs.e1Eqs[4]);
-			enemies->push_back(e1);
+			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[4]);
+			enemy->setEqs(enemyEqs.e1Eqs[4]);
+			enemies->push_back(enemy);
 			enemy_spawned[5] = true;
 		}
 		else if (time == 10) {
@@ -90,631 +90,906 @@ void Stage::spawn(std::vector<Enemy*>* enemies) {
 			clock.restart();
 		}
 		break;
-	/*
 	case 2:
-		if (boss_flag == false && boss_time == 1) {
-			enemies["eBoss"].setEqs(enemyEqs.eBossEqs[std::rand() % enemyEqs.eBossEqs.size()]);
-			spawned.push_back(enemies["eBoss"]);
-			boss_flag = true;
+		if (boss_spawned == false && boss_time == 1) {
+			rand = std::rand() % enemyEqs.eBossEqs_size;
+			Enemy* enemy = enemyFactory.create(100, enemyEqs.eBossEqs_startPos[rand]);
+			enemy->setEqs(enemyEqs.eBossEqs[rand]);
+			enemies->push_back(enemy);
+
+			boss_spawned = true;
 		}
 		else if (boss_time == 219.5f) {
-			boss_flag = false;
+			boss_spawned = false;
 			boss_clock.restart();
 		}
 
-		if (eflags[0] == false && time == 1) {
-			enemies["e0"].setEqs(enemyEqs.e0Eqs[std::rand() % enemyEqs.e0Eqs.size()]);
-			spawned.push_back(enemies["e0"]);
-			eflags[0] = true;
+		if (enemy_spawned[0] == false && time == 1) {
+			rand = std::rand() % enemyEqs.e0Eqs_size;
+			Enemy* enemy = enemyFactory.create(0, enemyEqs.e0Eqs_startPos[rand]);
+			enemy->setEqs(enemyEqs.e0Eqs[rand]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[0] = true;
 		}
-		else if (eflags[1] == false && time == 3) {
-			enemies["e0"].setEqs(enemyEqs.e0Eqs[std::rand() % enemyEqs.e0Eqs.size()]);
-			spawned.push_back(enemies["e0"]);
-			enemies["e1"].setEqs(enemyEqs.e1Eqs[0]);
-			spawned.push_back(enemies["e1"]);
-			eflags[1] = true;
+		else if (enemy_spawned[1] == false && time == 3) {
+			rand = std::rand() % enemyEqs.e0Eqs_size;
+			Enemy* enemy = enemyFactory.create(0, enemyEqs.e0Eqs_startPos[rand]);
+			enemy->setEqs(enemyEqs.e0Eqs[rand]);
+			enemies->push_back(enemy);
+
+			enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[0]);
+			enemy->setEqs(enemyEqs.e1Eqs[0]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[1] = true;
 		}
-		else if (eflags[2] == false && time == 4.4f) {
-			enemies["e1"].setEqs(enemyEqs.e1Eqs[1]);
-			spawned.push_back(enemies["e1"]);
-			eflags[2] = true;
+		else if (enemy_spawned[2] == false && time == 4.4f) {
+			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[1]);
+			enemy->setEqs(enemyEqs.e1Eqs[1]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[2] = true;
 		}
-		else if (eflags[3] == false && time == 5.8f) {
-			enemies["e1"].setEqs(enemyEqs.e1Eqs[2]);
-			spawned.push_back(enemies["e1"]);
-			eflags[3] = true;
+		else if (enemy_spawned[3] == false && time == 5.8f) {
+			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[2]);
+			enemy->setEqs(enemyEqs.e1Eqs[2]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[3] = true;
 		}
-		else if (eflags[4] == false && time == 7.2f) {
-			enemies["e1"].setEqs(enemyEqs.e1Eqs[3]);
-			spawned.push_back(enemies["e1"]);
-			eflags[4] = true;
+		else if (enemy_spawned[4] == false && time == 7.2f) {
+			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[3]);
+			enemy->setEqs(enemyEqs.e1Eqs[3]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[4] = true;
 		}
-		else if (eflags[5] == false && time == 8.6f) {
-			enemies["e1"].setEqs(enemyEqs.e1Eqs[4]);
-			spawned.push_back(enemies["e1"]);
-			eflags[5] = true;
+		else if (enemy_spawned[5] == false && time == 8.6f) {
+			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[4]);
+			enemy->setEqs(enemyEqs.e1Eqs[4]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[5] = true;
 		}
 		else if (time == 9.5f) {
-			int eflags_size = sizeof(eflags);
+			int eflags_size = sizeof(enemy_spawned);
 			for (int i = 0; i < eflags_size; i++) {
-				eflags[i] = false;
+				enemy_spawned[i] = false;
 			}
 			clock.restart();
 		}
 		break;
 	case 3:
-		if (boss_flag == false && boss_time == 1) {
-			enemies["e0"].setEqs(enemyEqs.eBossEqs[std::rand() % enemyEqs.eBossEqs.size()]);
-			spawned.push_back(enemies["e0"]);
-			boss_flag = true;
+		if (boss_spawned == false && boss_time == 1) {
+			rand = std::rand() % enemyEqs.e0Eqs_size;
+			Enemy* enemy = enemyFactory.create(0, enemyEqs.e0Eqs_startPos[rand]);
+			enemy->setEqs(enemyEqs.e0Eqs[rand]);
+			enemies->push_back(enemy);
+
+			boss_spawned = true;
 		}
 		else if (boss_time == 208) {
-			boss_flag = false;
+			boss_spawned = false;
 			boss_clock.restart();
 		}
-		if (eflags[0] == false && time == 1) {
-			enemies["e0"].setEqs(enemyEqs.e0Eqs[std::rand() % enemyEqs.e0Eqs.size()]);
-			spawned.push_back(enemies["e0"]);
-			eflags[0] = true;
+		if (enemy_spawned[0] == false && time == 1) {
+			rand = std::rand() % enemyEqs.e0Eqs_size;
+			Enemy* enemy = enemyFactory.create(0, enemyEqs.e0Eqs_startPos[rand]);
+			enemy->setEqs(enemyEqs.e0Eqs[rand]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[0] = true;
 		}
-		else if (eflags[6] == false && time == 2) {
-			enemies["e1"].setEqs(enemyEqs.e0Eqs[std::rand() % enemyEqs.e0Eqs.size()]);
-			spawned.push_back(enemies["e0"]);
-			eflags[6] = true;
+		else if (enemy_spawned[6] == false && time == 2) {
+			rand = std::rand() % enemyEqs.e0Eqs_size;
+			Enemy* enemy = enemyFactory.create(0, enemyEqs.e0Eqs_startPos[rand]);
+			enemy->setEqs(enemyEqs.e0Eqs[rand]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[6] = true;
 		}
-		else if (eflags[1] == false && time == 3) {
-			enemies["e0"].setEqs(enemyEqs.e0Eqs[std::rand() % enemyEqs.e0Eqs.size()]);
-			spawned.push_back(enemies["e0"]);
-			enemies["e1"].setEqs(enemyEqs.e1Eqs[0]);
-			spawned.push_back(enemies["e1"]);
-			eflags[1] = true;
+		else if (enemy_spawned[1] == false && time == 3) {
+			rand = std::rand() % enemyEqs.e0Eqs_size;
+			Enemy* enemy = enemyFactory.create(0, enemyEqs.e0Eqs_startPos[rand]);
+			enemy->setEqs(enemyEqs.e0Eqs[rand]);
+			enemies->push_back(enemy);
+
+			enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[0]);
+			enemy->setEqs(enemyEqs.e1Eqs[0]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[1] = true;
 		}
-		else if (eflags[2] == false && time == 4.3f) {
-			enemies["e1"].setEqs(enemyEqs.e1Eqs[1]);
-			spawned.push_back(enemies["e1"]);
-			eflags[2] = true;
+		else if (enemy_spawned[2] == false && time == 4.3f) {
+			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[1]);
+			enemy->setEqs(enemyEqs.e1Eqs[1]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[2] = true;
 		}
-		else if (eflags[3] == false && time == 5.6f) {
-			enemies["e1"].setEqs(enemyEqs.e1Eqs[2]);
-			spawned.push_back(enemies["e1"]);
-			eflags[3] = true;
+		else if (enemy_spawned[3] == false && time == 5.6f) {
+			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[2]);
+			enemy->setEqs(enemyEqs.e1Eqs[2]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[3] = true;
 		}
-		else if (eflags[4] == false && time == 6.9f) {
-			enemies["e1"].setEqs(enemyEqs.e1Eqs[3]);
-			spawned.push_back(enemies["e1"]);
-			eflags[4] = true;
+		else if (enemy_spawned[4] == false && time == 6.9f) {
+			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[3]);
+			enemy->setEqs(enemyEqs.e1Eqs[3]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[4] = true;
 		}
-		else if (eflags[5] == false && time == 8.2f) {
-			enemies["e1"].setEqs(enemyEqs.e1Eqs[4]);
-			spawned.push_back(enemies["e1"]);
-			eflags[5] = true;
+		else if (enemy_spawned[5] == false && time == 8.2f) {
+			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[4]);
+			enemy->setEqs(enemyEqs.e1Eqs[4]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[5] = true;
 		}
 		else if (time == 9) {
-			int eflags_size = sizeof(eflags);
+			int eflags_size = sizeof(enemy_spawned);
 			for (int i = 0; i < eflags_size; i++) {
-				eflags[i] = false;
+				enemy_spawned[i] = false;
 			}
 			clock.restart();
 		}
 		break;
-	/*
 	case 4:
-		if (boss_flag == false && boss_time == 1) {
-			EnemyBoss* eBoss_0 = new EnemyBoss(enemyEqs.eBossEqs[std::rand() % enemyEqs.eBossEqs.size()], textures["enemyBoss"], fhd);
-			spawned.push_back(eBoss_0);
-			boss_flag = true;
+		if (boss_spawned == false && boss_time == 1) {
+			rand = std::rand() % enemyEqs.eBossEqs_size;
+			Enemy* enemy = enemyFactory.create(100, enemyEqs.eBossEqs_startPos[rand]);
+			enemy->setEqs(enemyEqs.eBossEqs[rand]);
+			enemies->push_back(enemy);
+
+			boss_spawned = true;
 		}
 		else if (boss_time == 196.4f) {
-			boss_flag = false;
+			boss_spawned = false;
 			boss_clock.restart();
 		}
 
-		if (eflags[0] == false && time == 1) {
-			Enemy0* e0_0 = new Enemy0(enemyEqs.e0Eqs[std::rand() % enemyEqs.e0Eqs.size()], textures["enemy0"], fhd);
-			spawned.push_back(e0_0);
-			eflags[0] = true;
+		if (enemy_spawned[0] == false && time == 1) {
+			rand = std::rand() % enemyEqs.e0Eqs_size;
+			Enemy* enemy = enemyFactory.create(0, enemyEqs.e0Eqs_startPos[rand]);
+			enemy->setEqs(enemyEqs.e0Eqs[rand]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[0] = true;
 		}
-		else if (eflags[6] == false && time == 2) {
-			Enemy0* e0_2 = new Enemy0(enemyEqs.e0Eqs[std::rand() % enemyEqs.e0Eqs.size()], textures["enemy0"], fhd);
-			spawned.push_back(e0_2);
-			eflags[6] = true;
+		else if (enemy_spawned[6] == false && time == 2) {
+			rand = std::rand() % enemyEqs.e0Eqs_size;
+			Enemy* enemy = enemyFactory.create(0, enemyEqs.e0Eqs_startPos[rand]);
+			enemy->setEqs(enemyEqs.e0Eqs[rand]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[6] = true;
 		}
-		else if (eflags[1] == false && time == 3) {
-			Enemy0* e0_1 = new Enemy0(enemyEqs.e0Eqs[std::rand() % enemyEqs.e0Eqs.size()], textures["enemy0"], fhd);
-			spawned.push_back(e0_1);
-			Enemy1* e1_0 = new Enemy1(enemyEqs.e1Eqs[0], textures["enemy1"], fhd);
-			spawned.push_back(e1_0);
-			eflags[1] = true;
+		else if (enemy_spawned[1] == false && time == 3) {
+			rand = std::rand() % enemyEqs.e0Eqs_size;
+			Enemy* enemy = enemyFactory.create(0, enemyEqs.e0Eqs_startPos[rand]);
+			enemy->setEqs(enemyEqs.e0Eqs[rand]);
+			enemies->push_back(enemy);
+
+			enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[0]);
+			enemy->setEqs(enemyEqs.e1Eqs[0]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[1] = true;
 		}
-		else if (eflags[2] == false && time == 4.2f) {
-			Enemy1* e1_1 = new Enemy1(enemyEqs.e1Eqs[1], textures["enemy1"], fhd);
-			spawned.push_back(e1_1);
-			eflags[2] = true;
+		else if (enemy_spawned[2] == false && time == 4.2f) {
+			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[1]);
+			enemy->setEqs(enemyEqs.e1Eqs[1]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[2] = true;
 		}
-		else if (eflags[3] == false && time == 5.4f) {
-			Enemy1* e1_2 = new Enemy1(enemyEqs.e1Eqs[2], textures["enemy1"], fhd);
-			spawned.push_back(e1_2);
-			eflags[3] = true;
+		else if (enemy_spawned[3] == false && time == 5.4f) {
+			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[2]);
+			enemy->setEqs(enemyEqs.e1Eqs[2]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[3] = true;
 		}
-		else if (eflags[4] == false && time == 6.6f) {
-			Enemy1* e1_3 = new Enemy1(enemyEqs.e1Eqs[3], textures["enemy1"], fhd);
-			spawned.push_back(e1_3);
-			eflags[4] = true;
+		else if (enemy_spawned[4] == false && time == 6.6f) {
+			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[3]);
+			enemy->setEqs(enemyEqs.e1Eqs[3]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[4] = true;
 		}
-		else if (eflags[5] == false && time == 7.8f) {
-			Enemy1* e1_4 = new Enemy1(enemyEqs.e1Eqs[4], textures["enemy1"], fhd);
-			spawned.push_back(e1_4);
-			eflags[5] = true;
+		else if (enemy_spawned[5] == false && time == 7.8f) {
+			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[4]);
+			enemy->setEqs(enemyEqs.e1Eqs[4]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[5] = true;
 		}
 		else if (time == 8.5f) {
-			int eflags_size = sizeof(eflags);
+			int eflags_size = sizeof(enemy_spawned);
 			for (int i = 0; i < eflags_size; i++) {
-				eflags[i] = false;
+				enemy_spawned[i] = false;
 			}
 			clock.restart();
 		}
 		break;
 	case 5:
-		if (boss_flag == false && boss_time == 1) {
-			EnemyBoss* eBoss_0 = new EnemyBoss(enemyEqs.eBossEqs[std::rand() % enemyEqs.eBossEqs.size()], textures["enemyBoss"], fhd);
-			spawned.push_back(eBoss_0);
-			boss_flag = true;
+		if (boss_spawned == false && boss_time == 1) {
+			rand = std::rand() % enemyEqs.eBossEqs_size;
+			Enemy* enemy = enemyFactory.create(100, enemyEqs.eBossEqs_startPos[rand]);
+			enemy->setEqs(enemyEqs.eBossEqs[rand]);
+			enemies->push_back(enemy);
+
+			boss_spawned = true;
 		}
 		else if (boss_time == 185) {
-			boss_flag = false;
+			boss_spawned = false;
 			boss_clock.restart();
 		}
 
-		if (eflags[0] == false && time == 1) {
-			Enemy0* e0_0 = new Enemy0(enemyEqs.e0Eqs[std::rand() % enemyEqs.e0Eqs.size()], textures["enemy0"], fhd);
-			spawned.push_back(e0_0);
-			eflags[0] = true;
+		if (enemy_spawned[0] == false && time == 1) {
+			rand = std::rand() % enemyEqs.e0Eqs_size;
+			Enemy* enemy = enemyFactory.create(0, enemyEqs.e0Eqs_startPos[rand]);
+			enemy->setEqs(enemyEqs.e0Eqs[rand]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[0] = true;
 		}
-		else if (eflags[1] == false && time == 2) {
-			Enemy0* e0_1 = new Enemy0(enemyEqs.e0Eqs[std::rand() % enemyEqs.e0Eqs.size()], textures["enemy0"], fhd);
-			spawned.push_back(e0_1);
-			Enemy0* e0_2 = new Enemy0(enemyEqs.e0Eqs[std::rand() % enemyEqs.e0Eqs.size()], textures["enemy0"], fhd);
-			spawned.push_back(e0_2);
-			Enemy1* e1_0 = new Enemy1(enemyEqs.e1Eqs[5], textures["enemy1"], fhd);
-			spawned.push_back(e1_0);
-			eflags[1] = true;
+		else if (enemy_spawned[1] == false && time == 2) {
+			rand = std::rand() % enemyEqs.e0Eqs_size;
+			Enemy* enemy = enemyFactory.create(0, enemyEqs.e0Eqs_startPos[rand]);
+			enemy->setEqs(enemyEqs.e0Eqs[rand]);
+			enemies->push_back(enemy);
+
+			rand = std::rand() % enemyEqs.e0Eqs_size;
+			enemy = enemyFactory.create(0, enemyEqs.e0Eqs_startPos[rand]);
+			enemy->setEqs(enemyEqs.e0Eqs[rand]);
+			enemies->push_back(enemy);
+
+			enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[5]);
+			enemy->setEqs(enemyEqs.e1Eqs[5]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[1] = true;
 		}
-		else if (eflags[2] == false && time == 2.6f) {
-			Enemy0* e0_1 = new Enemy0(enemyEqs.e0Eqs[std::rand() % enemyEqs.e0Eqs.size()], textures["enemy0"], fhd);
-			spawned.push_back(e0_1);
-			Enemy1* e1_0 = new Enemy1(enemyEqs.e1Eqs[0], textures["enemy1"], fhd);
-			spawned.push_back(e1_0);
-			eflags[2] = true;
+		else if (enemy_spawned[2] == false && time == 2.6f) {
+			rand = std::rand() % enemyEqs.e0Eqs_size;
+			Enemy* enemy = enemyFactory.create(0, enemyEqs.e0Eqs_startPos[rand]);
+			enemy->setEqs(enemyEqs.e0Eqs[rand]);
+			enemies->push_back(enemy);
+
+			enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[0]);
+			enemy->setEqs(enemyEqs.e1Eqs[0]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[2] = true;
 		}
-		else if (eflags[3] == false && time == 3.7f) {
-			Enemy1* e1_1 = new Enemy1(enemyEqs.e1Eqs[1], textures["enemy1"], fhd);
-			spawned.push_back(e1_1);
-			eflags[3] = true;
+		else if (enemy_spawned[3] == false && time == 3.7f) {
+			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[1]);
+			enemy->setEqs(enemyEqs.e1Eqs[1]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[3] = true;
 		}
-		else if (eflags[4] == false && time == 4.8f) {
-			Enemy1* e1_2 = new Enemy1(enemyEqs.e1Eqs[2], textures["enemy1"], fhd);
-			spawned.push_back(e1_2);
-			eflags[4] = true;
+		else if (enemy_spawned[4] == false && time == 4.8f) {
+			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[2]);
+			enemy->setEqs(enemyEqs.e1Eqs[2]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[4] = true;
 		}
-		else if (eflags[5] == false && time == 5.9f) {
-			Enemy1* e1_3 = new Enemy1(enemyEqs.e1Eqs[3], textures["enemy1"], fhd);
-			spawned.push_back(e1_3);
-			eflags[5] = true;
+		else if (enemy_spawned[5] == false && time == 5.9f) {
+			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[3]);
+			enemy->setEqs(enemyEqs.e1Eqs[3]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[5] = true;
 		}
-		else if (eflags[6] == false && time == 7) {
-			Enemy1* e1_4 = new Enemy1(enemyEqs.e1Eqs[4], textures["enemy1"], fhd);
-			spawned.push_back(e1_4);
-			eflags[6] = true;
+		else if (enemy_spawned[6] == false && time == 7) {
+			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[4]);
+			enemy->setEqs(enemyEqs.e1Eqs[4]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[6] = true;
 		}
-		else if (eflags[7] == false && time == 8.1f) {
-			Enemy1* e1_5 = new Enemy1(enemyEqs.e1Eqs[6], textures["enemy1"], fhd);
-			spawned.push_back(e1_5);
-			eflags[7] = true;
+		else if (enemy_spawned[7] == false && time == 8.1f) {
+			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[6]);
+			enemy->setEqs(enemyEqs.e1Eqs[6]);
+			enemies->push_back(enemy);
+			enemy_spawned[7] = true;
 		}
 		else if (time == 8.5f) {
-			int eflags_size = sizeof(eflags);
+			int eflags_size = sizeof(enemy_spawned);
 			for (int i = 0; i < eflags_size; i++) {
-				eflags[i] = false;
+				enemy_spawned[i] = false;
 			}
 			clock.restart();
 		}
 		break;
 	case 6:
-		if (boss_flag == false && boss_time == 1) {
-			EnemyBoss* eBoss_0 = new EnemyBoss(enemyEqs.eBossEqs[std::rand() % enemyEqs.eBossEqs.size()], textures["enemyBoss"], fhd);
-			spawned.push_back(eBoss_0);
-			boss_flag = true;
+		if (boss_spawned == false && boss_time == 1) {
+			rand = std::rand() % enemyEqs.eBossEqs_size;
+			Enemy* enemy = enemyFactory.create(100, enemyEqs.eBossEqs_startPos[rand]);
+			enemy->setEqs(enemyEqs.eBossEqs[rand]);
+			enemies->push_back(enemy);
+
+			boss_spawned = true;
 		}
 		else if (boss_time == 173) {
-			boss_flag = false;
+			boss_spawned = false;
 			boss_clock.restart();
 		}
 
-		if (eflags[0] == false && time == 1) {
-			Enemy0* e0_0 = new Enemy0(enemyEqs.e0Eqs[std::rand() % enemyEqs.e0Eqs.size()], textures["enemy0"], fhd);
-			spawned.push_back(e0_0);
-			eflags[0] = true;
+		if (enemy_spawned[0] == false && time == 1) {
+			rand = std::rand() % enemyEqs.e0Eqs_size;
+			Enemy* enemy = enemyFactory.create(0, enemyEqs.e0Eqs_startPos[rand]);
+			enemy->setEqs(enemyEqs.e0Eqs[rand]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[0] = true;
 		}
-		else if (eflags[1] == false && time == 2) {
-			Enemy0* e0_1 = new Enemy0(enemyEqs.e0Eqs[std::rand() % enemyEqs.e0Eqs.size()], textures["enemy0"], fhd);
-			spawned.push_back(e0_1);
-			Enemy0* e0_2 = new Enemy0(enemyEqs.e0Eqs[std::rand() % enemyEqs.e0Eqs.size()], textures["enemy0"], fhd);
-			spawned.push_back(e0_2);
-			Enemy1* e1_0 = new Enemy1(enemyEqs.e1Eqs[5], textures["enemy1"], fhd);
-			spawned.push_back(e1_0);
-			eflags[1] = true;
+		else if (enemy_spawned[1] == false && time == 2) {
+			rand = std::rand() % enemyEqs.e0Eqs_size;
+			Enemy* enemy = enemyFactory.create(0, enemyEqs.e0Eqs_startPos[rand]);
+			enemy->setEqs(enemyEqs.e0Eqs[rand]);
+			enemies->push_back(enemy);
+
+			rand = std::rand() % enemyEqs.e0Eqs_size;
+			enemy = enemyFactory.create(0, enemyEqs.e0Eqs_startPos[rand]);
+			enemy->setEqs(enemyEqs.e0Eqs[rand]);
+			enemies->push_back(enemy);
+
+			enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[5]);
+			enemy->setEqs(enemyEqs.e1Eqs[5]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[1] = true;
 		}
-		else if (eflags[2] == false && time == 2.5f) {
-			Enemy0* e0_1 = new Enemy0(enemyEqs.e0Eqs[std::rand() % enemyEqs.e0Eqs.size()], textures["enemy0"], fhd);
-			spawned.push_back(e0_1);
-			Enemy1* e1_0 = new Enemy1(enemyEqs.e1Eqs[0], textures["enemy1"], fhd);
-			spawned.push_back(e1_0);
-			eflags[2] = true;
+		else if (enemy_spawned[2] == false && time == 2.5f) {
+			rand = std::rand() % enemyEqs.e0Eqs_size;
+			Enemy* enemy = enemyFactory.create(0, enemyEqs.e0Eqs_startPos[rand]);
+			enemy->setEqs(enemyEqs.e0Eqs[rand]);
+			enemies->push_back(enemy);
+
+			enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[0]);
+			enemy->setEqs(enemyEqs.e1Eqs[0]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[2] = true;
 		}
-		else if (eflags[3] == false && time == 3.5f) {
-			Enemy1* e1_1 = new Enemy1(enemyEqs.e1Eqs[1], textures["enemy1"], fhd);
-			spawned.push_back(e1_1);
-			eflags[3] = true;
+		else if (enemy_spawned[3] == false && time == 3.5f) {
+			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[1]);
+			enemy->setEqs(enemyEqs.e1Eqs[1]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[3] = true;
 		}
-		else if (eflags[4] == false && time == 4.5f) {
-			Enemy1* e1_2 = new Enemy1(enemyEqs.e1Eqs[2], textures["enemy1"], fhd);
-			spawned.push_back(e1_2);
-			eflags[4] = true;
+		else if (enemy_spawned[4] == false && time == 4.5f) {
+			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[2]);
+			enemy->setEqs(enemyEqs.e1Eqs[2]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[4] = true;
 		}
-		else if (eflags[5] == false && time == 5.5f) {
-			Enemy1* e1_3 = new Enemy1(enemyEqs.e1Eqs[3], textures["enemy1"], fhd);
-			spawned.push_back(e1_3);
-			eflags[5] = true;
+		else if (enemy_spawned[5] == false && time == 5.5f) {
+			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[3]);
+			enemy->setEqs(enemyEqs.e1Eqs[3]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[5] = true;
 		}
-		else if (eflags[6] == false && time == 6.5f) {
-			Enemy1* e1_4 = new Enemy1(enemyEqs.e1Eqs[4], textures["enemy1"], fhd);
-			spawned.push_back(e1_4);
-			eflags[6] = true;
+		else if (enemy_spawned[6] == false && time == 6.5f) {
+			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[4]);
+			enemy->setEqs(enemyEqs.e1Eqs[4]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[6] = true;
 		}
-		else if (eflags[7] == false && time == 7.5f) {
-			Enemy1* e1_5 = new Enemy1(enemyEqs.e1Eqs[6], textures["enemy1"], fhd);
-			spawned.push_back(e1_5);
-			eflags[7] = true;
+		else if (enemy_spawned[7] == false && time == 7.5f) {
+			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[6]);
+			enemy->setEqs(enemyEqs.e1Eqs[6]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[7] = true;
 		}
 		else if (time == 8) {
-			int eflags_size = sizeof(eflags);
+			int eflags_size = sizeof(enemy_spawned);
 			for (int i = 0; i < eflags_size; i++) {
-				eflags[i] = false;
+				enemy_spawned[i] = false;
 			}
 			clock.restart();
 		}
 		break;
 	case 7:
-		if (boss_flag == false && boss_time == 1) {
-			EnemyBoss* eBoss_0 = new EnemyBoss(enemyEqs.eBossEqs[std::rand() % enemyEqs.eBossEqs.size()], textures["enemyBoss"], fhd);
-			spawned.push_back(eBoss_0);
-			boss_flag = true;
+		if (boss_spawned == false && boss_time == 1) {
+			rand = std::rand() % enemyEqs.eBossEqs_size;
+			Enemy* enemy = enemyFactory.create(100, enemyEqs.eBossEqs_startPos[rand]);
+			enemy->setEqs(enemyEqs.eBossEqs[rand]);
+			enemies->push_back(enemy);
+
+			boss_spawned = true;
 		}
 		else if (boss_time == 162) {
-			boss_flag = false;
+			boss_spawned = false;
 			boss_clock.restart();
 		}
 
-		if (eflags[0] == false && time == 1) {
-			Enemy0* e0_0 = new Enemy0(enemyEqs.e0Eqs[std::rand() % enemyEqs.e0Eqs.size()], textures["enemy0"], fhd);
-			spawned.push_back(e0_0);
-			eflags[0] = true;
+		if (enemy_spawned[0] == false && time == 1) {
+			rand = std::rand() % enemyEqs.e0Eqs_size;
+			Enemy* enemy = enemyFactory.create(0, enemyEqs.e0Eqs_startPos[rand]);
+			enemy->setEqs(enemyEqs.e0Eqs[rand]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[0] = true;
 		}
-		else if (eflags[9] == false && time == 1.5f) {
-			Enemy1* e1_7 = new Enemy1(enemyEqs.e1Eqs[(std::rand() % 12) + 7], textures["enemy1"], fhd);
-			spawned.push_back(e1_7);
-			eflags[9] = true;
+		else if (enemy_spawned[9] == false && time == 1.5f) {
+			rand = (std::rand() % 12) + 7;
+			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[rand]);
+			enemy->setEqs(enemyEqs.e1Eqs[rand]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[9] = true;
 		}
-		else if (eflags[1] == false && time == 2) {
-			Enemy0* e0_1 = new Enemy0(enemyEqs.e0Eqs[std::rand() % enemyEqs.e0Eqs.size()], textures["enemy0"], fhd);
-			spawned.push_back(e0_1);
-			Enemy0* e0_2 = new Enemy0(enemyEqs.e0Eqs[std::rand() % enemyEqs.e0Eqs.size()], textures["enemy0"], fhd);
-			spawned.push_back(e0_2);
-			Enemy1* e1_0 = new Enemy1(enemyEqs.e1Eqs[5], textures["enemy1"], fhd);
-			spawned.push_back(e1_0);
-			eflags[1] = true;
+		else if (enemy_spawned[1] == false && time == 2) {
+			rand = std::rand() % enemyEqs.e0Eqs_size;
+			Enemy* enemy = enemyFactory.create(0, enemyEqs.e0Eqs_startPos[rand]);
+			enemy->setEqs(enemyEqs.e0Eqs[rand]);
+			enemies->push_back(enemy);
+
+			rand = std::rand() % enemyEqs.e0Eqs_size;
+			enemy = enemyFactory.create(0, enemyEqs.e0Eqs_startPos[rand]);
+			enemy->setEqs(enemyEqs.e0Eqs[rand]);
+			enemies->push_back(enemy);
+
+			enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[5]);
+			enemy->setEqs(enemyEqs.e1Eqs[5]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[1] = true;
 		}
-		else if (eflags[2] == false && time == 2.9f) {
-			Enemy0* e0_1 = new Enemy0(enemyEqs.e0Eqs[std::rand() % enemyEqs.e0Eqs.size()], textures["enemy0"], fhd);
-			spawned.push_back(e0_1);
-			Enemy1* e1_0 = new Enemy1(enemyEqs.e1Eqs[0], textures["enemy1"], fhd);
-			spawned.push_back(e1_0);
-			eflags[2] = true;
+		else if (enemy_spawned[2] == false && time == 2.9f) {
+			rand = std::rand() % enemyEqs.e0Eqs_size;
+			Enemy* enemy = enemyFactory.create(0, enemyEqs.e0Eqs_startPos[rand]);
+			enemy->setEqs(enemyEqs.e0Eqs[rand]);
+			enemies->push_back(enemy);
+
+			enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[0]);
+			enemy->setEqs(enemyEqs.e1Eqs[0]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[2] = true;
 		}
-		else if (eflags[3] == false && time == 3.8f) {
-			Enemy1* e1_1 = new Enemy1(enemyEqs.e1Eqs[1], textures["enemy1"], fhd);
-			spawned.push_back(e1_1);
-			eflags[3] = true;
+		else if (enemy_spawned[3] == false && time == 3.8f) {
+			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[1]);
+			enemy->setEqs(enemyEqs.e1Eqs[1]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[3] = true;
 		}
-		else if (eflags[4] == false && time == 4.7f) {
-			Enemy1* e1_2 = new Enemy1(enemyEqs.e1Eqs[2], textures["enemy1"], fhd);
-			spawned.push_back(e1_2);
-			eflags[4] = true;
+		else if (enemy_spawned[4] == false && time == 4.7f) {
+			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[2]);
+			enemy->setEqs(enemyEqs.e1Eqs[2]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[4] = true;
 		}
-		else if (eflags[5] == false && time == 5.6f) {
-			Enemy1* e1_3 = new Enemy1(enemyEqs.e1Eqs[3], textures["enemy1"], fhd);
-			spawned.push_back(e1_3);
-			eflags[5] = true;
+		else if (enemy_spawned[5] == false && time == 5.6f) {
+			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[3]);
+			enemy->setEqs(enemyEqs.e1Eqs[3]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[5] = true;
 		}
-		else if (eflags[6] == false && time == 6.5f) {
-			Enemy1* e1_4 = new Enemy1(enemyEqs.e1Eqs[4], textures["enemy1"], fhd);
-			spawned.push_back(e1_4);
-			eflags[6] = true;
+		else if (enemy_spawned[6] == false && time == 6.5f) {
+			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[4]);
+			enemy->setEqs(enemyEqs.e1Eqs[4]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[6] = true;
 		}
-		else if (eflags[7] == false && time == 7.4f) {
-			Enemy1* e1_5 = new Enemy1(enemyEqs.e1Eqs[6], textures["enemy1"], fhd);
-			spawned.push_back(e1_5);
-			eflags[7] = true;
+		else if (enemy_spawned[7] == false && time == 7.4f) {
+			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[6]);
+			enemy->setEqs(enemyEqs.e1Eqs[6]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[7] = true;
 		}
-		else if (eflags[8] == false && time == 8.3f) {
-			Enemy1* e1_6 = new Enemy1(enemyEqs.e1Eqs[(std::rand() % 12) + 7], textures["enemy1"], fhd);
-			spawned.push_back(e1_6);
-			eflags[8] = true;
+		else if (enemy_spawned[8] == false && time == 8.3f) {
+			rand = (std::rand() % 12) + 7;
+			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[rand]);
+			enemy->setEqs(enemyEqs.e1Eqs[rand]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[8] = true;
 		}
 		else if (time == 9) {
-			int eflags_size = sizeof(eflags);
+			int eflags_size = sizeof(enemy_spawned);
 			for (int i = 0; i < eflags_size; i++) {
-				eflags[i] = false;
+				enemy_spawned[i] = false;
 			}
 			clock.restart();
 		}
 		break;
 	case 8:
-		if (boss_flag == false && boss_time == 1) {
-			EnemyBoss* eBoss_0 = new EnemyBoss(enemyEqs.eBossEqs[std::rand() % enemyEqs.eBossEqs.size()], textures["enemyBoss"], fhd);
-			spawned.push_back(eBoss_0);
-			boss_flag = true;
+		if (boss_spawned == false && boss_time == 1) {
+			rand = std::rand() % enemyEqs.eBossEqs_size;
+			Enemy* enemy = enemyFactory.create(100, enemyEqs.eBossEqs_startPos[rand]);
+			enemy->setEqs(enemyEqs.eBossEqs[rand]);
+			enemies->push_back(enemy);
+
+			boss_spawned = true;
 		}
 		else if (boss_time == 150) {
-			boss_flag = false;
+			boss_spawned = false;
 			boss_clock.restart();
 		}
 
-		if (eflags[0] == false && time == 1) {
-			Enemy0* e0_0 = new Enemy0(enemyEqs.e0Eqs[std::rand() % enemyEqs.e0Eqs.size()], textures["enemy0"], fhd);
-			spawned.push_back(e0_0);
-			eflags[0] = true;
+		if (enemy_spawned[0] == false && time == 1) {
+			rand = std::rand() % enemyEqs.e0Eqs_size;
+			Enemy* enemy = enemyFactory.create(0, enemyEqs.e0Eqs_startPos[rand]);
+			enemy->setEqs(enemyEqs.e0Eqs[rand]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[0] = true;
 		}
-		else if (eflags[11] == false && time == 1.5f) {
-			Enemy1* e1_7 = new Enemy1(enemyEqs.e1Eqs[(std::rand() % 12) + 7], textures["enemy1"], fhd);
-			spawned.push_back(e1_7);
-			eflags[11] = true;
+		else if (enemy_spawned[11] == false && time == 1.5f) {
+			rand = (std::rand() % 12) + 7;
+			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[rand]);
+			enemy->setEqs(enemyEqs.e1Eqs[rand]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[11] = true;
 		}
-		else if (eflags[1] == false && time == 2) {
-			Enemy0* e0_1 = new Enemy0(enemyEqs.e0Eqs[std::rand() % enemyEqs.e0Eqs.size()], textures["enemy0"], fhd);
-			spawned.push_back(e0_1);
-			Enemy0* e0_2 = new Enemy0(enemyEqs.e0Eqs[std::rand() % enemyEqs.e0Eqs.size()], textures["enemy0"], fhd);
-			spawned.push_back(e0_2);
-			Enemy1* e1_0 = new Enemy1(enemyEqs.e1Eqs[5], textures["enemy1"], fhd);
-			spawned.push_back(e1_0);
-			eflags[1] = true;
+		else if (enemy_spawned[1] == false && time == 2) {
+			rand = std::rand() % enemyEqs.e0Eqs_size;
+			Enemy* enemy = enemyFactory.create(0, enemyEqs.e0Eqs_startPos[rand]);
+			enemy->setEqs(enemyEqs.e0Eqs[rand]);
+			enemies->push_back(enemy);
+
+			rand = std::rand() % enemyEqs.e0Eqs_size;
+			enemy = enemyFactory.create(0, enemyEqs.e0Eqs_startPos[rand]);
+			enemy->setEqs(enemyEqs.e0Eqs[rand]);
+			enemies->push_back(enemy);
+
+			enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[5]);
+			enemy->setEqs(enemyEqs.e1Eqs[5]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[1] = true;
 		}
-		else if (eflags[2] == false && time == 2.4f) {
-			Enemy0* e0_1 = new Enemy0(enemyEqs.e0Eqs[std::rand() % enemyEqs.e0Eqs.size()], textures["enemy0"], fhd);
-			spawned.push_back(e0_1);
-			Enemy1* e1_0 = new Enemy1(enemyEqs.e1Eqs[0], textures["enemy1"], fhd);
-			spawned.push_back(e1_0);
-			eflags[2] = true;
+		else if (enemy_spawned[2] == false && time == 2.4f) {
+			rand = std::rand() % enemyEqs.e0Eqs_size;
+			Enemy* enemy = enemyFactory.create(0, enemyEqs.e0Eqs_startPos[rand]);
+			enemy->setEqs(enemyEqs.e0Eqs[rand]);
+			enemies->push_back(enemy);
+
+			enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[0]);
+			enemy->setEqs(enemyEqs.e1Eqs[0]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[2] = true;
 		}
-		else if (eflags[3] == false && time == 3.2f) {
-			Enemy1* e1_1 = new Enemy1(enemyEqs.e1Eqs[1], textures["enemy1"], fhd);
-			spawned.push_back(e1_1);
-			eflags[3] = true;
+		else if (enemy_spawned[3] == false && time == 3.2f) {
+			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[1]);
+			enemy->setEqs(enemyEqs.e1Eqs[1]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[3] = true;
 		}
-		else if (eflags[4] == false && time == 4) {
-			Enemy1* e1_2 = new Enemy1(enemyEqs.e1Eqs[2], textures["enemy1"], fhd);
-			spawned.push_back(e1_2);
-			eflags[4] = true;
+		else if (enemy_spawned[4] == false && time == 4) {
+			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[2]);
+			enemy->setEqs(enemyEqs.e1Eqs[2]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[4] = true;
 		}
-		else if (eflags[5] == false && time == 4.8f) {
-			Enemy1* e1_3 = new Enemy1(enemyEqs.e1Eqs[3], textures["enemy1"], fhd);
-			spawned.push_back(e1_3);
-			eflags[5] = true;
+		else if (enemy_spawned[5] == false && time == 4.8f) {
+			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[3]);
+			enemy->setEqs(enemyEqs.e1Eqs[3]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[5] = true;
 		}
-		else if (eflags[10] == false && time == 5.2f) {
-			Enemy1* e1_6 = new Enemy1(enemyEqs.e1Eqs[(std::rand() % 12) + 7], textures["enemy1"], fhd);
-			spawned.push_back(e1_6);
-			eflags[10] = true;
+		else if (enemy_spawned[10] == false && time == 5.2f) {
+			rand = (std::rand() % 12) + 7;
+			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[rand]);
+			enemy->setEqs(enemyEqs.e1Eqs[rand]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[10] = true;
 		}
-		else if (eflags[6] == false && time == 5.6f) {
-			Enemy1* e1_4 = new Enemy1(enemyEqs.e1Eqs[4], textures["enemy1"], fhd);
-			spawned.push_back(e1_4);
-			eflags[6] = true;
+		else if (enemy_spawned[6] == false && time == 5.6f) {
+			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[4]);
+			enemy->setEqs(enemyEqs.e1Eqs[4]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[6] = true;
 		}
-		else if (eflags[7] == false && time == 6.4f) {
-			Enemy1* e1_5 = new Enemy1(enemyEqs.e1Eqs[6], textures["enemy1"], fhd);
-			spawned.push_back(e1_5);
-			eflags[7] = true;
+		else if (enemy_spawned[7] == false && time == 6.4f) {
+			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[6]);
+			enemy->setEqs(enemyEqs.e1Eqs[6]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[7] = true;
 		}
-		else if (eflags[8] == false && time == 7) {
-			Enemy1* e1_6 = new Enemy1(enemyEqs.e1Eqs[(std::rand() % 12) + 7], textures["enemy1"], fhd);
-			spawned.push_back(e1_6);
-			eflags[8] = true;
+		else if (enemy_spawned[8] == false && time == 7) {
+			rand = (std::rand() % 12) + 7;
+			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[rand]);
+			enemy->setEqs(enemyEqs.e1Eqs[rand]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[8] = true;
 		}
-		else if (eflags[9] == false && time == 7.8f) {
-			Enemy1* e1_6 = new Enemy1(enemyEqs.e1Eqs[(std::rand() % 12) + 7], textures["enemy1"], fhd);
-			spawned.push_back(e1_6);
-			eflags[9] = true;
+		else if (enemy_spawned[9] == false && time == 7.8f) {
+			rand = (std::rand() % 12) + 7;
+			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[rand]);
+			enemy->setEqs(enemyEqs.e1Eqs[rand]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[9] = true;
 		}
 		else if (time == 8) {
-			int eflags_size = sizeof(eflags);
+			int eflags_size = sizeof(enemy_spawned);
 			for (int i = 0; i < eflags_size; i++) {
-				eflags[i] = false;
+				enemy_spawned[i] = false;
 			}
 			clock.restart();
 		}
 		break;
 	case 9:
-		if (boss_flag == false && boss_time == 1) {
-			EnemyBoss* eBoss_0 = new EnemyBoss(enemyEqs.eBossEqs[std::rand() % enemyEqs.eBossEqs.size()], textures["enemyBoss"], fhd);
-			spawned.push_back(eBoss_0);
-			boss_flag = true;
+		if (boss_spawned == false && boss_time == 1) {
+			rand = std::rand() % enemyEqs.eBossEqs_size;
+			Enemy* enemy = enemyFactory.create(100, enemyEqs.eBossEqs_startPos[rand]);
+			enemy->setEqs(enemyEqs.eBossEqs[rand]);
+			enemies->push_back(enemy);
+
+			boss_spawned = true;
 		}
 		else if (boss_time == 138.5f) {
-			boss_flag = false;
+			boss_spawned = false;
 			boss_clock.restart();
 		}
 
-		if (eflags[0] == false && time == 1) {
-			Enemy0* e0_0 = new Enemy0(enemyEqs.e0Eqs[std::rand() % enemyEqs.e0Eqs.size()], textures["enemy0"], fhd);
-			spawned.push_back(e0_0);
-			eflags[0] = true;
+		if (enemy_spawned[0] == false && time == 1) {
+			rand = std::rand() % enemyEqs.e0Eqs_size;
+			Enemy* enemy = enemyFactory.create(0, enemyEqs.e0Eqs_startPos[rand]);
+			enemy->setEqs(enemyEqs.e0Eqs[rand]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[0] = true;
 		}
-		else if (eflags[11] == false && time == 1.5f) {
-			Enemy1* e1_7 = new Enemy1(enemyEqs.e1Eqs[(std::rand() % 12) + 7], textures["enemy1"], fhd);
-			spawned.push_back(e1_7);
-			eflags[11] = true;
+		else if (enemy_spawned[11] == false && time == 1.5f) {
+			rand = (std::rand() % 12) + 7;
+			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[rand]);
+			enemy->setEqs(enemyEqs.e1Eqs[rand]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[11] = true;
 		}
-		else if (eflags[1] == false && time == 2) {
-			Enemy0* e0_1 = new Enemy0(enemyEqs.e0Eqs[std::rand() % enemyEqs.e0Eqs.size()], textures["enemy0"], fhd);
-			spawned.push_back(e0_1);
-			Enemy0* e0_2 = new Enemy0(enemyEqs.e0Eqs[std::rand() % enemyEqs.e0Eqs.size()], textures["enemy0"], fhd);
-			spawned.push_back(e0_2);
-			Enemy1* e1_0 = new Enemy1(enemyEqs.e1Eqs[5], textures["enemy1"], fhd);
-			spawned.push_back(e1_0);
-			eflags[1] = true;
+		else if (enemy_spawned[1] == false && time == 2) {
+			rand = std::rand() % enemyEqs.e0Eqs_size;
+			Enemy* enemy = enemyFactory.create(0, enemyEqs.e0Eqs_startPos[rand]);
+			enemy->setEqs(enemyEqs.e0Eqs[rand]);
+			enemies->push_back(enemy);
+
+			rand = std::rand() % enemyEqs.e0Eqs_size;
+			enemy = enemyFactory.create(0, enemyEqs.e0Eqs_startPos[rand]);
+			enemy->setEqs(enemyEqs.e0Eqs[rand]);
+			enemies->push_back(enemy);
+
+			enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[5]);
+			enemy->setEqs(enemyEqs.e1Eqs[5]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[1] = true;
 		}
-		else if (eflags[2] == false && time == 2.3f) {
-			Enemy0* e0_1 = new Enemy0(enemyEqs.e0Eqs[std::rand() % enemyEqs.e0Eqs.size()], textures["enemy0"], fhd);
-			spawned.push_back(e0_1);
-			Enemy1* e1_0 = new Enemy1(enemyEqs.e1Eqs[0], textures["enemy1"], fhd);
-			spawned.push_back(e1_0);
-			eflags[2] = true;
+		else if (enemy_spawned[2] == false && time == 2.3f) {
+			rand = std::rand() % enemyEqs.e0Eqs_size;
+			Enemy* enemy = enemyFactory.create(0, enemyEqs.e0Eqs_startPos[rand]);
+			enemy->setEqs(enemyEqs.e0Eqs[rand]);
+			enemies->push_back(enemy);
+
+			enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[0]);
+			enemy->setEqs(enemyEqs.e1Eqs[0]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[2] = true;
 		}
-		else if (eflags[3] == false && time == 3) {
-			Enemy1* e1_1 = new Enemy1(enemyEqs.e1Eqs[1], textures["enemy1"], fhd);
-			spawned.push_back(e1_1);
-			eflags[3] = true;
+		else if (enemy_spawned[3] == false && time == 3) {
+			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[1]);
+			enemy->setEqs(enemyEqs.e1Eqs[1]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[3] = true;
 		}
-		else if (eflags[4] == false && time == 3.7f) {
-			Enemy1* e1_2 = new Enemy1(enemyEqs.e1Eqs[2], textures["enemy1"], fhd);
-			spawned.push_back(e1_2);
-			eflags[4] = true;
+		else if (enemy_spawned[4] == false && time == 3.7f) {
+			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[2]);
+			enemy->setEqs(enemyEqs.e1Eqs[2]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[4] = true;
 		}
-		else if (eflags[5] == false && time == 4.3f) {
-			Enemy1* e1_3 = new Enemy1(enemyEqs.e1Eqs[3], textures["enemy1"], fhd);
-			spawned.push_back(e1_3);
-			eflags[5] = true;
+		else if (enemy_spawned[5] == false && time == 4.3f) {
+			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[3]);
+			enemy->setEqs(enemyEqs.e1Eqs[3]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[5] = true;
 		}
-		else if (eflags[10] == false && time == 4.5f) {
-			Enemy1* e1_6 = new Enemy1(enemyEqs.e1Eqs[(std::rand() % 12) + 7], textures["enemy1"], fhd);
-			spawned.push_back(e1_6);
-			eflags[10] = true;
+		else if (enemy_spawned[10] == false && time == 4.5f) {
+			rand = (std::rand() % 12) + 7;
+			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[rand]);
+			enemy->setEqs(enemyEqs.e1Eqs[rand]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[10] = true;
 		}
-		else if (eflags[6] == false && time == 5) {
-			Enemy1* e1_4 = new Enemy1(enemyEqs.e1Eqs[4], textures["enemy1"], fhd);
-			spawned.push_back(e1_4);
-			eflags[6] = true;
+		else if (enemy_spawned[6] == false && time == 5) {
+			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[4]);
+			enemy->setEqs(enemyEqs.e1Eqs[4]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[6] = true;
 		}
-		else if (eflags[7] == false && time == 5.7f) {
-			Enemy1* e1_5 = new Enemy1(enemyEqs.e1Eqs[6], textures["enemy1"], fhd);
-			spawned.push_back(e1_5);
-			eflags[7] = true;
+		else if (enemy_spawned[7] == false && time == 5.7f) {
+			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[6]);
+			enemy->setEqs(enemyEqs.e1Eqs[6]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[7] = true;
 		}
-		else if (eflags[8] == false && time == 6.3f) {
-			Enemy1* e1_6 = new Enemy1(enemyEqs.e1Eqs[(std::rand() % 12) + 7], textures["enemy1"], fhd);
-			spawned.push_back(e1_6);
-			eflags[8] = true;
+		else if (enemy_spawned[8] == false && time == 6.3f) {
+			rand = (std::rand() % 12) + 7;
+			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[rand]);
+			enemy->setEqs(enemyEqs.e1Eqs[rand]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[8] = true;
 		}
-		else if (eflags[9] == false && time == 7) {
-			Enemy1* e1_6 = new Enemy1(enemyEqs.e1Eqs[(std::rand() % 12) + 7], textures["enemy1"], fhd);
-			spawned.push_back(e1_6);
-			eflags[9] = true;
+		else if (enemy_spawned[9] == false && time == 7) {
+			rand = (std::rand() % 12) + 7;
+			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[rand]);
+			enemy->setEqs(enemyEqs.e1Eqs[rand]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[9] = true;
 		}
 		else if (time == 7.5f) {
-			int eflags_size = sizeof(eflags);
+			int eflags_size = sizeof(enemy_spawned);
 			for (int i = 0; i < eflags_size; i++) {
-				eflags[i] = false;
+				enemy_spawned[i] = false;
 			}
 			clock.restart();
 		}
 		break;
 	case 10:
-		if (boss_flag == false && boss_time == 1) {
-			EnemyBoss* eBoss_0 = new EnemyBoss(enemyEqs.eBossEqs[std::rand() % enemyEqs.eBossEqs.size()], textures["enemyBoss"], fhd);
-			spawned.push_back(eBoss_0);
-			boss_flag = true;
+		if (boss_spawned == false && boss_time == 1) {
+			rand = std::rand() % enemyEqs.eBossEqs_size;
+			Enemy* enemy = enemyFactory.create(100, enemyEqs.eBossEqs_startPos[rand]);
+			enemy->setEqs(enemyEqs.eBossEqs[rand]);
+			enemies->push_back(enemy);
+
+			boss_spawned = true;
 		}
 		else if (boss_time == 127) {
-			boss_flag = false;
+			boss_spawned = false;
 			boss_clock.restart();
 		}
 
-		if (eflags[0] == false && time == 1) {
-			Enemy0* e0_0 = new Enemy0(enemyEqs.e0Eqs[std::rand() % enemyEqs.e0Eqs.size()], textures["enemy0"], fhd);
-			spawned.push_back(e0_0);
-			eflags[0] = true;
+		if (enemy_spawned[0] == false && time == 1) {
+			rand = std::rand() % enemyEqs.e0Eqs_size;
+			Enemy* enemy = enemyFactory.create(0, enemyEqs.e0Eqs_startPos[rand]);
+			enemy->setEqs(enemyEqs.e0Eqs[rand]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[0] = true;
 		}
-		else if (eflags[11] == false && time == 1.5f) {
-			Enemy1* e1_7 = new Enemy1(enemyEqs.e1Eqs[(std::rand() % 12) + 7], textures["enemy1"], fhd);
-			spawned.push_back(e1_7);
-			eflags[11] = true;
+		else if (enemy_spawned[11] == false && time == 1.5f) {
+			rand = (std::rand() % 12) + 7;
+			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[rand]);
+			enemy->setEqs(enemyEqs.e1Eqs[rand]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[11] = true;
 		}
-		else if (eflags[1] == false && time == 2) {
-			Enemy0* e0_1 = new Enemy0(enemyEqs.e0Eqs[std::rand() % enemyEqs.e0Eqs.size()], textures["enemy0"], fhd);
-			spawned.push_back(e0_1);
-			Enemy0* e0_2 = new Enemy0(enemyEqs.e0Eqs[std::rand() % enemyEqs.e0Eqs.size()], textures["enemy0"], fhd);
-			spawned.push_back(e0_2);
-			Enemy1* e1_0 = new Enemy1(enemyEqs.e1Eqs[5], textures["enemy1"], fhd);
-			spawned.push_back(e1_0);
-			eflags[1] = true;
+		else if (enemy_spawned[1] == false && time == 2) {
+			rand = std::rand() % enemyEqs.e0Eqs_size;
+			Enemy* enemy = enemyFactory.create(0, enemyEqs.e0Eqs_startPos[rand]);
+			enemy->setEqs(enemyEqs.e0Eqs[rand]);
+			enemies->push_back(enemy);
+
+			rand = std::rand() % enemyEqs.e0Eqs_size;
+			enemy = enemyFactory.create(0, enemyEqs.e0Eqs_startPos[rand]);
+			enemy->setEqs(enemyEqs.e0Eqs[rand]);
+			enemies->push_back(enemy);
+
+			enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[5]);
+			enemy->setEqs(enemyEqs.e1Eqs[5]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[1] = true;
 		}
-		else if (eflags[2] == false && time == 2.3f) {
-			Enemy0* e0_1 = new Enemy0(enemyEqs.e0Eqs[std::rand() % enemyEqs.e0Eqs.size()], textures["enemy0"], fhd);
-			spawned.push_back(e0_1);
-			Enemy1* e1_0 = new Enemy1(enemyEqs.e1Eqs[0], textures["enemy1"], fhd);
-			spawned.push_back(e1_0);
-			eflags[2] = true;
+		else if (enemy_spawned[2] == false && time == 2.3f) {
+			rand = std::rand() % enemyEqs.e0Eqs_size;
+			Enemy* enemy = enemyFactory.create(0, enemyEqs.e0Eqs_startPos[rand]);
+			enemy->setEqs(enemyEqs.e0Eqs[rand]);
+			enemies->push_back(enemy);
+
+			enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[0]);
+			enemy->setEqs(enemyEqs.e1Eqs[0]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[2] = true;
 		}
-		else if (eflags[3] == false && time == 2.8f) {
-			Enemy1* e1_1 = new Enemy1(enemyEqs.e1Eqs[1], textures["enemy1"], fhd);
-			spawned.push_back(e1_1);
-			eflags[3] = true;
+		else if (enemy_spawned[3] == false && time == 2.8f) {
+			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[1]);
+			enemy->setEqs(enemyEqs.e1Eqs[1]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[3] = true;
 		}
-		else if (eflags[4] == false && time == 3.3f) {
-			Enemy1* e1_2 = new Enemy1(enemyEqs.e1Eqs[2], textures["enemy1"], fhd);
-			spawned.push_back(e1_2);
-			eflags[4] = true;
+		else if (enemy_spawned[4] == false && time == 3.3f) {
+			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[2]);
+			enemy->setEqs(enemyEqs.e1Eqs[2]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[4] = true;
 		}
-		else if (eflags[5] == false && time == 3.8f) {
-			Enemy1* e1_3 = new Enemy1(enemyEqs.e1Eqs[3], textures["enemy1"], fhd);
-			spawned.push_back(e1_3);
-			eflags[5] = true;
+		else if (enemy_spawned[5] == false && time == 3.8f) {
+			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[3]);
+			enemy->setEqs(enemyEqs.e1Eqs[3]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[5] = true;
 		}
-		else if (eflags[10] == false && time == 4) {
-			Enemy1* e1_6 = new Enemy1(enemyEqs.e1Eqs[(std::rand() % 12) + 7], textures["enemy1"], fhd);
-			spawned.push_back(e1_6);
-			eflags[10] = true;
+		else if (enemy_spawned[10] == false && time == 4) {
+			rand = (std::rand() % 12) + 7;
+			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[rand]);
+			enemy->setEqs(enemyEqs.e1Eqs[rand]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[10] = true;
 		}
-		else if (eflags[6] == false && time == 4.3f) {
-			Enemy1* e1_4 = new Enemy1(enemyEqs.e1Eqs[4], textures["enemy1"], fhd);
-			spawned.push_back(e1_4);
-			eflags[6] = true;
+		else if (enemy_spawned[6] == false && time == 4.3f) {
+			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[4]);
+			enemy->setEqs(enemyEqs.e1Eqs[4]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[6] = true;
 		}
-		else if (eflags[7] == false && time ==  4.8f) {
-			Enemy1* e1_5 = new Enemy1(enemyEqs.e1Eqs[6], textures["enemy1"], fhd);
-			spawned.push_back(e1_5);
-			eflags[7] = true;
+		else if (enemy_spawned[7] == false && time ==  4.8f) {
+			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[6]);
+			enemy->setEqs(enemyEqs.e1Eqs[6]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[7] = true;
 		}
-		else if (eflags[8] == false && time == 5.3f) {
-			Enemy1* e1_6 = new Enemy1(enemyEqs.e1Eqs[(std::rand() % 12) + 7], textures["enemy1"], fhd);
-			spawned.push_back(e1_6);
-			eflags[8] = true;
+		else if (enemy_spawned[8] == false && time == 5.3f) {
+			rand = (std::rand() % 12) + 7;
+			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[rand]);
+			enemy->setEqs(enemyEqs.e1Eqs[rand]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[8] = true;
 		}
-		else if (eflags[9] == false && time == 5.8f) {
-			Enemy1* e1_6 = new Enemy1(enemyEqs.e1Eqs[(std::rand() % 12) + 7], textures["enemy1"], fhd);
-			spawned.push_back(e1_6);
-			eflags[9] = true;
+		else if (enemy_spawned[9] == false && time == 5.8f) {
+			rand = (std::rand() % 12) + 7;
+			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[rand]);
+			enemy->setEqs(enemyEqs.e1Eqs[rand]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[9] = true;
 		}
 		else if (time == 6) {
-			int eflags_size = sizeof(eflags);
+			int eflags_size = sizeof(enemy_spawned);
 			for (int i = 0; i < eflags_size; i++) {
-				eflags[i] = false;
+				enemy_spawned[i] = false;
 			}
 			clock.restart();
 		}
 		break;
-		*/
 	}
 }
 

@@ -23,12 +23,12 @@ private:
 	std::map<std::string, sf::Sprite> UIsprites;
 	std::map<std::string, sf::Text> texts;
 
+	Player player;
+	std::vector<GameEntity*> player_bullets;
 	std::vector<Enemy*> enemies;
-	//std::vector<>
-	//std::vector<>
+	std::vector<GameEntity*> enemy_bullets;
 
 	sf::FloatRect boundary;
-	Player player;
 	Stage stage;
 	int money;
 
@@ -36,9 +36,9 @@ private:
 public:
 	Gameplay(sf::RenderWindow* window);
 	int display();
-	void updateCollisions();
 	void scaleUI();
 	void scaleEntities();
 	void updateEntityPosition(float time);
+	void checkCollisions();
 	void stageAnimation();
 };
