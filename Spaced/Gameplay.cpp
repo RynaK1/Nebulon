@@ -95,8 +95,12 @@ int Gameplay::display() {
         player.keepInBoundary(boundary);
         player.attack(textures, &player_bullets);
 
-        //enemy updates
+        //entity updates
         stage.spawn(&enemies);
+        size_t enemies_size = enemies.size();
+        for (int i = 0; i < enemies_size; i++) {
+            enemies[i]->attack(textures, &enemy_bullets);
+        }
         updateEntityPosition(time);
 
         //entity collision updates
@@ -113,7 +117,7 @@ int Gameplay::display() {
         window->clear();
         window->draw(UIsprites["background"]);
 
-        size_t enemies_size = enemies.size();
+        enemies_size = enemies.size();
         for (int i = 0; i < enemies_size; i++) {
             window->draw(enemies[i]->getSprite());
         }
@@ -121,6 +125,11 @@ int Gameplay::display() {
         size_t player_bullets_size = player_bullets.size();
         for (int i = 0; i < player_bullets_size; i++) {
             window->draw(player_bullets[i]->getSprite());
+        }
+
+        size_t enemy_bullets_size = enemy_bullets.size();
+        for (int i = 0; i < enemy_bullets_size; i++) {
+            window->draw(enemy_bullets[i]->getSprite());
         }
 
         window->draw(player.getSprite());

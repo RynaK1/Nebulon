@@ -73,6 +73,7 @@ std::vector<Equation> Entity::getEqs() {
 }
 
 void Entity::update(float time) {
+
 	float x = sprite.getPosition().x;
 	if (eqs[0].isNegative) {
 		x -= speed * time;
@@ -230,6 +231,29 @@ void Player::death() {
 
 
 
+void Enemy::attack(std::map<std::string, sf::Texture>& textures, std::vector<GameEntity*>* enemy_bullets) {
+	switch (attackType) {
+	case 0: case 100:
+		if (attack_clock.getElapsedTime().asSeconds() >= 1) {
+			attack_clock.restart();
+
+			sf::FloatRect pos = this->getGlobalBounds();
+			GameEntity* attack = new GameEntity(textures["bullet0"], pos.left + (pos.width / 2), 10, 1);
+			attack->setRotation(180);
+			attack->setScale(3, 3);
+			std::vector<Equation> attackEq;
+			attackEq.push_back(Equation(1, -(pos.left + (pos.width / 2)), -pos.top, 1, 99, -1000, 1, true));
+			attack->setEqs(attackEq);
+			enemy_bullets->push_back(attack);
+		}
+		break;
+	default:
+		break;
+	}
+}
+
+
+
 EnemyFactory::EnemyFactory(std::map<std::string, sf::Texture>& textures) {
 	this->textures = textures;
 }
@@ -238,16 +262,16 @@ Enemy* EnemyFactory::create(int type, float start_pos) {
 	Enemy* enemy = nullptr;
 	switch (type) {
 	case 0:
-		enemy = new Enemy(textures["enemy0"], start_pos, 125, 25, false);
+		enemy = new Enemy(textures["enemy0"], start_pos, 125, 25, 0, false);
 		enemy->setScale(0.25f, 0.25f);
 		break;
 	case 1:
-		enemy = new Enemy(textures["enemy1"], start_pos, 125, 40, false);
+		enemy = new Enemy(textures["enemy1"], start_pos, 125, 40, 1, false);
 		enemy->setScale(0.16f, 0.16f);
 		enemy->setRotation(180);
 		break;
 	case 100:
-		enemy = new Enemy(textures["enemy100"], start_pos, 100, 100, true);
+		enemy = new Enemy(textures["enemy100"], start_pos, 100, 100, 2, true);
 		enemy->setScale(0.7f, 0.7f);
 		break;
 	}

@@ -66,7 +66,6 @@ public:
 
 class Player : public GameEntity {
 protected:
-	//BulletEqs bulletEqs;
 	sf::Clock attack1_clock;
 	sf::Clock attack2_clock;
 public:
@@ -81,15 +80,17 @@ public:
 
 class Enemy : public GameEntity {
 protected:
+	int attackType;
 	bool isBoss;
 	sf::Clock attack_clock;
 public:
-	Enemy() : isBoss(false) {}
-	Enemy(sf::Texture& texture, float start_pos, float speed, int health, bool isBoss) :
+	Enemy() : isBoss(false), attackType(0) {}
+	Enemy(sf::Texture& texture, float start_pos, float speed, int health, int attackType, bool isBoss) :
 		GameEntity(texture, start_pos, speed, health) {
 		this->isBoss = isBoss;
+		this->attackType = attackType;
 	}
-	bool attack() { return false; }
+	void attack(std::map<std::string, sf::Texture>& textures, std::vector<GameEntity*>* enemy_bullets);
 };
 
 
