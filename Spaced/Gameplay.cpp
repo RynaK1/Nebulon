@@ -102,6 +102,7 @@ int Gameplay::display() {
             enemies[i]->attack(textures, &enemy_bullets);
         }
         updateEntityPosition(time);
+        updateEntityCollision();
 
         //entity collision updates
 
@@ -216,7 +217,37 @@ void Gameplay::updateEntityPosition(float time) {
     }
 }
 
-void Gameplay::checkCollisions() {
+void Gameplay::updateEntityCollision() {
+    //enemy to player and player_bullets
+    for (int i = 0; i < enemies.size(); i++) {
+        //enemy to player
+        if (player.getGlobalBounds().intersects(enemies[i]->getGlobalBounds())) {
+            player.setHealth(player.getHealth() - enemies[i]->getDmg());
+        }
+
+        for (int j = 0; j < player_bullets.size(); j++) {
+            //player bullets to enemy
+            if (player_bullets[j]->getGlobalBounds().intersects(enemies[i]->getGlobalBounds())) {
+                enemies[i]->setHealth(enemies[i]->getHealth() - player_bullets[j]->getDmg());
+                //remove enemy if dead
+                if (enemies[i]->getHealth() <= 0) {
+                    delete enemies[i];
+                    enemies.erase(enemies.begin() + i);
+                }
+
+                //remove player bullet
+                delete player_bullets[j];
+                player_bullets.erase(player_bullets.begin() + j);
+            }
+        }
+    }
+
+    //enemy bullets to player
+    for (int i = 0; i < enemy_bullets.size(); i++) {
+        if (player.getGlobalBounds().intersects(enemy_bullets[i]->getGlobalBounds())) {
+            player.setHealth(player.getHealth() - enemy_bullets[i]->getDmg());
+        }
+    }
 
 }
 

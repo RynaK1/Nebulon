@@ -139,8 +139,16 @@ void GameEntity::setHealth(int health) {
 	this->health = health;
 }
 
+void GameEntity::setDmg(int dmg) {
+	this->dmg = dmg;
+}
+
 int GameEntity::getHealth() {
 	return health;
+}
+
+int GameEntity::getDmg() {
+	return dmg;
 }
 
 
@@ -201,7 +209,7 @@ void Player::attack(std::map<std::string, sf::Texture>& textures, std::vector<Ga
 			attack1_clock.restart();
 
 			sf::FloatRect pos = this->getGlobalBounds();
-			GameEntity* attack1 = new GameEntity(textures["bullet0"], pos.left + (pos.width / 2), 10, 1);
+			GameEntity* attack1 = new GameEntity(textures["bullet0"], pos.left + (pos.width / 2), 10, 1, 10);
 			attack1->setScale(3, 3);
 			std::vector<Equation> attack1Eq;
 			attack1Eq.push_back(Equation(1, -(pos.left + (pos.width / 2)), -pos.top, 1, 99, 3000, 1, false));
@@ -215,7 +223,7 @@ void Player::attack(std::map<std::string, sf::Texture>& textures, std::vector<Ga
 			attack2_clock.restart();
 
 			sf::FloatRect pos = this->getGlobalBounds();
-			GameEntity* attack2 = new GameEntity(textures["bullet1"], pos.left + (pos.width / 2), 6, 1);
+			GameEntity* attack2 = new GameEntity(textures["bullet1"], pos.left + (pos.width / 2), 6, 1, 25);
 			attack2->setScale(4, 4);
 			std::vector<Equation> attack2Eq;
 			attack2Eq.push_back(Equation(1, -(pos.left + (pos.width / 2)), -pos.top, 1, 99, 3000, 1, false));
@@ -238,7 +246,7 @@ void Enemy::attack(std::map<std::string, sf::Texture>& textures, std::vector<Gam
 			attack_clock.restart();
 
 			sf::FloatRect pos = this->getGlobalBounds();
-			GameEntity* attack = new GameEntity(textures["bullet0"], pos.left + (pos.width / 2), 10, 1);
+			GameEntity* attack = new GameEntity(textures["bullet0"], pos.left + (pos.width / 2), 10, 1, 15);
 			attack->setRotation(180);
 			attack->setScale(3, 3);
 			std::vector<Equation> attackEq;
@@ -262,16 +270,16 @@ Enemy* EnemyFactory::create(int type, float start_pos) {
 	Enemy* enemy = nullptr;
 	switch (type) {
 	case 0:
-		enemy = new Enemy(textures["enemy0"], start_pos, 125, 25, 0, false);
+		enemy = new Enemy(textures["enemy0"], start_pos, 125, 15, 0, 20, false);
 		enemy->setScale(0.25f, 0.25f);
 		break;
 	case 1:
-		enemy = new Enemy(textures["enemy1"], start_pos, 125, 40, 1, false);
+		enemy = new Enemy(textures["enemy1"], start_pos, 125, 20, 1, 20, false);
 		enemy->setScale(0.16f, 0.16f);
 		enemy->setRotation(180);
 		break;
 	case 100:
-		enemy = new Enemy(textures["enemy100"], start_pos, 100, 100, 2, true);
+		enemy = new Enemy(textures["enemy100"], start_pos, 100, 100, 1, 34, true);
 		enemy->setScale(0.7f, 0.7f);
 		break;
 	}

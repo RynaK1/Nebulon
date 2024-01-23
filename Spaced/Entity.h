@@ -52,14 +52,18 @@ public:
 class GameEntity : public Entity {
 protected:
 	int health;
+	int dmg;
 public:
 	GameEntity() : health(0) {};
-	GameEntity(sf::Texture& texture, float start_pos, float speed, int health) :
+	GameEntity(sf::Texture& texture, float start_pos, float speed, int health, int dmg) :
 		Entity(texture, start_pos, speed) {
 		this->health = health;
+		this->dmg = dmg;
 	}
 	void setHealth(int health);
+	void setDmg(int dmg);
 	int getHealth();
+	int getDmg();
 };
 
 
@@ -85,8 +89,8 @@ protected:
 	sf::Clock attack_clock;
 public:
 	Enemy() : isBoss(false), attackType(0) {}
-	Enemy(sf::Texture& texture, float start_pos, float speed, int health, int attackType, bool isBoss) :
-		GameEntity(texture, start_pos, speed, health) {
+	Enemy(sf::Texture& texture, float start_pos, float speed, int health, int attackType, int dmg, bool isBoss) :
+		GameEntity(texture, start_pos, speed, health, dmg) {
 		this->isBoss = isBoss;
 		this->attackType = attackType;
 	}

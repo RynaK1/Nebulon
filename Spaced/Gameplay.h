@@ -39,6 +39,6 @@ public:
 	void scaleUI();
 	void scaleEntities();
 	void updateEntityPosition(float time);
-	void checkCollisions();
+	void updateEntityCollision();
 	void stageAnimation();
 };
