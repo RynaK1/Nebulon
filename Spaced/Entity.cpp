@@ -183,6 +183,13 @@ void Player::move(float time) {
 	sprite.setPosition(pos.x + velocity.x, pos.y + velocity.y);
 }
 
+void Player::hit(int dmg) {
+	if (hit_clock.getElapsedTime().asSeconds() >= 1) {
+		this->health -= dmg;
+		hit_clock.restart();
+	}
+}
+
 void Player::keepInBoundary(sf::FloatRect boundary) {
 	sf::FloatRect bounds = sprite.getGlobalBounds();
 	sf::Vector2f adjust;
@@ -239,14 +246,25 @@ void Player::death() {
 
 
 
+bool Enemy::getIsBoss() {
+	return isBoss;
+}
+
+void Enemy::hit(int dmg) {
+	if (hit_clock.getElapsedTime().asSeconds() >= 1) {
+		this->health -= dmg;
+		hit_clock.restart();
+	}
+}
+
 void Enemy::attack(std::map<std::string, sf::Texture>& textures, std::vector<GameEntity*>* enemy_bullets) {
 	switch (attackType) {
 	case 0: case 100:
-		if (attack_clock.getElapsedTime().asSeconds() >= 1) {
+		if (attack_clock.getElapsedTime().asSeconds() >= 2) {
 			attack_clock.restart();
 
 			sf::FloatRect pos = this->getGlobalBounds();
-			GameEntity* attack = new GameEntity(textures["bullet0"], pos.left + (pos.width / 2), 10, 1, 15);
+			GameEntity* attack = new GameEntity(textures["bullet0"], pos.left + (pos.width / 2), 7, 1, 15);
 			attack->setRotation(180);
 			attack->setScale(3, 3);
 			std::vector<Equation> attackEq;
@@ -266,20 +284,25 @@ EnemyFactory::EnemyFactory(std::map<std::string, sf::Texture>& textures) {
 	this->textures = textures;
 }
 
-Enemy* EnemyFactory::create(int type, float start_pos) {
+Enemy* EnemyFactory::create(int type, float start_pos, int stage_num) {
 	Enemy* enemy = nullptr;
+	float speed;
+	stage_num -= 1;
 	switch (type) {
 	case 0:
-		enemy = new Enemy(textures["enemy0"], start_pos, 125, 15, 0, 20, false);
+		speed = 125 + 125 * 0.05f * (stage_num % 10);
+		enemy = new Enemy(textures["enemy0"], start_pos, speed, 15, 0, 20, false);
 		enemy->setScale(0.25f, 0.25f);
 		break;
 	case 1:
-		enemy = new Enemy(textures["enemy1"], start_pos, 125, 20, 1, 20, false);
+		speed = 125 + 125 * 0.05f * (stage_num % 10);
+		enemy = new Enemy(textures["enemy1"], start_pos, speed, 20, 1, 20, false);
 		enemy->setScale(0.16f, 0.16f);
 		enemy->setRotation(180);
 		break;
 	case 100:
-		enemy = new Enemy(textures["enemy100"], start_pos, 100, 100, 1, 34, true);
+		speed = 100 + 100 * 0.05f * (stage_num % 10);
+		enemy = new Enemy(textures["enemy100"], start_pos, speed, 100, 1, 34, true);
 		enemy->setScale(0.7f, 0.7f);
 		break;
 	}

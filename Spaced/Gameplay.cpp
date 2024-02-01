@@ -27,7 +27,7 @@ Gameplay::Gameplay(sf::RenderWindow* window) {
     }
 
     //texts
-    texts["stage"] = sf::Text("Stage " + std::to_string(1), font);
+    texts["stage"] = sf::Text("Stage 0", font);
     texts["money"] = sf::Text(readFromFile("money"), font);
     texts["money"].setFillColor(sf::Color::White);
 
@@ -70,6 +70,7 @@ Gameplay::Gameplay(sf::RenderWindow* window) {
 
     money = stoi(readFromFile("money"));
     stage = Stage(textures);
+    startNextStage();
 
     scaleUI();
     scaleEntities();
@@ -104,35 +105,40 @@ int Gameplay::display() {
         updateEntityPosition(time);
         updateEntityCollision();
 
-        //entity collision updates
-
         //stage text animation
         stageAnimation();
 
-        ///////////////////////// FIGURE OUT DIFFERENT WAY TO STORE ENTITIES TO CONTAIN ALL CLASSES
-
+        //player death
+        if (player.getHealth() <= 0) {
+            int num_lives = stoi(readFromFile("lives"));
+            if (num_lives > 1) {
+                num_lives -= 1;
+                writeToFile(std::to_string(num_lives), "lives");
+                return GO_END;
+            }
+            else {
+                writeToFile("10", "lives");
+                return GO_GAMEOVER;
+            }
+        }
 
         time = frame_clock.restart().asSeconds();
 
         //draw updated graphics
         window->clear();
         window->draw(UIsprites["background"]);
-
         enemies_size = enemies.size();
         for (int i = 0; i < enemies_size; i++) {
             window->draw(enemies[i]->getSprite());
         }
-
         size_t player_bullets_size = player_bullets.size();
         for (int i = 0; i < player_bullets_size; i++) {
             window->draw(player_bullets[i]->getSprite());
         }
-
         size_t enemy_bullets_size = enemy_bullets.size();
         for (int i = 0; i < enemy_bullets_size; i++) {
             window->draw(enemy_bullets[i]->getSprite());
         }
-
         window->draw(player.getSprite());
         window->draw(UIsprites["health_UI"]);
         UIsprites["healthbar_UI"].setTextureRect(sf::IntRect(676, 968, 246 * player.getHealth() / 100, 24));
@@ -222,15 +228,19 @@ void Gameplay::updateEntityCollision() {
     for (int i = 0; i < enemies.size(); i++) {
         //enemy to player
         if (player.getGlobalBounds().intersects(enemies[i]->getGlobalBounds())) {
-            player.setHealth(player.getHealth() - enemies[i]->getDmg());
+            player.hit(enemies[i]->getDmg());
         }
 
         for (int j = 0; j < player_bullets.size(); j++) {
             //player bullets to enemy
             if (player_bullets[j]->getGlobalBounds().intersects(enemies[i]->getGlobalBounds())) {
-                enemies[i]->setHealth(enemies[i]->getHealth() - player_bullets[j]->getDmg());
+                enemies[i]->hit(player_bullets[j]->getDmg());
                 //remove enemy if dead
                 if (enemies[i]->getHealth() <= 0) {
+                    //check if dead enemy is boss
+                    if (enemies[i]->getIsBoss()) {
+                        startNextStage();
+                    }
                     delete enemies[i];
                     enemies.erase(enemies.begin() + i);
                 }
@@ -246,9 +256,27 @@ void Gameplay::updateEntityCollision() {
     for (int i = 0; i < enemy_bullets.size(); i++) {
         if (player.getGlobalBounds().intersects(enemy_bullets[i]->getGlobalBounds())) {
             player.setHealth(player.getHealth() - enemy_bullets[i]->getDmg());
+            delete enemy_bullets[i];
+            enemy_bullets.erase(enemy_bullets.begin() + i);
         }
     }
 
+}
+
+void Gameplay::startNextStage() {
+    stage.nextStage();
+    texts["stage"].setString("Stage " + std::to_string(stage.getStage_num()));
+    animation_clock.restart();
+}
+
+bool Gameplay::checkBossDNE() {
+    size_t enemies_size = enemies.size();
+    for (int i = 0; i < enemies_size; i++) {
+        if (enemies[i]->getIsBoss()) {
+            return false;
+        }
+    }
+    return true;
 }
 
 void Gameplay::stageAnimation() {
@@ -256,7 +284,13 @@ void Gameplay::stageAnimation() {
     if (time <= 0.5f) {
         texts["stage"].setFillColor(sf::Color(255, 255, 255, (uint8_t)(time * 510)));
     }
-    else if (time >= 1.5 && time <= 2) {
+    else if (time >= 1.5f && time <= 2) {
         texts["stage"].setFillColor(sf::Color(255, 255, 255, (uint8_t)((2 - time) * 510)));
     }
 }
+
+
+
+
+//1. IMPLEMENT HEALTH UI FOR ENEMY BOSS
+//2. IMPLEMENT INCREASED DIFFICULTY PER STAGE

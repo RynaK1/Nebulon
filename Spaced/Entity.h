@@ -54,7 +54,7 @@ protected:
 	int health;
 	int dmg;
 public:
-	GameEntity() : health(0) {};
+	GameEntity() : health(0), dmg(0) {};
 	GameEntity(sf::Texture& texture, float start_pos, float speed, int health, int dmg) :
 		Entity(texture, start_pos, speed) {
 		this->health = health;
@@ -72,10 +72,12 @@ class Player : public GameEntity {
 protected:
 	sf::Clock attack1_clock;
 	sf::Clock attack2_clock;
+	sf::Clock hit_clock;
 public:
 	Player() {};
 	Player(sf::Texture& texture, sf::Vector2f start_pos, float speed, int health);
 	void move(float time);
+	void hit(int dmg);
 	void keepInBoundary(sf::FloatRect boundary);
 	void attack(std::map<std::string, sf::Texture>& textures, std::vector<GameEntity*>* player_bullets);
 	void death();
@@ -87,6 +89,7 @@ protected:
 	int attackType;
 	bool isBoss;
 	sf::Clock attack_clock;
+	sf::Clock hit_clock;
 public:
 	Enemy() : isBoss(false), attackType(0) {}
 	Enemy(sf::Texture& texture, float start_pos, float speed, int health, int attackType, int dmg, bool isBoss) :
@@ -94,6 +97,8 @@ public:
 		this->isBoss = isBoss;
 		this->attackType = attackType;
 	}
+	void hit(int dmg);
+	bool getIsBoss();
 	void attack(std::map<std::string, sf::Texture>& textures, std::vector<GameEntity*>* enemy_bullets);
 };
 
@@ -103,5 +108,5 @@ class EnemyFactory {
 public:
 	EnemyFactory() {}
 	EnemyFactory(std::map<std::string, sf::Texture>& textures);
-	Enemy* create(int type, float start_pos);
+	Enemy* create(int type, float start_pos, int stage_num);
 };

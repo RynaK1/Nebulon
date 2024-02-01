@@ -41,5 +41,8 @@ public:
 	Stage() : MIN(-1000), MAX(10000), boss_spawned(false), stage_num(0), enemy_spawned{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0} {}
 	Stage(std::map<std::string, sf::Texture>& textures);
 	int getStage_num();
+	bool getBoss_spawned();
+	void setBoss_spawned(bool boss_spawned);
+	void nextStage();
 	void spawn(std::vector<Enemy*>* enemies);
 };

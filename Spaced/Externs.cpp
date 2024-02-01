@@ -4,7 +4,6 @@ float calcVolPercent(float knob_pos, float offset) {
 	return std::round((knob_pos - offset) / 2.3f);
 }
 
-
 sf::Vector2f calcVolTotal() {
 	float main = stof(readFromFile("main_volume"));
 	float x = (main / 100) * stof(readFromFile("music_volume"));
@@ -13,14 +12,12 @@ sf::Vector2f calcVolTotal() {
 	return sf::Vector2f(x, y);
 }
 
-
 std::string getVolPercentString(float percent) {
 	std::string main_vol = std::to_string(percent);
 	main_vol = main_vol.substr(0, main_vol.find('.'));
 	main_vol.append("%");
 	return main_vol;
 }
-
 
 bool buttonBounds(sf::Vector2i mousePos, sf::Text text) {
 	sf::FloatRect bound = text.getGlobalBounds();
@@ -29,7 +26,6 @@ bool buttonBounds(sf::Vector2i mousePos, sf::Text text) {
 	}
 	return false;
 }
-
 
 bool buttonBounds(sf::Vector2i mousePos, sf::RectangleShape shape) {
 	sf::FloatRect bound = shape.getGlobalBounds();
@@ -40,7 +36,6 @@ bool buttonBounds(sf::Vector2i mousePos, sf::RectangleShape shape) {
 	}
 	return false;
 }
-
 
 void writeToFile(std::string value, std::string key) {
 
@@ -78,7 +73,6 @@ void writeToFile(std::string value, std::string key) {
 	}
 	outFile.close();
 }
-
 
 std::string readFromFile(std::string key) {
 	std::ifstream inFile("data.txt");
