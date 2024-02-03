@@ -100,39 +100,6 @@ float Entity::calcYPosition(float x) {
 	return -((pow((eqs[0].m_xt * x) + eqs[0].xt, eqs[0].pt) * eqs[0].m_yt) + eqs[0].yt);
 }
 
-void Entity::changeResolution(bool fhd) {
-	float val1;
-	float val2;
-	if (fhd) {
-		val1 = 1.5f;
-		val2 = 2.255f;
-	}
-	else {
-		val1 = 0.6667f;
-		val2 = 0.4433f;
-	}
-
-	//change member variables
-	speed = speed * val1;
-	sf::Vector2f pos = sprite.getPosition();
-	sprite.setPosition(pos.x * val1, calcYPosition(pos.x * val1));
-	sf::Vector2f scale = sprite.getScale();
-	sprite.setScale(scale.x * val1, scale.y * val1);
-
-	//change equations
-	size_t eqs_size = eqs.size();
-	for (int i = 0; i< eqs_size; i++) {
-		if (eqs[i].pt == 2) {
-			eqs[i].m_yt *= val1;
-		}
-		else if (eqs[i].pt == 3) {
-			eqs[i].m_yt *= val2;
-		}
-		eqs[i].xt *= val1;
-		eqs[i].yt *= val1;
-	}
-}
-
 
 
 void GameEntity::setHealth(int health) {
@@ -156,6 +123,7 @@ int GameEntity::getDmg() {
 Player::Player(sf::Texture& texture, sf::Vector2f start_pos, float speed, int health) {
 	sprite.setTexture(texture);
 	sprite.setPosition(start_pos.x, start_pos.y);
+	sprite.setScale(0.25f, 0.25f);
 	this->speed = speed;
 	this->health = health;
 }
@@ -311,3 +279,6 @@ Enemy* EnemyFactory::create(int type, float start_pos, int stage_num) {
 
 	return enemy;
 }
+
+
+// enemy health bar

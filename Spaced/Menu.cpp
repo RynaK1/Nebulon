@@ -27,8 +27,7 @@ Menu::Menu(sf::RenderWindow* window) {
     music.play();
 
     //ship textures
-    if (!textures["backgroundFHD"].loadFromFile("../Resources/Textures/BackgroundMenu_FHD.png") ||
-        !textures["background"].loadFromFile("../Resources/Textures/BackgroundMenu.png") ||
+    if (!textures["background"].loadFromFile("../Resources/Textures/BackgroundMenu.png") ||
         !textures["transparent"].loadFromFile("../Resources/Textures/TransparentMenu.png") ||
         !textures["transparentFHD"].loadFromFile("../Resources/Textures/TransparentMenu_FHD.png") ||
         !textures["entity0"].loadFromFile("../Resources/Textures/ship_sprite7.png", sf::IntRect(14, 14, 525, 294)) ||
@@ -41,23 +40,11 @@ Menu::Menu(sf::RenderWindow* window) {
         std::cerr << "Textures load error <MENU>" << std::endl;
     }
 
-    //resolution
-    if (readFromFile("resolution").compare("1280x720") == 0) {
-        fhd = false;
-        win_x = 1280;
-        win_y = 720;
-        background.setTexture(textures["background"]);
-        transparent.setTexture(textures["transparent"]);
-    }
-    else {
-        fhd = true;
-        win_x = 1920;
-        win_y = 1080;
-        background.setTexture(textures["backgroundFHD"]);
-        transparent.setTexture(textures["transparentFHD"]);
-    }
+    background.setTexture(textures["background"]);
+    transparent.setTexture(textures["transparent"]);
+    win_x = 1280;
+    win_y = 720;
 
-    resolutionReset(fhd);
     loadUIMain();
     loadUIOptions();
 }
@@ -286,56 +273,11 @@ int Menu::buttonPressedOptions(sf::Vector2i mousePos) {
         sfx.play();
         //key binds
     }
-    else if (buttonBounds(mousePos, UI_options["low_txt"])) {
-        sfx.play();
-        window->create(sf::VideoMode(1280, 720), "Nebulon", sf::Style::Close);
-        resolutionReset(false);
-        loadUIMain();
-        loadUIOptions();
-    }
-    else if (buttonBounds(mousePos, UI_options["high_txt"])) {
-        sfx.play();
-        window->create(sf::VideoMode(1920, 1080), "Nebulon", sf::Style::Close);
-        window->setPosition(sf::Vector2i(-8, -31));
-        resolutionReset(true);
-        loadUIMain();
-        loadUIOptions();
-    }
     else if (buttonBounds(mousePos, UI_options["back_txt"])) {
         sfx.play();
         return GO_MAIN_MENU;
     }
     return NULL;
-}
-
-void Menu::resolutionReset(bool fhd) { 
-    int mem_flags_size = sizeof(le_flags);
-    for (int i = 0; i < mem_flags_size; i++) {
-        le_flags[i] = false;
-    }
-
-    if (fhd) {
-        writeToFile("1920x1080", "resolution");
-        background = sf::Sprite();
-        background.setTexture(textures["backgroundFHD"]);
-        transparent = sf::Sprite();
-        transparent.setTexture(textures["transparentFHD"]);
-        changeEntityFHD(fhd);
-        this->fhd = fhd;
-        win_x = 1920;
-        win_y = 1080;
-    }
-    else {
-        writeToFile("1280x720", "resolution");
-        background = sf::Sprite();
-        background.setTexture(textures["background"]);
-        transparent = sf::Sprite();
-        transparent.setTexture(textures["transparent"]);
-        changeEntityFHD(fhd);
-        this->fhd = fhd;
-        win_x = 1280;
-        win_y = 720;
-    }
 }
 
 void Menu::loadUIMain() {
@@ -526,15 +468,10 @@ void Menu::spawnEntities() {
     float MIN = -1000;
     int mem_time = (int)em_clock.getElapsedTime().asSeconds();
 
-    float scale = 1;
-    if (fhd) {
-        scale = 1.5f;
-    }
-
     if (mem_time == 0 && le_flags[0] == false) {
         Entity e0(textures["entity0"], 1280, 35); //top right, fast
         e0.push_back(Equation(1, 0, -300, 1, 0.23f, MIN, 1, true));
-        e0.setScale(0.07f * scale, 0.07f * scale);
+        e0.setScale(0.07f, 0.07f);
 
         Entity e1(textures["entity1"], -135, 8); //mid left, lower
         e1.push_back(Equation(0, 0, -300, 0, 0, MAX, 1, false));
@@ -551,14 +488,6 @@ void Menu::spawnEntities() {
         Entity e6(textures["entity6"], 200, 3); //bottom left, behind tower
         e6.push_back(Equation(0, 0, -400, 0, 0, MAX, 1, false));
         e6.setScale(0.1f, 0.1f);
-
-        if (fhd) {
-            e0.changeResolution(fhd);
-            e1.changeResolution(fhd);
-            e3.changeResolution(fhd);
-            e5.changeResolution(fhd);
-            e6.changeResolution(fhd);
-        }
 
         entities_front.push_back(e0);
         entities_back.push_back(e3);
@@ -577,11 +506,6 @@ void Menu::spawnEntities() {
         e4.push_back(Equation(0, 0, -100, 0, 0, MIN, 1, true));
         e4.setScale(0.5f, 0.5f);
 
-        if (fhd) {
-            e2.changeResolution(fhd);
-            e4.changeResolution(fhd);
-        }
-
         entities_back.push_back(e2);
         entities_front.push_back(e4);
 
@@ -593,9 +517,7 @@ void Menu::spawnEntities() {
         e0.setScale(0.07f, 0.07f);
         e0.setRotation(10);
 
-        if (fhd) {
-            e0.changeResolution(fhd);
-        }
+
         entities_front.push_back(e0);
 
         le_flags[2] = true;
@@ -629,27 +551,6 @@ void Menu::updateEntityPosition() {
         sf::FloatRect pos = entities_back[i].getGlobalBounds();
         if (!boundary.intersects(pos)) {
             entities_back.erase(entities_back.begin() + i);
-        }
-    }
-}
-
-void Menu::changeEntityFHD(bool fhd) {
-    size_t entities_front_size = entities_front.size();
-    size_t entities_back_size = entities_back.size();
-    if (fhd && !this->fhd) {
-        for (int i = 0; i < entities_front_size; i++) {
-            entities_front[i].changeResolution(fhd);
-        }
-        for (int i = 0; i < entities_back_size; i++) {
-            entities_back[i].changeResolution(fhd);
-        }
-    }
-    else if (!fhd && this->fhd) {
-        for (int i = 0; i < entities_front_size; i++) {
-            entities_front[i].changeResolution(fhd);
-        }
-        for (int i = 0; i < entities_back_size; i++) {
-            entities_back[i].changeResolution(fhd);
         }
     }
 }

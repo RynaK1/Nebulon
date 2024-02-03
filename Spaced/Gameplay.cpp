@@ -33,7 +33,6 @@ Gameplay::Gameplay(sf::RenderWindow* window) {
 
     //textures
     if (!textures["background"].loadFromFile("../Resources/Textures/BackgroundGame.png") ||
-        !textures["backgroundFHD"].loadFromFile("../Resources/Textures/BackgroundGame_FHD.png") || 
         !textures["player"].loadFromFile("../Resources/Textures/ship_sprite4.png", sf::IntRect(768, 32, 227, 171)) ||
         !textures["bullet0_UI"].loadFromFile("../Resources/Textures/Game_UI.png", sf::IntRect(125, 433, 141, 126)) ||
         !textures["bullet1_UI"].loadFromFile("../Resources/Textures/Game_UI.png", sf::IntRect(199, 47, 172, 160)) ||
@@ -48,32 +47,21 @@ Gameplay::Gameplay(sf::RenderWindow* window) {
         std::cerr << "Texture load failure <Gameplay>" << std::endl;
     }
 
-    UIsprites["background"].setTexture(textures["background"]);
     UIsprites["bullet0_UI"].setTexture(textures["bullet0_UI"]);
     UIsprites["bullet1UI"].setTexture(textures["bullet1_UI"]);
     UIsprites["health_UI"].setTexture(textures["health_UI"]);
     UIsprites["healthbar_UI"].setTexture(textures["healthbar_UI"]);
     UIsprites["money_UI"].setTexture(textures["money_UI"]);
+    UIsprites["background"].setTexture(textures["background"]);
 
-    //resolution
-
-    if (readFromFile("resolution").compare("1920x1080") == 0) {
-        fhd = true;
-        boundary = sf::FloatRect(0, 0, 1920, 1080);
-        player = Player(textures["player"], sf::Vector2f(960, 750), 400, 100);
-    }
-    else {
-        fhd = false;
-        boundary = sf::FloatRect(0, 0, 1280, 720);
-        player = Player(textures["player"], sf::Vector2f(640, 500), 400, 100);
-    }
+    boundary = sf::FloatRect(0, 0, 1280, 720);
+    player = Player(textures["player"], sf::Vector2f(640, 500), 400, 100);
 
     money = stoi(readFromFile("money"));
     stage = Stage(textures);
     startNextStage();
 
     scaleUI();
-    scaleEntities();
 }
 
 
@@ -152,43 +140,24 @@ int Gameplay::display() {
 }
 
 void Gameplay::scaleUI() {
-    float scale;
-    if (fhd) {
-        scale = 1.5f;
-        UIsprites["background"].setTexture(textures["backgroundFHD"]);
-    }
-    else {
-        scale = 1;
-        UIsprites["background"].setTexture(textures["background"]);
-    }
+    UIsprites["bullet0_UI"].setScale(0.41f, 0.41f);
+    UIsprites["bullet1_UI"].setScale(0.335f, 0.335f);
+    UIsprites["health_UI"].setScale(0.65f, 0.65f);
+    UIsprites["healthbar_UI"].setScale(0.65f, 0.65f);
+    UIsprites["money_UI"].setScale(0.4f, 0.4f);
+    texts["money"].setCharacterSize((unsigned)(23));
+    texts["stage"].setCharacterSize((unsigned)(40));
 
-    UIsprites["bullet0_UI"].setScale(0.41f * scale, 0.41f * scale);
-    UIsprites["bullet1_UI"].setScale(0.335f * scale, 0.335f * scale);
-    UIsprites["health_UI"].setScale(0.65f * scale, 0.65f * scale);
-    UIsprites["healthbar_UI"].setScale(0.65f * scale, 0.65f * scale);
-    UIsprites["money_UI"].setScale(0.4f * scale, 0.4f * scale);
-    texts["money"].setCharacterSize((unsigned)(23 * scale));
-    texts["stage"].setCharacterSize((unsigned)(40 * scale));
-
-    UIsprites["bullet0_UI"].setPosition(905 * scale, 645 * scale);
-    UIsprites["bullet1_UI"].setPosition(970 * scale, 645 * scale);
-    UIsprites["health_UI"].setPosition(1050 * scale, 635 * scale);
-    UIsprites["healthbar_UI"].setPosition(1080 * scale, 662 * scale);
-    texts["money"].setPosition(((1280 * scale) - texts["money"].getLocalBounds().width) / 1.017f,
-                               ((720 * scale) - texts["money"].getLocalBounds().height) / 50);
-    UIsprites["money_UI"].setPosition(texts["money"].getGlobalBounds().left - (45 * scale),
-                                     ((720 * scale) - texts["money"].getLocalBounds().height) / 55);
-    texts["stage"].setPosition(((1280 * scale) - texts["stage"].getLocalBounds().width) / 2,
-                               ((720 * scale) - texts["stage"].getLocalBounds().height) / 3.5f);
-}
-
-void Gameplay::scaleEntities() {
-    if (fhd) {
-        player.setScale(0.375f, 0.375f);
-    }
-    else {
-        player.setScale(0.25f, 0.25f);
-    }
+    UIsprites["bullet0_UI"].setPosition(905, 645);
+    UIsprites["bullet1_UI"].setPosition(970, 645);
+    UIsprites["health_UI"].setPosition(1050, 635);
+    UIsprites["healthbar_UI"].setPosition(1080, 662);
+    texts["money"].setPosition((1280 - texts["money"].getLocalBounds().width) / 1.017f,
+                               (720 - texts["money"].getLocalBounds().height) / 50);
+    UIsprites["money_UI"].setPosition(texts["money"].getGlobalBounds().left - 45,
+                                     (720 - texts["money"].getLocalBounds().height) / 55);
+    texts["stage"].setPosition((1280 - texts["stage"].getLocalBounds().width) / 2,
+                               (720 - texts["stage"].getLocalBounds().height) / 3.5f);
 }
 
 void Gameplay::updateEntityPosition(float time) {

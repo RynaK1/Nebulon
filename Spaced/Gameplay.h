@@ -31,12 +31,10 @@ private:
 	sf::FloatRect boundary;
 	Stage stage;
 	int money;
-	bool fhd;
 public:
 	Gameplay(sf::RenderWindow* window);
 	int display();
 	void scaleUI();
-	void scaleEntities();
 	void updateEntityPosition(float time);
 	void updateEntityCollision();
 	bool checkBossDNE();

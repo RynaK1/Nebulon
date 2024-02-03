@@ -28,7 +28,6 @@ private:
 	std::map<std::string, sf::Text> UI_main;
 	std::map<std::string, sf::Text> UI_options;
 	std::map<std::string, sf::RectangleShape> UI_options2;
-	bool fhd;
 	int win_x;
 	int win_y;
 
@@ -38,7 +37,6 @@ public:
 	Menu(sf::RenderWindow* window);
 	int displayMain();
 	int displayOptions();
-	void resolutionReset(bool fhd);
 	void loadUIMain();
 	void loadUIOptions();
 	void highlightMain(sf::Vector2i mousePos);
@@ -47,5 +45,4 @@ public:
 	int buttonPressedOptions(sf::Vector2i mousePos);
 	void spawnEntities();
 	void updateEntityPosition();
-	void changeEntityFHD(bool fhd);
 };

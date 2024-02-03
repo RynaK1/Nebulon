@@ -41,6 +41,8 @@ void Stage::spawn(std::vector<Enemy*>* enemies) {
 	float time = std::round(10 * clock.getElapsedTime().asSeconds()) / 10; //round to tenths
 	float boss_time = std::round(10 * boss_clock.getElapsedTime().asSeconds()) / 10; //round to tenths
 
+	size_t before_size = enemies->size();
+
 	switch (stage_num) {
 	case 1: 
 		if (boss_spawned == false && boss_time == 1) {

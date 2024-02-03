@@ -11,17 +11,9 @@
 using namespace std;
 
 int main() {
-    // window resolution
+    sf::RenderWindow window(sf::VideoMode(1280, 720), "Nebulon", sf::Style::Close);
+
     int go = GO_MAIN_MENU; //which screen to go to
-    string res = readFromFile("resolution");
-    int win_x = stoi(res.substr(0, res.find('x')));
-    int win_y = stoi(res.substr(res.find('x') + 1));
-
-    sf::RenderWindow window(sf::VideoMode(win_x, win_y), "Nebulon", sf::Style::Close);
-    if (res.compare("1920x1080") == 0) {
-        window.setPosition(sf::Vector2i(-8, -31)); //position correction for HD
-    }
-
     while (window.isOpen()) {
         switch (go) {
         case GO_MAIN_MENU: {

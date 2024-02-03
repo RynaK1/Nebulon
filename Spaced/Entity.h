@@ -21,6 +21,7 @@ struct Equation {
 };
 
 
+
 class Entity {
 protected:
 	sf::Sprite sprite;
@@ -45,8 +46,8 @@ public:
 	void push_back(Equation eq);
 	void update(float time);
 	float calcYPosition(float x);
-	void changeResolution(bool fhd);
 };
+
 
 
 class GameEntity : public Entity {
@@ -84,6 +85,7 @@ public:
 };
 
 
+
 class Enemy : public GameEntity {
 protected:
 	int attackType;
@@ -101,6 +103,7 @@ public:
 	bool getIsBoss();
 	void attack(std::map<std::string, sf::Texture>& textures, std::vector<GameEntity*>* enemy_bullets);
 };
+
 
 
 class EnemyFactory {
