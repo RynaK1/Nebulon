@@ -4,12 +4,6 @@
 Menu::Menu(sf::RenderWindow* window) {
     this->window = window;
 
-    //entity manager flags for timed spawn
-    int em_flags_size = sizeof(le_flags);
-    for (int i = 0; i < em_flags_size; i++) {
-        le_flags[i] = false;
-    }
-
     //text font
     if (!font.loadFromFile("../Resources/Textures/AlfaSlabOne-Regular.ttf")) {
         std::cerr << "Font load error <MENU>" << std::endl;
@@ -40,8 +34,15 @@ Menu::Menu(sf::RenderWindow* window) {
         std::cerr << "Textures load error <MENU>" << std::endl;
     }
 
-    background.setTexture(textures["background"]);
-    transparent.setTexture(textures["transparent"]);
+    UIsprites["background"].setTexture(textures["background"]);
+    UIsprites["transparent"].setTexture(textures["transparent"]);
+
+    //entity manager flags for timed spawn
+    int entities_flags_size = sizeof(entities_flags);
+    for (int i = 0; i < entities_flags_size; i++) {
+        entities_flags[i] = false;
+    }
+
     win_x = 1280;
     win_y = 720;
 
@@ -60,7 +61,7 @@ int Menu::displayMain() {
 
             //highlight button if mouse is hovered over it
             sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
-            highlightMain(mousePos);
+            highlightButtonMain(mousePos);
 
             // button actions
             if (evnt.type == sf::Event::MouseButtonReleased && evnt.mouseButton.button == sf::Mouse::Left) {
@@ -80,14 +81,14 @@ int Menu::displayMain() {
         updateEntityPosition();
 
         window->clear();
-        window->draw(background);
+        window->draw(UIsprites["background"]);
         //drawing ships in front and behind buildings
         //behind
         size_t entities_back_size = entities_back.size();
         for (int i = 0; i < entities_back_size; i++) {
             window->draw(entities_back[i].getSprite());
         }
-        window->draw(transparent);
+        window->draw(UIsprites["transparent"]);
         //front
         size_t entities_front_size = entities_front.size();
         for (int i = 0; i < entities_front_size; i++) {
@@ -116,39 +117,9 @@ int Menu::displayOptions() {
                 break;
             }
 
-            //highlight button if mouse is hovered over it
             sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
-            highlightOptions(mousePos);
-
-            //mouse tracker alternative for volume slider
-            if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-                if (buttonBounds(mousePos, UI_options2["mvol_bar"])) {
-                    UI_options2["mvol_knob"].setPosition((float)mousePos.x, (win_y - UI_options2["mvol_bar"].getLocalBounds().height) / 1.89f);
-                    float mvol_num = calcVolPercent((float)mousePos.x, UI_options2["mvol_bar"].getPosition().x);
-                    writeToFile(std::to_string(mvol_num), "main_volume");
-
-                    sf::Vector2f sounds = calcVolTotal();
-                    music.setVolume(sounds.x);
-                    sfx.setVolume(sounds.y);             
-                    UI_options["mvol_num_txt"].setString(getVolPercentString(mvol_num));
-                } 
-                else if (buttonBounds(mousePos, UI_options2["svol_bar"])) {
-                    UI_options2["svol_knob"].setPosition((float)mousePos.x, (win_y - UI_options2["svol_bar"].getLocalBounds().height) / 1.585f);
-                    float svol_num = calcVolPercent((float)mousePos.x, UI_options2["svol_bar"].getPosition().x);
-                    writeToFile(std::to_string(svol_num), "sfx_volume");
-
-                    sfx.setVolume(calcVolTotal().y);
-                    UI_options["svol_num_txt"].setString(getVolPercentString(svol_num));
-                }
-                else if (buttonBounds(mousePos, UI_options2["muvol_bar"])) {
-                    UI_options2["muvol_knob"].setPosition((float)mousePos.x, (win_y - UI_options2["muvol_bar"].getLocalBounds().height) / 1.585f);
-                    float muvol_num = calcVolPercent((float)mousePos.x, UI_options2["muvol_bar"].getPosition().x);
-                    writeToFile(std::to_string(muvol_num), "music_volume");
-
-                    music.setVolume(calcVolTotal().x);
-                    UI_options["muvol_num_txt"].setString(getVolPercentString(muvol_num));
-                }
-            }
+            highlightButtonOptions(mousePos);
+            volumeSliderOptions(mousePos);
 
             // button actions
             if (evnt.type == sf::Event::MouseButtonReleased && evnt.mouseButton.button == sf::Mouse::Left) {
@@ -161,13 +132,13 @@ int Menu::displayOptions() {
         updateEntityPosition();
 
         window->clear();
-        window->draw(background);
+        window->draw(UIsprites["background"]);
         //drawing ships in front and behind buildings
         size_t entities_back_size = entities_back.size();
         for (int i = 0; i < entities_back_size; i++) {
             window->draw(entities_back[i].getSprite());
         }
-        window->draw(transparent);
+        window->draw(UIsprites["transparent"]);
         //front
         size_t entities_front_size = entities_front.size();
         for (int i = 0; i < entities_front_size; i++) {
@@ -197,17 +168,17 @@ int Menu::displayOptions() {
     return QUIT;
 }
 
-void Menu::highlightMain(sf::Vector2i mousePos) {
-    if (buttonBounds(mousePos, UI_main["start_txt"])) {
+void Menu::highlightButtonMain(sf::Vector2i mousePos) {
+    if (buttonBounds(window->mapPixelToCoords(mousePos), UI_main["start_txt"])) {
         UI_main["start_txt"].setFillColor(sf::Color::Red);
     }
-    else if (buttonBounds(mousePos, UI_main["options_txt"])) {
+    else if (buttonBounds(window->mapPixelToCoords(mousePos), UI_main["options_txt"])) {
         UI_main["options_txt"].setFillColor(sf::Color::Red);
     }
-    else if (buttonBounds(mousePos, UI_main["highscores_txt"])) {
+    else if (buttonBounds(window->mapPixelToCoords(mousePos), UI_main["highscores_txt"])) {
         UI_main["highscores_txt"].setFillColor(sf::Color::Red);
     }
-    else if (buttonBounds(mousePos, UI_main["quit_txt"])) {
+    else if (buttonBounds(window->mapPixelToCoords(mousePos), UI_main["quit_txt"])) {
         UI_main["quit_txt"].setFillColor(sf::Color::Red);
     }
     else {
@@ -218,26 +189,26 @@ void Menu::highlightMain(sf::Vector2i mousePos) {
     }
 }
 
-void Menu::highlightOptions(sf::Vector2i mousePos) {
-    if (buttonBounds(mousePos, UI_options2["mvol_knob"])) {
+void Menu::highlightButtonOptions(sf::Vector2i mousePos) {
+    if (buttonBounds(window->mapPixelToCoords(mousePos), UI_options2["mvol_knob"])) {
         UI_options2["mvol_knob"].setFillColor(sf::Color::Red);
     }
-    else if (buttonBounds(mousePos, UI_options2["svol_knob"])) {
+    else if (buttonBounds(window->mapPixelToCoords(mousePos), UI_options2["svol_knob"])) {
         UI_options2["svol_knob"].setFillColor(sf::Color::Red);
     }
-    else if (buttonBounds(mousePos, UI_options2["muvol_knob"])) {
+    else if (buttonBounds(window->mapPixelToCoords(mousePos), UI_options2["muvol_knob"])) {
         UI_options2["muvol_knob"].setFillColor(sf::Color::Red);
     }
-    else if (buttonBounds(mousePos, UI_options["bind_txt"])) {
+    else if (buttonBounds(window->mapPixelToCoords(mousePos), UI_options["bind_txt"])) {
         UI_options["bind_txt"].setFillColor(sf::Color::Red);
     }
-    else if (buttonBounds(mousePos, UI_options["back_txt"])) {
+    else if (buttonBounds(window->mapPixelToCoords(mousePos), UI_options["back_txt"])) {
         UI_options["back_txt"].setFillColor(sf::Color::Red);
     }
-    else if (buttonBounds(mousePos, UI_options["low_txt"])) {
+    else if (buttonBounds(window->mapPixelToCoords(mousePos), UI_options["low_txt"])) {
         UI_options["low_txt"].setFillColor(sf::Color::Red);
     }
-    else if (buttonBounds(mousePos, UI_options["high_txt"])) {
+    else if (buttonBounds(window->mapPixelToCoords(mousePos), UI_options["high_txt"])) {
         UI_options["high_txt"].setFillColor(sf::Color::Red);
     }
     else {
@@ -252,16 +223,16 @@ void Menu::highlightOptions(sf::Vector2i mousePos) {
 }
 
 int Menu::buttonPressedMain(sf::Vector2i mousePos) {
-    if (buttonBounds(mousePos, UI_main["start_txt"])) {
+    if (buttonBounds(window->mapPixelToCoords(mousePos), UI_main["start_txt"])) {
         sfx.play();
         music.stop();
         return GO_GAMEPLAY;
     }
-    else if (buttonBounds(mousePos, UI_main["options_txt"])) {
+    else if (buttonBounds(window->mapPixelToCoords(mousePos), UI_main["options_txt"])) {
         sfx.play();
         return GO_OPTIONS_MENU;
     }
-    else if (buttonBounds(mousePos, UI_main["quit_txt"])) {
+    else if (buttonBounds(window->mapPixelToCoords(mousePos), UI_main["quit_txt"])) {
         sfx.play();
         return QUIT;
     }
@@ -269,19 +240,61 @@ int Menu::buttonPressedMain(sf::Vector2i mousePos) {
 }
 
 int Menu::buttonPressedOptions(sf::Vector2i mousePos) {
-    if (buttonBounds(mousePos, UI_options["bind_txt"])) {
+    if (buttonBounds(window->mapPixelToCoords(mousePos), UI_options["bind_txt"])) {
         sfx.play();
         //key binds
     }
-    else if (buttonBounds(mousePos, UI_options["back_txt"])) {
+    else if (buttonBounds(window->mapPixelToCoords(mousePos), UI_options["low_txt"])) {
+        window->setSize(sf::Vector2u(1280, 720));
+        sf::VideoMode screen_size = sf::VideoMode::getDesktopMode();
+        window->setPosition(sf::Vector2i(screen_size.width / 2 - 640, screen_size.height / 2 - 360));
+        sfx.play();
+    }
+    else if (buttonBounds(window->mapPixelToCoords(mousePos), UI_options["high_txt"])) {
+        sfx.play();
+        window->setSize(sf::Vector2u(1920, 1080));
+        sf::VideoMode screen_size = sf::VideoMode::getDesktopMode();
+        window->setPosition(sf::Vector2i(screen_size.width / 2 - 968, screen_size.height / 2 - 571));
+    }
+    else if (buttonBounds(window->mapPixelToCoords(mousePos), UI_options["back_txt"])) {
         sfx.play();
         return GO_MAIN_MENU;
     }
     return NULL;
 }
 
+void Menu::volumeSliderOptions(sf:: Vector2i mousePos) {
+    if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+        if (buttonBounds(window->mapPixelToCoords(mousePos), UI_options2["mvol_bar"])) {
+            UI_options2["mvol_knob"].setPosition(window->mapPixelToCoords(mousePos).x, 377);
+            float mvol_num = calcVolPercent(window->mapPixelToCoords(mousePos).x, UI_options2["mvol_bar"].getPosition().x);
+            writeToFile(std::to_string(mvol_num), "main_volume");
+
+            sf::Vector2f sounds = calcVolTotal();
+            music.setVolume(sounds.x);
+            sfx.setVolume(sounds.y);
+            UI_options["mvol_num_txt"].setString(getVolPercentString(mvol_num));
+        }
+        else if (buttonBounds(window->mapPixelToCoords(mousePos), UI_options2["svol_bar"])) {
+            UI_options2["svol_knob"].setPosition(window->mapPixelToCoords(mousePos).x, 450);
+            float svol_num = calcVolPercent(window->mapPixelToCoords(mousePos).x, UI_options2["svol_bar"].getPosition().x);
+            writeToFile(std::to_string(svol_num), "sfx_volume");
+
+            sfx.setVolume(calcVolTotal().y);
+            UI_options["svol_num_txt"].setString(getVolPercentString(svol_num));
+        }
+        else if (buttonBounds(window->mapPixelToCoords(mousePos), UI_options2["muvol_bar"])) {
+            UI_options2["muvol_knob"].setPosition(window->mapPixelToCoords(mousePos).x, 450);
+            float muvol_num = calcVolPercent(window->mapPixelToCoords(mousePos).x, UI_options2["muvol_bar"].getPosition().x);
+            writeToFile(std::to_string(muvol_num), "music_volume");
+
+            music.setVolume(calcVolTotal().x);
+            UI_options["muvol_num_txt"].setString(getVolPercentString(muvol_num));
+        }
+    }
+}
+
 void Menu::loadUIMain() {
-    //texts
     int lives = stoi(readFromFile("lives"));
     sf::Text lives_txt(std::to_string(lives), font);
     if (lives == 1) {
@@ -335,10 +348,10 @@ void Menu::loadUIMain() {
     quit_txt.setPosition(((win_x - quit_txt.getLocalBounds().width) / 2.0f),
         (win_y - quit_txt.getLocalBounds().height) / 1.32f);
     UI_main["quit_txt"] = quit_txt;
+    UI_main["quit_txt"] = quit_txt;
 }
 
 void Menu::loadUIOptions() {
-    //texts
     sf::Text options_txt("Options", font);
     options_txt.setCharacterSize(45);
     options_txt.setStyle(sf::Text::Bold);
@@ -466,9 +479,9 @@ void Menu::loadUIOptions() {
 void Menu::spawnEntities() {
     float MAX = 3000;
     float MIN = -1000;
-    int mem_time = (int)em_clock.getElapsedTime().asSeconds();
+    int mem_time = (int)entities_clock.getElapsedTime().asSeconds();
 
-    if (mem_time == 0 && le_flags[0] == false) {
+    if (mem_time == 0 && entities_flags[0] == false) {
         Entity e0(textures["entity0"], 1280, 35); //top right, fast
         e0.push_back(Equation(1, 0, -300, 1, 0.23f, MIN, 1, true));
         e0.setScale(0.07f, 0.07f);
@@ -495,9 +508,9 @@ void Menu::spawnEntities() {
         entities_front.push_back(e5);
         entities_back.push_back(e6);
 
-        le_flags[0] = true;
+        entities_flags[0] = true;
     }
-    else if (mem_time == 10 && le_flags[1] == false) {
+    else if (mem_time == 10 && entities_flags[1] == false) {
         Entity e2(textures["entity2"], -102, 8); //mid left, upper
         e2.push_back(Equation(0, 0, -260, 0, 0, MAX, 1, false));
         e2.setScale(0.22f, 0.22f);
@@ -509,9 +522,9 @@ void Menu::spawnEntities() {
         entities_back.push_back(e2);
         entities_front.push_back(e4);
 
-        le_flags[1] = true;
+        entities_flags[1] = true;
     }
-    else if (mem_time == 70 && le_flags[2] == false) {
+    else if (mem_time == 70 && entities_flags[2] == false) {
         Entity e0(textures["entity0"], 1280, 35); //mid left, fast
         e0.push_back(Equation(1, 0, -400, 1, 0.1f, MIN, 1, true));
         e0.setScale(0.07f, 0.07f);
@@ -520,19 +533,19 @@ void Menu::spawnEntities() {
 
         entities_front.push_back(e0);
 
-        le_flags[2] = true;
+        entities_flags[2] = true;
     }
     else if (mem_time == 140) {
-        int mem_flags_size = sizeof(le_flags);
+        int mem_flags_size = sizeof(entities_flags);
         for (int i = 0; i < mem_flags_size; i++) {
-            le_flags[i] = false;
+            entities_flags[i] = false;
         }
-        em_clock.restart();
+        entities_clock.restart();
     }
 }
 
 void Menu::updateEntityPosition() {
-    sf::FloatRect boundary(0, 0, (float)win_x, (float)win_y);
+    sf::FloatRect boundary(0, 0, 1280, 720);
     float frame_time = frame_clock.getElapsedTime().asSeconds();
     frame_clock.restart();
 
@@ -554,3 +567,15 @@ void Menu::updateEntityPosition() {
         }
     }
 }
+
+/* BUGS */
+//FIX ENEMY1 VERTICAL PATHING SPEED
+//FIX ENEMY0 WAVE ATTACK COMING OUT IN WRONG ORDER
+//FIX GAMEOVER STRAIGHT TO GAMEPLAY BECAUSE OF UI BUTTON OVERLAP
+//FIX ENEMY ATTACK POSITIONING
+
+
+
+/* IMPLEMENTATIONS */
+//ADD BOSS HEALTH UI
+

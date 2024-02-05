@@ -14,35 +14,36 @@ class Menu {
 private:
 	sf::RenderWindow* window;
 	sf::Clock frame_clock;
-	sf::Music music;
+	sf::Font font;
 	sf::Sound sfx;
 	sf::SoundBuffer sfx_buffer;
-	sf::Font font;
+	sf::Music music;
+
 	std::map<std::string, sf::Texture> textures;
-	sf::Sprite background;
-	sf::Sprite transparent;
-
-	sf::Clock em_clock;
-	bool le_flags[3];
-
+	std::map<std::string, sf::Sprite> UIsprites;
 	std::map<std::string, sf::Text> UI_main;
 	std::map<std::string, sf::Text> UI_options;
 	std::map<std::string, sf::RectangleShape> UI_options2;
-	int win_x;
-	int win_y;
 
 	std::vector<Entity> entities_front;
 	std::vector<Entity> entities_back;
+
+	sf::Clock entities_clock;
+	bool entities_flags[3];
+
+	int win_x;
+	int win_y;
 public:
 	Menu(sf::RenderWindow* window);
 	int displayMain();
 	int displayOptions();
 	void loadUIMain();
 	void loadUIOptions();
-	void highlightMain(sf::Vector2i mousePos);
-	void highlightOptions(sf::Vector2i mousePos);
+	void highlightButtonMain(sf::Vector2i mousePos);
+	void highlightButtonOptions(sf::Vector2i mousePos);
 	int buttonPressedMain(sf::Vector2i mousePos);
 	int buttonPressedOptions(sf::Vector2i mousePos);
 	void spawnEntities();
 	void updateEntityPosition();
+	void volumeSliderOptions(sf::Vector2i mousePos);
 };

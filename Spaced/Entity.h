@@ -103,13 +103,3 @@ public:
 	bool getIsBoss();
 	void attack(std::map<std::string, sf::Texture>& textures, std::vector<GameEntity*>* enemy_bullets);
 };
-
-
-
-class EnemyFactory {
-	std::map<std::string, sf::Texture> textures;
-public:
-	EnemyFactory() {}
-	EnemyFactory(std::map<std::string, sf::Texture>& textures);
-	Enemy* create(int type, float start_pos, int stage_num);
-};

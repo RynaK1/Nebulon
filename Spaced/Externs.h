@@ -47,10 +47,10 @@ std::string getVolPercentString(float percent);
 *
 * Description: Checks if the mouse position is within the boundaries of a texture.
 *			   (overloaded function specifically for sf::Text texture)
-* Parameters: sf::Vector2i mousePos: position of the mouse
+* Parameters: sf::Vector2f mousePos: position of the mouse
 *			  sf::Text shape: the text with which to check the boundaries
 */
-bool buttonBounds(sf::Vector2i mousePos, sf::Text text);
+bool buttonBounds(sf::Vector2f mousePos, sf::Text text);
 
 
 /*
@@ -61,7 +61,7 @@ bool buttonBounds(sf::Vector2i mousePos, sf::Text text);
 * Parameters: sf::Vector2i mousePos: position of the mouse
 *			  sf::RectangleShape shape: the shape with which to check the boundaries
 */
-bool buttonBounds(sf::Vector2i mousePos, sf::RectangleShape shape);
+bool buttonBounds(sf::Vector2f mousePos, sf::RectangleShape shape);
 
 
 /*

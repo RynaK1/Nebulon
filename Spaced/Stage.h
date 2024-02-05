@@ -25,6 +25,15 @@ struct EnemyEqs {
 };
 
 
+class EnemyFactory {
+	std::map<std::string, sf::Texture> textures;
+public:
+	EnemyFactory() {}
+	EnemyFactory(std::map<std::string, sf::Texture>& textures);
+	Enemy* create(int type, float start_pos, int stage_num);
+};
+
+
 class Stage {
 private:
 	EnemyFactory enemyFactory;

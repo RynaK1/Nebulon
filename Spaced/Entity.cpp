@@ -76,15 +76,14 @@ void Entity::update(float time) {
 
 	float x = sprite.getPosition().x;
 	if (eqs[0].isNegative) {
-		x -= speed * time;
+		x -= speed * eqs[0].speed_mult * time;
 	}
 	else {
-		x += speed * time;
+		x += speed * eqs[0].speed_mult * time;
 	}
 
 	if ((!eqs[0].isNegative && x >= eqs[0].x_max) ||
 		(eqs[0].isNegative && x <= eqs[0].x_max)) {
-		speed *= eqs[1].speed_mult;
 		eqs.erase(eqs.begin());
 	};
 
@@ -245,40 +244,3 @@ void Enemy::attack(std::map<std::string, sf::Texture>& textures, std::vector<Gam
 		break;
 	}
 }
-
-
-
-EnemyFactory::EnemyFactory(std::map<std::string, sf::Texture>& textures) {
-	this->textures = textures;
-}
-
-Enemy* EnemyFactory::create(int type, float start_pos, int stage_num) {
-	Enemy* enemy = nullptr;
-	float speed;
-	stage_num -= 1;
-	switch (type) {
-	case 0:
-		speed = 125 + 125 * 0.05f * (stage_num % 10);
-		enemy = new Enemy(textures["enemy0"], start_pos, speed, 15, 0, 20, false);
-		enemy->setScale(0.25f, 0.25f);
-		break;
-	case 1:
-		speed = 125 + 125 * 0.05f * (stage_num % 10);
-		enemy = new Enemy(textures["enemy1"], start_pos, speed, 20, 1, 20, false);
-		enemy->setScale(0.16f, 0.16f);
-		enemy->setRotation(180);
-		break;
-	case 100:
-		speed = 100 + 100 * 0.05f * (stage_num % 10);
-		enemy = new Enemy(textures["enemy100"], start_pos, speed, 100, 1, 34, true);
-		enemy->setScale(0.7f, 0.7f);
-		break;
-	}
-	sf::FloatRect pos = enemy->getGlobalBounds();
-	enemy->setOrigin(pos.width / 2, pos.height / 2);
-
-	return enemy;
-}
-
-
-// enemy health bar

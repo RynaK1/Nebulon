@@ -70,7 +70,7 @@ int Gameover::display(sf::RenderWindow& window) {
 
 			sf::Vector2i mousePos = sf::Mouse::getPosition(window);
 			// highlight button if mouse is over button
-			if (buttonBounds(mousePos, back_txt)) {
+			if (buttonBounds(window.mapPixelToCoords(mousePos), back_txt)) {
 				back_txt.setFillColor(sf::Color::Red);
 			}
 			else {
@@ -79,7 +79,7 @@ int Gameover::display(sf::RenderWindow& window) {
 
 			// button actions
 			if (evnt.type == sf::Event::MouseButtonPressed && evnt.mouseButton.button == sf::Mouse::Left) {
-				if (buttonBounds(mousePos, back_txt)) {
+				if (buttonBounds(window.mapPixelToCoords(mousePos), back_txt)) {
 					sfx.play();
 					return GO_MAIN_MENU;
 				}

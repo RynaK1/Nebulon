@@ -61,7 +61,7 @@ Gameplay::Gameplay(sf::RenderWindow* window) {
     stage = Stage(textures);
     startNextStage();
 
-    scaleUI();
+    loadUI();
 }
 
 
@@ -139,7 +139,7 @@ int Gameplay::display() {
     return QUIT;
 }
 
-void Gameplay::scaleUI() {
+void Gameplay::loadUI() {
     UIsprites["bullet0_UI"].setScale(0.41f, 0.41f);
     UIsprites["bullet1_UI"].setScale(0.335f, 0.335f);
     UIsprites["health_UI"].setScale(0.65f, 0.65f);
@@ -262,4 +262,6 @@ void Gameplay::stageAnimation() {
 
 
 //1. IMPLEMENT HEALTH UI FOR ENEMY BOSS
-//2. IMPLEMENT INCREASED DIFFICULTY PER STAGE
+//2. REMOVE FHD FROM OPTIONS
+//3. SET UP KEY BINDINGS?
+//4. SET UP TUTORIAL

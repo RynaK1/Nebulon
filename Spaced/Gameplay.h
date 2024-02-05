@@ -34,7 +34,7 @@ private:
 public:
 	Gameplay(sf::RenderWindow* window);
 	int display();
-	void scaleUI();
+	void loadUI();
 	void updateEntityPosition(float time);
 	void updateEntityCollision();
 	bool checkBossDNE();

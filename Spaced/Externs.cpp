@@ -19,19 +19,19 @@ std::string getVolPercentString(float percent) {
 	return main_vol;
 }
 
-bool buttonBounds(sf::Vector2i mousePos, sf::Text text) {
+bool buttonBounds(sf::Vector2f mousePos, sf::Text text) {
 	sf::FloatRect bound = text.getGlobalBounds();
-	if (bound.contains((float)mousePos.x, (float)mousePos.y)) {
+	if (bound.contains(mousePos.x, mousePos.y)) {
 		return true;
 	}
 	return false;
 }
 
-bool buttonBounds(sf::Vector2i mousePos, sf::RectangleShape shape) {
+bool buttonBounds(sf::Vector2f mousePos, sf::RectangleShape shape) {
 	sf::FloatRect bound = shape.getGlobalBounds();
 	bound.top -= 13;
 	bound.height += 20;
-	if (bound.contains((float)mousePos.x, (float)mousePos.y)) {
+	if (bound.contains(mousePos.x, mousePos.y)) {
 		return true;
 	}
 	return false;
