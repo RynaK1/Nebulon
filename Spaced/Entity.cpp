@@ -16,12 +16,10 @@ Equation::Equation(float pt, float xt, float yt, float m_xt, float m_yt, float x
 
 Entity::Entity(sf::Texture& texture, float start_pos, float speed) {
 	sprite.setTexture(texture);
+	sf::FloatRect size = sprite.getGlobalBounds();
+	sprite.setOrigin(size.width / 2, size.height / 2);
 	sprite.setPosition(start_pos, 0);
 	this->speed = speed;
-}
-
-void Entity::setOrigin(float x, float y) {
-	sprite.setOrigin(x, y);
 }
 
 void Entity::setEqs(std::vector<Equation> eqs) {
@@ -235,7 +233,7 @@ void Enemy::attack(std::map<std::string, sf::Texture>& textures, std::vector<Gam
 			attack->setRotation(180);
 			attack->setScale(3, 3);
 			std::vector<Equation> attackEq;
-			attackEq.push_back(Equation(1, -(pos.left + (pos.width / 2)), -pos.top, 1, 99, -1000, 1, true));
+			attackEq.push_back(Equation(1, -(pos.left + (pos.width / 2)), -(pos.top + (pos.height / 2)), 1, 99, -1000, 1, true));
 			attack->setEqs(attackEq);
 			enemy_bullets->push_back(attack);
 		}

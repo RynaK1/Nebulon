@@ -23,12 +23,10 @@ Enemy* EnemyFactory::create(int type, float start_pos, int stage_num) {
 		break;
 	case 100:
 		speed = 100 + 100 * 0.05f * (stage_num % 10);
-		enemy = new Enemy(textures["enemy100"], start_pos, speed, 100, 1, 34, true);
+		enemy = new Enemy(textures["enemy100"], start_pos, speed, 100, 100, 34, true);
 		enemy->setScale(0.7f, 0.7f);
 		break;
 	}
-	sf::FloatRect pos = enemy->getGlobalBounds();
-	enemy->setOrigin(pos.width / 2, pos.height / 2);
 
 	return enemy;
 }
@@ -1078,6 +1076,11 @@ EnemyEqs::EnemyEqs() {
 	
 	//E1: x^2 wave (0-6)
 	eqs.clear();
+	eqs.push_back(Equation(2, -10, -700, 0.25f, 1, MAX, 1, false));
+	e1Eqs.push_back(eqs);
+	e1Eqs_startPos.push_back(-2);
+
+	eqs.clear();
 	eqs.push_back(Equation(2, -60, -700, 0.25f, 1, MAX, 1, false));
 	e1Eqs.push_back(eqs);
 	e1Eqs_startPos.push_back(135);
@@ -1106,12 +1109,6 @@ EnemyEqs::EnemyEqs() {
 	eqs.push_back(Equation(2, -310, -700, 0.25f, 1, MAX, 1, false));
 	e1Eqs.push_back(eqs);
 	e1Eqs_startPos.push_back(1135);
-
-	eqs.clear();
-	eqs.push_back(Equation(2, -10, -700, 0.25f, 1, MAX, 1, false));
-	e1Eqs.push_back(eqs);
-	e1Eqs_startPos.push_back(-2);
-
 
 	//E1: vertical line (7-19)
 	eqs.clear();

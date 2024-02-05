@@ -99,7 +99,7 @@ int End::display(sf::RenderWindow &window) {
 			}
 
 			// button actions
-			if (evnt.type == sf::Event::MouseButtonPressed && evnt.mouseButton.button == sf::Mouse::Left) {
+			if (evnt.type == sf::Event::MouseButtonReleased && evnt.mouseButton.button == sf::Mouse::Left) {
 				if (buttonBounds(window.mapPixelToCoords(mousePos), back_txt)) {
 					sfx.play();
 					return GO_MAIN_MENU;
