@@ -1,7 +1,7 @@
 main_volume=50.000000
-music_volume=53.000000
+music_volume=0.000000
 sfx_volume=100.000000
 resolution=1280x720
 money=220
-lives=9
+lives=8
 stage=0

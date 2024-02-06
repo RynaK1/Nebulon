@@ -11,14 +11,9 @@
 using namespace std;
 
 int main() {
-    int win_x = 1280;
-    int win_y = 720;
+    sf::RenderWindow window(sf::VideoMode(1280, 720), "Nebulon");
     if (readFromFile("resolution").compare("1920x1080") == 0) {
-        win_x = 1920;
-        win_y = 1080;
-    }
-    sf::RenderWindow window(sf::VideoMode(win_x, win_y), "Nebulon");
-    if (win_x == 1920) {
+        window.setSize(sf::Vector2u(1920, 1080));
         window.setPosition(sf::Vector2i(-8, -31)); //position correction for HD
     }
 

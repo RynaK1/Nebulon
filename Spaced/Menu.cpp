@@ -248,6 +248,7 @@ int Menu::buttonPressedOptions(sf::Vector2i mousePos) {
         window->setSize(sf::Vector2u(1280, 720));
         sf::VideoMode screen_size = sf::VideoMode::getDesktopMode();
         window->setPosition(sf::Vector2i(screen_size.width / 2 - 640, screen_size.height / 2 - 360));
+        writeToFile("1280x720", "resolution");
         sfx.play();
     }
     else if (buttonBounds(window->mapPixelToCoords(mousePos), UI_options["high_txt"])) {
@@ -255,6 +256,7 @@ int Menu::buttonPressedOptions(sf::Vector2i mousePos) {
         window->setSize(sf::Vector2u(1920, 1080));
         sf::VideoMode screen_size = sf::VideoMode::getDesktopMode();
         window->setPosition(sf::Vector2i(screen_size.width / 2 - 968, screen_size.height / 2 - 571));
+        writeToFile("1920x1080", "resolution");
     }
     else if (buttonBounds(window->mapPixelToCoords(mousePos), UI_options["back_txt"])) {
         sfx.play();
