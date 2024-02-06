@@ -37,7 +37,6 @@ public:
 	void loadUI();
 	void updateEntityPosition(float time);
 	void updateEntityCollision();
-	bool checkBossDNE();
 	void startNextStage();
 	void stageAnimation();
 };

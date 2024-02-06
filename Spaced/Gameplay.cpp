@@ -30,6 +30,8 @@ Gameplay::Gameplay(sf::RenderWindow* window) {
     texts["stage"] = sf::Text("Stage 0", font);
     texts["money"] = sf::Text(readFromFile("money"), font);
     texts["money"].setFillColor(sf::Color::White);
+    texts["boss_health"] = sf::Text("100", font);
+    texts["boss_health"].setFillColor(sf::Color::White);
 
     //textures
     if (!textures["background"].loadFromFile("../Resources/Textures/BackgroundGame.png") ||
@@ -53,6 +55,7 @@ Gameplay::Gameplay(sf::RenderWindow* window) {
     UIsprites["healthbar_UI"].setTexture(textures["healthbar_UI"]);
     UIsprites["money_UI"].setTexture(textures["money_UI"]);
     UIsprites["background"].setTexture(textures["background"]);
+    UIsprites["boss_healthbar_UI"].setTexture(textures["healthbar_UI"]);
 
     boundary = sf::FloatRect(0, 0, 1280, 720);
     player = Player(textures["player"], sf::Vector2f(640, 500), 400, 100);
@@ -86,9 +89,8 @@ int Gameplay::display() {
 
         //entity updates
         stage.spawn(&enemies);
-        size_t enemies_size = enemies.size();
-        for (int i = 0; i < enemies_size; i++) {
-            enemies[i]->attack(textures, &enemy_bullets);
+        for (Enemy* enemy : enemies) {
+            enemy->attack(textures, &enemy_bullets);
         }
         updateEntityPosition(time);
         updateEntityCollision();
@@ -115,25 +117,34 @@ int Gameplay::display() {
         //draw updated graphics
         window->clear();
         window->draw(UIsprites["background"]);
-        enemies_size = enemies.size();
-        for (int i = 0; i < enemies_size; i++) {
-            window->draw(enemies[i]->getSprite());
+        for (Enemy* enemy : enemies) {
+            window->draw(enemy->getSprite());
         }
-        size_t player_bullets_size = player_bullets.size();
-        for (int i = 0; i < player_bullets_size; i++) {
-            window->draw(player_bullets[i]->getSprite());
+        for (GameEntity* pb: player_bullets) {
+            window->draw(pb->getSprite());
         }
-        size_t enemy_bullets_size = enemy_bullets.size();
-        for (int i = 0; i < enemy_bullets_size; i++) {
-            window->draw(enemy_bullets[i]->getSprite());
+        for (GameEntity* eb : enemy_bullets) {
+            window->draw(eb->getSprite());
         }
         window->draw(player.getSprite());
         window->draw(UIsprites["health_UI"]);
         UIsprites["healthbar_UI"].setTextureRect(sf::IntRect(676, 968, 246 * player.getHealth() / 100, 24));
         window->draw(UIsprites["healthbar_UI"]);
-        window->draw(texts["money"]);
+        if (!enemies.empty()) {
+            if (enemies[0]->getIsBoss()) {
+                UIsprites["boss_healthbar_UI"].setTextureRect(sf::IntRect(676, 968, 246 * enemies[0]->getHealth() / 100, 24));
+                texts["boss_health"].setString(std::to_string(enemies[0]->getHealth()));
+            }
+            else {
+                UIsprites["boss_healthbar_UI"].setTextureRect(sf::IntRect(676, 968, 0, 24));
+                texts["boss_health"].setString("0");
+            }
+        }
+        window->draw(UIsprites["boss_healthbar_UI"]);
         window->draw(UIsprites["money_UI"]);
+        window->draw(texts["boss_health"]);
         window->draw(texts["stage"]);
+        window->draw(texts["money"]);
         window->display();
     }
     return QUIT;
@@ -145,19 +156,21 @@ void Gameplay::loadUI() {
     UIsprites["health_UI"].setScale(0.65f, 0.65f);
     UIsprites["healthbar_UI"].setScale(0.65f, 0.65f);
     UIsprites["money_UI"].setScale(0.4f, 0.4f);
+    UIsprites["boss_healthbar_UI"].setScale(5.07f, 0.4f);
     texts["money"].setCharacterSize((unsigned)(23));
     texts["stage"].setCharacterSize((unsigned)(40));
+    texts["boss_health"].setCharacterSize((unsigned)20);
 
     UIsprites["bullet0_UI"].setPosition(905, 645);
     UIsprites["bullet1_UI"].setPosition(970, 645);
     UIsprites["health_UI"].setPosition(1050, 635);
     UIsprites["healthbar_UI"].setPosition(1080, 662);
-    texts["money"].setPosition((1280 - texts["money"].getLocalBounds().width) / 1.017f,
-                               (720 - texts["money"].getLocalBounds().height) / 50);
-    UIsprites["money_UI"].setPosition(texts["money"].getGlobalBounds().left - 45,
-                                     (720 - texts["money"].getLocalBounds().height) / 55);
+    texts["boss_health"].setPosition(620, 5);
+    texts["money"].setPosition(1210, 30);
+    UIsprites["money_UI"].setPosition(1170, 30);
     texts["stage"].setPosition((1280 - texts["stage"].getLocalBounds().width) / 2,
                                (720 - texts["stage"].getLocalBounds().height) / 3.5f);
+    UIsprites["boss_healthbar_UI"].setPosition(15, 12);
 }
 
 void Gameplay::updateEntityPosition(float time) {
@@ -195,18 +208,16 @@ void Gameplay::updateEntityPosition(float time) {
 void Gameplay::updateEntityCollision() {
     //enemy to player and player_bullets
     for (int i = 0; i < enemies.size(); i++) {
-        //enemy to player
+        //enemy hits player
         if (player.getGlobalBounds().intersects(enemies[i]->getGlobalBounds())) {
             player.hit(enemies[i]->getDmg());
         }
 
         for (int j = 0; j < player_bullets.size(); j++) {
-            //player bullets to enemy
+            //player bullets hits enemy
             if (player_bullets[j]->getGlobalBounds().intersects(enemies[i]->getGlobalBounds())) {
                 enemies[i]->hit(player_bullets[j]->getDmg());
-                //remove enemy if dead
                 if (enemies[i]->getHealth() <= 0) {
-                    //check if dead enemy is boss
                     if (enemies[i]->getIsBoss()) {
                         startNextStage();
                     }
@@ -214,14 +225,13 @@ void Gameplay::updateEntityCollision() {
                     enemies.erase(enemies.begin() + i);
                 }
 
-                //remove player bullet
                 delete player_bullets[j];
                 player_bullets.erase(player_bullets.begin() + j);
             }
         }
     }
 
-    //enemy bullets to player
+    //enemy bullets hits player
     for (int i = 0; i < enemy_bullets.size(); i++) {
         if (player.getGlobalBounds().intersects(enemy_bullets[i]->getGlobalBounds())) {
             player.setHealth(player.getHealth() - enemy_bullets[i]->getDmg());
@@ -229,23 +239,12 @@ void Gameplay::updateEntityCollision() {
             enemy_bullets.erase(enemy_bullets.begin() + i);
         }
     }
-
 }
 
 void Gameplay::startNextStage() {
     stage.nextStage();
     texts["stage"].setString("Stage " + std::to_string(stage.getStage_num()));
     animation_clock.restart();
-}
-
-bool Gameplay::checkBossDNE() {
-    size_t enemies_size = enemies.size();
-    for (int i = 0; i < enemies_size; i++) {
-        if (enemies[i]->getIsBoss()) {
-            return false;
-        }
-    }
-    return true;
 }
 
 void Gameplay::stageAnimation() {

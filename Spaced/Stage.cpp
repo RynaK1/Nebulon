@@ -77,11 +77,11 @@ void Stage::spawn(std::vector<Enemy*>* enemies) {
 
 	switch (stage_num) {
 	case 1: 
-		if (boss_spawned == false && boss_time == 1) {
+		if (boss_spawned == false && boss_time == 0.7f) {
 			rand = std::rand() % enemyEqs.eBossEqs_size;
 			Enemy* enemy = enemyFactory.create(100, enemyEqs.eBossEqs_startPos[rand], stage_num);
 			enemy->setEqs(enemyEqs.eBossEqs[rand]);
-			enemies->push_back(enemy);
+			enemies->insert(enemies->begin(), enemy);
 
 			boss_spawned = true;
 		}
@@ -98,45 +98,45 @@ void Stage::spawn(std::vector<Enemy*>* enemies) {
 
 			enemy_spawned[0] = true;
 		}
-		else if (enemy_spawned[1] == false && time == 3) {
+		else if (enemy_spawned[1] == false && time == 3.3f) {
 			rand = std::rand() % enemyEqs.e0Eqs_size;
 			Enemy* enemy = enemyFactory.create(0, enemyEqs.e0Eqs_startPos[rand], stage_num);
 			enemy->setEqs(enemyEqs.e0Eqs[rand]);
 			enemies->push_back(enemy);
 
-			enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[0], stage_num);
-			enemy->setEqs(enemyEqs.e1Eqs[0]);
+			enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[1], stage_num);
+			enemy->setEqs(enemyEqs.e1Eqs[1]);
 			enemies->push_back(enemy);
 
 			enemy_spawned[1] = true;
 		}
-		else if (enemy_spawned[2] == false && time == 4.5f) {
-			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[1], stage_num);
-			enemy->setEqs(enemyEqs.e1Eqs[1]);
-			enemies->push_back(enemy);
-
-			enemy_spawned[2] = true;
-		}
-		else if (enemy_spawned[3] == false && time == 6) {
+		else if (enemy_spawned[2] == false && time == 4.7f) {
 			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[2], stage_num);
 			enemy->setEqs(enemyEqs.e1Eqs[2]);
 			enemies->push_back(enemy);
 
-			enemy_spawned[3] = true;
+			enemy_spawned[2] = true;
 		}
-		else if (enemy_spawned[4] == false && time == 7.5f) {
+		else if (enemy_spawned[3] == false && time == 6.2f) {
 			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[3], stage_num);
 			enemy->setEqs(enemyEqs.e1Eqs[3]);
 			enemies->push_back(enemy);
-			enemy_spawned[4] = true;
+
+			enemy_spawned[3] = true;
 		}
-		else if (enemy_spawned[5] == false && time == 9) {
+		else if (enemy_spawned[4] == false && time == 7.7f) {
 			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[4], stage_num);
 			enemy->setEqs(enemyEqs.e1Eqs[4]);
 			enemies->push_back(enemy);
+			enemy_spawned[4] = true;
+		}
+		else if (enemy_spawned[5] == false && time == 9.2f) {
+			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[5], stage_num);
+			enemy->setEqs(enemyEqs.e1Eqs[5]);
+			enemies->push_back(enemy);
 			enemy_spawned[5] = true;
 		}
-		else if (time == 10) {
+		else if (time == 11) {
 			int eflags_size = sizeof(enemy_spawned);
 			for (int i = 0; i < eflags_size; i++) {
 				enemy_spawned[i] = false;
@@ -145,11 +145,11 @@ void Stage::spawn(std::vector<Enemy*>* enemies) {
 		}
 		break;
 	case 2:
-		if (boss_spawned == false && boss_time == 1) {
+		if (boss_spawned == false && boss_time == 0.7f) {
 			rand = std::rand() % enemyEqs.eBossEqs_size;
 			Enemy* enemy = enemyFactory.create(100, enemyEqs.eBossEqs_startPos[rand], stage_num);
 			enemy->setEqs(enemyEqs.eBossEqs[rand]);
-			enemies->push_back(enemy);
+			enemies->insert(enemies->begin(), enemy);
 
 			boss_spawned = true;
 		}
@@ -166,45 +166,47 @@ void Stage::spawn(std::vector<Enemy*>* enemies) {
 
 			enemy_spawned[0] = true;
 		}
-		else if (enemy_spawned[1] == false && time == 3) {
+		else if (enemy_spawned[1] == false && time == 2.8f) {
 			rand = std::rand() % enemyEqs.e0Eqs_size;
 			Enemy* enemy = enemyFactory.create(0, enemyEqs.e0Eqs_startPos[rand], stage_num);
 			enemy->setEqs(enemyEqs.e0Eqs[rand]);
 			enemies->push_back(enemy);
-
-			enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[0], stage_num);
-			enemy->setEqs(enemyEqs.e1Eqs[0]);
-			enemies->push_back(enemy);
-
 			enemy_spawned[1] = true;
 		}
-		else if (enemy_spawned[2] == false && time == 4.4f) {
+		else if (enemy_spawned[2] == false && time == 3.2f) {
 			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[1], stage_num);
 			enemy->setEqs(enemyEqs.e1Eqs[1]);
 			enemies->push_back(enemy);
 
 			enemy_spawned[2] = true;
 		}
-		else if (enemy_spawned[3] == false && time == 5.8f) {
+		else if (enemy_spawned[3] == false && time == 4.4f) {
 			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[2], stage_num);
 			enemy->setEqs(enemyEqs.e1Eqs[2]);
 			enemies->push_back(enemy);
 
 			enemy_spawned[3] = true;
 		}
-		else if (enemy_spawned[4] == false && time == 7.2f) {
+		else if (enemy_spawned[4] == false && time == 5.8f) {
 			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[3], stage_num);
 			enemy->setEqs(enemyEqs.e1Eqs[3]);
 			enemies->push_back(enemy);
 
 			enemy_spawned[4] = true;
 		}
-		else if (enemy_spawned[5] == false && time == 8.6f) {
+		else if (enemy_spawned[5] == false && time == 7.2f) {
 			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[4], stage_num);
 			enemy->setEqs(enemyEqs.e1Eqs[4]);
 			enemies->push_back(enemy);
 
 			enemy_spawned[5] = true;
+		}
+		else if (enemy_spawned[6] == false && time == 8.6f) {
+			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[5], stage_num);
+			enemy->setEqs(enemyEqs.e1Eqs[5]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[6] = true;
 		}
 		else if (time == 9.5f) {
 			int eflags_size = sizeof(enemy_spawned);
@@ -215,11 +217,11 @@ void Stage::spawn(std::vector<Enemy*>* enemies) {
 		}
 		break;
 	case 3:
-		if (boss_spawned == false && boss_time == 1) {
+		if (boss_spawned == false && boss_time == 0.7f) {
 			rand = std::rand() % enemyEqs.eBossEqs_size;
 			Enemy* enemy = enemyFactory.create(100, enemyEqs.eBossEqs_startPos[rand], stage_num);
 			enemy->setEqs(enemyEqs.eBossEqs[rand]);
-			enemies->push_back(enemy);
+			enemies->insert(enemies->begin(), enemy);
 
 			boss_spawned = true;
 		}
@@ -235,53 +237,56 @@ void Stage::spawn(std::vector<Enemy*>* enemies) {
 
 			enemy_spawned[0] = true;
 		}
-		else if (enemy_spawned[6] == false && time == 2) {
+		else if (enemy_spawned[7] == false && time == 2.2f) {
 			rand = std::rand() % enemyEqs.e0Eqs_size;
 			Enemy* enemy = enemyFactory.create(0, enemyEqs.e0Eqs_startPos[rand], stage_num);
 			enemy->setEqs(enemyEqs.e0Eqs[rand]);
 			enemies->push_back(enemy);
 
-			enemy_spawned[6] = true;
+			enemy_spawned[7] = true;
 		}
-		else if (enemy_spawned[1] == false && time == 3) {
+		else if (enemy_spawned[1] == false && time == 2.8f) {
 			rand = std::rand() % enemyEqs.e0Eqs_size;
 			Enemy* enemy = enemyFactory.create(0, enemyEqs.e0Eqs_startPos[rand], stage_num);
 			enemy->setEqs(enemyEqs.e0Eqs[rand]);
-			enemies->push_back(enemy);
-
-			enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[0], stage_num);
-			enemy->setEqs(enemyEqs.e1Eqs[0]);
 			enemies->push_back(enemy);
 
 			enemy_spawned[1] = true;
 		}
-		else if (enemy_spawned[2] == false && time == 4.3f) {
+		else if (enemy_spawned[2] == false && time == 3) {
 			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[1], stage_num);
 			enemy->setEqs(enemyEqs.e1Eqs[1]);
 			enemies->push_back(enemy);
 
 			enemy_spawned[2] = true;
 		}
-		else if (enemy_spawned[3] == false && time == 5.6f) {
+		else if (enemy_spawned[3] == false && time == 4.3f) {
 			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[2], stage_num);
 			enemy->setEqs(enemyEqs.e1Eqs[2]);
 			enemies->push_back(enemy);
 
 			enemy_spawned[3] = true;
 		}
-		else if (enemy_spawned[4] == false && time == 6.9f) {
+		else if (enemy_spawned[4] == false && time == 5.6f) {
 			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[3], stage_num);
 			enemy->setEqs(enemyEqs.e1Eqs[3]);
 			enemies->push_back(enemy);
 
 			enemy_spawned[4] = true;
 		}
-		else if (enemy_spawned[5] == false && time == 8.2f) {
+		else if (enemy_spawned[5] == false && time == 6.9f) {
 			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[4], stage_num);
 			enemy->setEqs(enemyEqs.e1Eqs[4]);
 			enemies->push_back(enemy);
 
 			enemy_spawned[5] = true;
+		}
+		else if (enemy_spawned[6] == false && time == 8.2f) {
+			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[5], stage_num);
+			enemy->setEqs(enemyEqs.e1Eqs[5]);
+			enemies->push_back(enemy);
+
+			enemy_spawned[6] = true;
 		}
 		else if (time == 9) {
 			int eflags_size = sizeof(enemy_spawned);
@@ -292,11 +297,11 @@ void Stage::spawn(std::vector<Enemy*>* enemies) {
 		}
 		break;
 	case 4:
-		if (boss_spawned == false && boss_time == 1) {
+		if (boss_spawned == false && boss_time == 0.7f) {
 			rand = std::rand() % enemyEqs.eBossEqs_size;
 			Enemy* enemy = enemyFactory.create(100, enemyEqs.eBossEqs_startPos[rand], stage_num);
 			enemy->setEqs(enemyEqs.eBossEqs[rand]);
-			enemies->push_back(enemy);
+			enemies->insert(enemies->begin(), enemy);
 
 			boss_spawned = true;
 		}
@@ -313,7 +318,7 @@ void Stage::spawn(std::vector<Enemy*>* enemies) {
 
 			enemy_spawned[0] = true;
 		}
-		else if (enemy_spawned[6] == false && time == 2) {
+		else if (enemy_spawned[6] == false && time == 1.6f) {
 			rand = std::rand() % enemyEqs.e0Eqs_size;
 			Enemy* enemy = enemyFactory.create(0, enemyEqs.e0Eqs_startPos[rand], stage_num);
 			enemy->setEqs(enemyEqs.e0Eqs[rand]);
@@ -327,36 +332,36 @@ void Stage::spawn(std::vector<Enemy*>* enemies) {
 			enemy->setEqs(enemyEqs.e0Eqs[rand]);
 			enemies->push_back(enemy);
 
-			enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[0], stage_num);
-			enemy->setEqs(enemyEqs.e1Eqs[0]);
+			enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[1], stage_num);
+			enemy->setEqs(enemyEqs.e1Eqs[1]);
 			enemies->push_back(enemy);
 
 			enemy_spawned[1] = true;
 		}
 		else if (enemy_spawned[2] == false && time == 4.2f) {
-			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[1], stage_num);
-			enemy->setEqs(enemyEqs.e1Eqs[1]);
+			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[2], stage_num);
+			enemy->setEqs(enemyEqs.e1Eqs[2]);
 			enemies->push_back(enemy);
 
 			enemy_spawned[2] = true;
 		}
 		else if (enemy_spawned[3] == false && time == 5.4f) {
-			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[2], stage_num);
-			enemy->setEqs(enemyEqs.e1Eqs[2]);
+			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[3], stage_num);
+			enemy->setEqs(enemyEqs.e1Eqs[3]);
 			enemies->push_back(enemy);
 
 			enemy_spawned[3] = true;
 		}
 		else if (enemy_spawned[4] == false && time == 6.6f) {
-			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[3], stage_num);
-			enemy->setEqs(enemyEqs.e1Eqs[3]);
+			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[4], stage_num);
+			enemy->setEqs(enemyEqs.e1Eqs[4]);
 			enemies->push_back(enemy);
 
 			enemy_spawned[4] = true;
 		}
 		else if (enemy_spawned[5] == false && time == 7.8f) {
-			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[4], stage_num);
-			enemy->setEqs(enemyEqs.e1Eqs[4]);
+			Enemy* enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[5], stage_num);
+			enemy->setEqs(enemyEqs.e1Eqs[5]);
 			enemies->push_back(enemy);
 
 			enemy_spawned[5] = true;
@@ -370,11 +375,11 @@ void Stage::spawn(std::vector<Enemy*>* enemies) {
 		}
 		break;
 	case 5:
-		if (boss_spawned == false && boss_time == 1) {
+		if (boss_spawned == false && boss_time == 0.7f) {
 			rand = std::rand() % enemyEqs.eBossEqs_size;
 			Enemy* enemy = enemyFactory.create(100, enemyEqs.eBossEqs_startPos[rand], stage_num);
 			enemy->setEqs(enemyEqs.eBossEqs[rand]);
-			enemies->push_back(enemy);
+			enemies->insert(enemies->begin(), enemy);
 
 			boss_spawned = true;
 		}
@@ -391,7 +396,7 @@ void Stage::spawn(std::vector<Enemy*>* enemies) {
 
 			enemy_spawned[0] = true;
 		}
-		else if (enemy_spawned[1] == false && time == 2) {
+		else if (enemy_spawned[1] == false && time == 1.5f) {
 			rand = std::rand() % enemyEqs.e0Eqs_size;
 			Enemy* enemy = enemyFactory.create(0, enemyEqs.e0Eqs_startPos[rand], stage_num);
 			enemy->setEqs(enemyEqs.e0Eqs[rand]);
@@ -400,10 +405,6 @@ void Stage::spawn(std::vector<Enemy*>* enemies) {
 			rand = std::rand() % enemyEqs.e0Eqs_size;
 			enemy = enemyFactory.create(0, enemyEqs.e0Eqs_startPos[rand], stage_num);
 			enemy->setEqs(enemyEqs.e0Eqs[rand]);
-			enemies->push_back(enemy);
-
-			enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[5], stage_num);
-			enemy->setEqs(enemyEqs.e1Eqs[5]);
 			enemies->push_back(enemy);
 
 			enemy_spawned[1] = true;
@@ -463,11 +464,11 @@ void Stage::spawn(std::vector<Enemy*>* enemies) {
 		}
 		break;
 	case 6:
-		if (boss_spawned == false && boss_time == 1) {
+		if (boss_spawned == false && boss_time == 0.7f) {
 			rand = std::rand() % enemyEqs.eBossEqs_size;
 			Enemy* enemy = enemyFactory.create(100, enemyEqs.eBossEqs_startPos[rand], stage_num);
 			enemy->setEqs(enemyEqs.eBossEqs[rand]);
-			enemies->push_back(enemy);
+			enemies->insert(enemies->begin(), enemy);
 
 			boss_spawned = true;
 		}
@@ -490,13 +491,9 @@ void Stage::spawn(std::vector<Enemy*>* enemies) {
 			enemy->setEqs(enemyEqs.e0Eqs[rand]);
 			enemies->push_back(enemy);
 
-			rand = std::rand() % enemyEqs.e0Eqs_size;
-			enemy = enemyFactory.create(0, enemyEqs.e0Eqs_startPos[rand], stage_num);
-			enemy->setEqs(enemyEqs.e0Eqs[rand]);
-			enemies->push_back(enemy);
-
-			enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[5], stage_num);
-			enemy->setEqs(enemyEqs.e1Eqs[5]);
+			rand = (std::rand() % 12) + 7;
+			enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[rand], stage_num);
+			enemy->setEqs(enemyEqs.e1Eqs[rand]);
 			enemies->push_back(enemy);
 
 			enemy_spawned[1] = true;
@@ -557,11 +554,11 @@ void Stage::spawn(std::vector<Enemy*>* enemies) {
 		}
 		break;
 	case 7:
-		if (boss_spawned == false && boss_time == 1) {
+		if (boss_spawned == false && boss_time == 0.7f) {
 			rand = std::rand() % enemyEqs.eBossEqs_size;
 			Enemy* enemy = enemyFactory.create(100, enemyEqs.eBossEqs_startPos[rand], stage_num);
 			enemy->setEqs(enemyEqs.eBossEqs[rand]);
-			enemies->push_back(enemy);
+			enemies->insert(enemies->begin(), enemy);
 
 			boss_spawned = true;
 		}
@@ -595,10 +592,6 @@ void Stage::spawn(std::vector<Enemy*>* enemies) {
 			rand = std::rand() % enemyEqs.e0Eqs_size;
 			enemy = enemyFactory.create(0, enemyEqs.e0Eqs_startPos[rand], stage_num);
 			enemy->setEqs(enemyEqs.e0Eqs[rand]);
-			enemies->push_back(enemy);
-
-			enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[5], stage_num);
-			enemy->setEqs(enemyEqs.e1Eqs[5]);
 			enemies->push_back(enemy);
 
 			enemy_spawned[1] = true;
@@ -667,11 +660,11 @@ void Stage::spawn(std::vector<Enemy*>* enemies) {
 		}
 		break;
 	case 8:
-		if (boss_spawned == false && boss_time == 1) {
+		if (boss_spawned == false && boss_time == 0.7f) {
 			rand = std::rand() % enemyEqs.eBossEqs_size;
 			Enemy* enemy = enemyFactory.create(100, enemyEqs.eBossEqs_startPos[rand], stage_num);
 			enemy->setEqs(enemyEqs.eBossEqs[rand]);
-			enemies->push_back(enemy);
+			enemies->insert(enemies->begin(), enemy);
 
 			boss_spawned = true;
 		}
@@ -705,10 +698,6 @@ void Stage::spawn(std::vector<Enemy*>* enemies) {
 			rand = std::rand() % enemyEqs.e0Eqs_size;
 			enemy = enemyFactory.create(0, enemyEqs.e0Eqs_startPos[rand], stage_num);
 			enemy->setEqs(enemyEqs.e0Eqs[rand]);
-			enemies->push_back(enemy);
-
-			enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[5], stage_num);
-			enemy->setEqs(enemyEqs.e1Eqs[5]);
 			enemies->push_back(enemy);
 
 			enemy_spawned[1] = true;
@@ -793,11 +782,11 @@ void Stage::spawn(std::vector<Enemy*>* enemies) {
 		}
 		break;
 	case 9:
-		if (boss_spawned == false && boss_time == 1) {
+		if (boss_spawned == false && boss_time == 0.7f) {
 			rand = std::rand() % enemyEqs.eBossEqs_size;
 			Enemy* enemy = enemyFactory.create(100, enemyEqs.eBossEqs_startPos[rand], stage_num);
 			enemy->setEqs(enemyEqs.eBossEqs[rand]);
-			enemies->push_back(enemy);
+			enemies->insert(enemies->begin(), enemy);
 
 			boss_spawned = true;
 		}
@@ -831,10 +820,6 @@ void Stage::spawn(std::vector<Enemy*>* enemies) {
 			rand = std::rand() % enemyEqs.e0Eqs_size;
 			enemy = enemyFactory.create(0, enemyEqs.e0Eqs_startPos[rand], stage_num);
 			enemy->setEqs(enemyEqs.e0Eqs[rand]);
-			enemies->push_back(enemy);
-
-			enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[5], stage_num);
-			enemy->setEqs(enemyEqs.e1Eqs[5]);
 			enemies->push_back(enemy);
 
 			enemy_spawned[1] = true;
@@ -919,11 +904,11 @@ void Stage::spawn(std::vector<Enemy*>* enemies) {
 		}
 		break;
 	case 10:
-		if (boss_spawned == false && boss_time == 1) {
+		if (boss_spawned == false && boss_time == 0.7f) {
 			rand = std::rand() % enemyEqs.eBossEqs_size;
 			Enemy* enemy = enemyFactory.create(100, enemyEqs.eBossEqs_startPos[rand], stage_num);
 			enemy->setEqs(enemyEqs.eBossEqs[rand]);
-			enemies->push_back(enemy);
+			enemies->insert(enemies->begin(), enemy);
 
 			boss_spawned = true;
 		}
@@ -959,8 +944,9 @@ void Stage::spawn(std::vector<Enemy*>* enemies) {
 			enemy->setEqs(enemyEqs.e0Eqs[rand]);
 			enemies->push_back(enemy);
 
-			enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[5], stage_num);
-			enemy->setEqs(enemyEqs.e1Eqs[5]);
+			rand = (std::rand() % 12) + 7;
+			enemy = enemyFactory.create(1, enemyEqs.e1Eqs_startPos[rand], stage_num);
+			enemy->setEqs(enemyEqs.e1Eqs[rand]);
 			enemies->push_back(enemy);
 
 			enemy_spawned[1] = true;
@@ -1074,7 +1060,7 @@ EnemyEqs::EnemyEqs() {
 
 	e0Eqs_size = e0Eqs.size();
 	
-	//E1: x^2 wave (0-6)
+	//E1: x^2 wave (indexes: 0-6)
 	eqs.clear();
 	eqs.push_back(Equation(2, -10, -700, 0.25f, 1, MAX, 1, false));
 	e1Eqs.push_back(eqs);
@@ -1110,7 +1096,7 @@ EnemyEqs::EnemyEqs() {
 	e1Eqs.push_back(eqs);
 	e1Eqs_startPos.push_back(1135);
 
-	//E1: vertical line (7-19)
+	//E1: vertical line (indexes: 7-19)
 	eqs.clear();
 	eqs.push_back(Equation(1, -100, 0, 1, 99, MIN, 0.1f, true));
 	e1Eqs.push_back(eqs);

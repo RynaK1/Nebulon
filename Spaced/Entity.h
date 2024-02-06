@@ -30,7 +30,6 @@ protected:
 public:
 	Entity() : speed(0) {}
 	Entity(sf::Texture& texture, float start_pos, float speed);
-	void setOrigin(float x, float y);
 	void setRotation(float r);
 	void setSpeed(float speed);
 	void setScale(float s1, float s2);
@@ -88,18 +87,17 @@ public:
 
 class Enemy : public GameEntity {
 protected:
-	int attackType;
 	bool isBoss;
+	int attackType;
 	sf::Clock attack_clock;
-	sf::Clock hit_clock;
 public:
 	Enemy() : isBoss(false), attackType(0) {}
 	Enemy(sf::Texture& texture, float start_pos, float speed, int health, int attackType, int dmg, bool isBoss) :
 		GameEntity(texture, start_pos, speed, health, dmg) {
-		this->isBoss = isBoss;
 		this->attackType = attackType;
+		this->isBoss = isBoss;
 	}
-	void hit(int dmg);
 	bool getIsBoss();
+	void hit(int dmg);
 	void attack(std::map<std::string, sf::Texture>& textures, std::vector<GameEntity*>* enemy_bullets);
 };

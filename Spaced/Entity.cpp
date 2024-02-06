@@ -216,10 +216,7 @@ bool Enemy::getIsBoss() {
 }
 
 void Enemy::hit(int dmg) {
-	if (hit_clock.getElapsedTime().asSeconds() >= 1) {
-		this->health -= dmg;
-		hit_clock.restart();
-	}
+	this->health -= dmg;
 }
 
 void Enemy::attack(std::map<std::string, sf::Texture>& textures, std::vector<GameEntity*>* enemy_bullets) {

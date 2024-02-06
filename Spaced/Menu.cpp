@@ -569,9 +569,7 @@ void Menu::updateEntityPosition() {
 }
 
 /* BUGS */
-//FIX ENEMY ATTACK POSITIONING
-
-
 
 /* IMPLEMENTATIONS */
 //ADD BOSS HEALTH UI
+//UPGRADES
